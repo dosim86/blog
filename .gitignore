@@ -1,4 +1,5 @@
 /.idea/
+/workdir/
 
 ###> symfony/framework-bundle ###
 /.env
