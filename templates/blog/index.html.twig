@@ -3,13 +3,16 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            {% for blog in blogs %}
+            {% for blog in pagination %}
                 <div class="col-md-4">
-                    <h2>{{ blog.title }}</h2>
-                    <p>{{ blog.content }}</p>
-                    <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+                    <h4>{{ blog.title }}</h4>
+                    <p>{{ blog.content|truncate(100) }}</p>
+                    <p><a class="btn btn-secondary" href="{{ path('blog_show', {slug:blog.slug}) }}" role="button">Read more »</a></p>
                 </div>
+            {% else %}
+                <h2>No blogs found</h2>
             {% endfor %}
         </div>
+        {{ knp_pagination_render(pagination) }}
     </div>
 {% endblock %}
