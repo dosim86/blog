@@ -1,0 +1,6 @@
+easy_admin:
+    site_name: 'Admin Panel'
+    search:
+        title: 'ssdf'
+    entities:
+        - App\Entity\Blog
