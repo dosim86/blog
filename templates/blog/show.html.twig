@@ -5,6 +5,7 @@
 {% block body %}
     <div class="container">
         <a href="{{ path('blog_index') }}" class="btn btn-light">Back</a>
+        <a href="{{ path('blog_edit', {id:blog.id}) }}" class="btn btn-success">Edit</a>
         <hr>
         <h1>{{ blog.title }}</h1>
         <p>
