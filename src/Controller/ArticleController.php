@@ -19,7 +19,7 @@ class ArticleController extends AbstractController
      */
     public function index(Request $request, ArticleRepository $articleRepository, PaginatorInterface $paginator)
     {
-        $queryBuilder = $articleRepository->getWithQueryBuilder();
+        $queryBuilder = $articleRepository->getWithQueryBuilder($request->get('q'));
         $pagination = $paginator->paginate($queryBuilder, $request->query->getInt('page', 1), 10);
 
         return $this->render('article/index.html.twig', [

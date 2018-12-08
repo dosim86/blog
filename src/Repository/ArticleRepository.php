@@ -19,11 +19,17 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
-    public function getWithQueryBuilder()
+    public function getWithQueryBuilder($q)
     {
-        return $this->createQueryBuilder('a')
-            ->orderBy('a.id', 'ASC')
-        ;
+        $qb = $this->createQueryBuilder('a')
+            ->orderBy('a.id', 'ASC');
+
+        if ($q) {
+            $qb->andWhere('a.title LIKE :a_title')
+                ->setParameter('a_title', '%'.$q.'%');
+        }
+
+        return $qb;
     }
 
     /*

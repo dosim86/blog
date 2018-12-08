@@ -26,7 +26,16 @@
                         </li>
                         {% endif %}
                     </ul>
-                    <ul class="navbar-nav ml-auto">
+                    <form class="form-inline my-2 my-lg-0">
+                        <div class="input-group mr-sm-2">
+                            <input type="text" class="form-control" placeholder="Search for..." name="q" value="{{ app.request.get('q') }}">
+                            <div class="input-group-append">
+                                <a class="btn btn-outline-info" href="{{ path('article_index') }}"><i class="fas fa-times"></i></a>
+                                <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                    <ul class="navbar-nav">
                         {% if is_granted('ROLE_USER') %}
                             <li class="nav-item dropdown" style="margin-right: 75px;">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
