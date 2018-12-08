@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            {% for article in pagination %}
+                <div class="col-md-4">
+                    <h4>{{ article.title }}</h4>
+                    <p>{{ article.content|truncate(100) }}</p>
+                    <p>
+                        <small class="text-info">{{ article.createdAt|date('d.m.Y') }}</small>
+                        Comments 0
+                        Watched 0
+                    </p>
+                    <p><a class="btn btn-sm btn-outline-info" href="{{ path('article_show', {slug:article.slug}) }}" role="button">Read more »</a></p>
+                </div>
+            {% else %}
+                <h2>No articles found</h2>
+            {% endfor %}
+        </div>
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}

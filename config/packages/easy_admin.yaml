@@ -4,9 +4,9 @@ easy_admin:
         menu:
             - { label: 'Homepage', route: 'homepage' }
             - User
-            - Blog
+            - Article
     search:
         title: 'ssdf'
     entities:
-        - App\Entity\Blog
+        - App\Entity\Article
         - App\Entity\User

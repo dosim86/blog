@@ -8,8 +8,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixture extends BaseFixture
 {
-    const MAIN_USER_COUNT = 10;
-
     /**
      * @var UserPasswordEncoderInterface
      */
@@ -22,10 +20,12 @@ class UserFixture extends BaseFixture
 
     public function loadData(ObjectManager $manager)
     {
-        $this->createMany(User::class, self::MAIN_USER_COUNT, function(User $user, $index) use ($manager) {
+        $this->createMany(10, 'user', function($index) use ($manager) {
+            $user = new User();
             $user->setEmail($this->faker->email);
             $user->setFirstname($this->faker->firstName);
             $user->setPassword($this->encoder->encodePassword($user, '123'));
+            return $user;
         });
 
         $manager->flush();

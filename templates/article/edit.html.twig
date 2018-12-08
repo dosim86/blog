@@ -5,9 +5,9 @@
 {% block body %}
     <div class="container">
         {% if form.vars.data.slug %}
-            <a href="{{ path('blog_show', {slug:form.vars.data.slug}) }}" class="btn btn-light">Back</a>
+            <a href="{{ path('article_show', {slug:form.vars.data.slug}) }}" class="btn btn-light">Back</a>
         {% else %}
-            <a href="{{ path('blog_index') }}" class="btn btn-light">Back</a>
+            <a href="{{ path('article_index') }}" class="btn btn-light">Back</a>
         {% endif %}
         <hr>
         {{ form(form) }}

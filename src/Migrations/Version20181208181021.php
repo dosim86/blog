@@ -8,14 +8,16 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20181204155641 extends AbstractMigration
+final class Version20181208181021 extends AbstractMigration
 {
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('CREATE TABLE article (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, slug VARCHAR(100) NOT NULL, content LONGTEXT DEFAULT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, UNIQUE INDEX UNIQ_C0155143989D9B62 (slug), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE article ADD author_id INT NOT NULL');
+        $this->addSql('ALTER TABLE article ADD CONSTRAINT FK_C0155143F675F31B FOREIGN KEY (author_id) REFERENCES user (id)');
+        $this->addSql('CREATE INDEX IDX_C0155143F675F31B ON article (author_id)');
     }
 
     public function down(Schema $schema) : void
@@ -23,6 +25,8 @@ final class Version20181204155641 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('DROP TABLE article');
+        $this->addSql('ALTER TABLE article DROP FOREIGN KEY FK_C0155143F675F31B');
+        $this->addSql('DROP INDEX IDX_C0155143F675F31B ON article');
+        $this->addSql('ALTER TABLE article DROP author_id');
     }
 }
