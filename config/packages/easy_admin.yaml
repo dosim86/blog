@@ -3,8 +3,10 @@ easy_admin:
     design:
         menu:
             - { label: 'Homepage', route: 'homepage' }
+            - User
             - Blog
     search:
         title: 'ssdf'
     entities:
         - App\Entity\Blog
+        - App\Entity\User

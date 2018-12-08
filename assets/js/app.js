@@ -2,3 +2,5 @@
 // require('../css/app.css');
 
 global.$ = global.jQuery = $;
+
+$('.dropdown-toggle').dropdown();
