@@ -30,7 +30,7 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("blog/add", name="blog_add")
+     * @Route("/blog/add", name="blog_add")
      */
     public function add(Request $request)
     {
@@ -54,7 +54,7 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("blog/edit/{id}", name="blog_edit")
+     * @Route("/blog/edit/{id}", name="blog_edit")
      */
     public function edit(Blog $blog, Request $request)
     {
@@ -73,7 +73,7 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("blog/{slug}", name="blog_show")
+     * @Route("/blog/{slug}", name="blog_show")
      */
     public function show(Blog $blog)
     {

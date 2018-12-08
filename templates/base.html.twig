@@ -11,26 +11,28 @@
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
             <div class="container">
-                <a class="navbar-brand" href="{{ path('homepage') }}">Blog</a>
+                <a class="navbar-brand font-weight-bold" href="{{ path('homepage') }}">Blog</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                        </li>
+                    <ul class="navbar-nav mr-auto">
+                        {#<li class="nav-item active">#}
+                            {#<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>#}
+                        {#</li>#}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('blog_add') }}">New blog</a>
                         </li>
                     </ul>
+                    <a class="nav-link btn btn-outline-info" href="{{ path('blog_add') }}">Sign in</a>
+                    <a class="ml-1 nav-link btn btn-info" href="{{ path('blog_add') }}">Register</a>
                 </div>
             </div>
         </nav>
         {% block body %}{% endblock %}
 
         {% block javascripts %}
-            <link rel="stylesheet" href="{{ asset('build/vendor.js') }}">
+            <script src="{{ asset('build/vendor.js') }}"></script>
         {% endblock %}
     </body>
 </html>

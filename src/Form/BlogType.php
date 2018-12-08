@@ -15,8 +15,6 @@ class BlogType extends AbstractType
         $builder
             ->add('title')
             ->add('content')
-            ->add('createdAt')
-            ->add('updatedAt')
             ->add('Save', SubmitType::class)
         ;
     }

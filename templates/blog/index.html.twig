@@ -7,7 +7,12 @@
                 <div class="col-md-4">
                     <h4>{{ blog.title }}</h4>
                     <p>{{ blog.content|truncate(100) }}</p>
-                    <p><a class="btn btn-secondary" href="{{ path('blog_show', {slug:blog.slug}) }}" role="button">Read more »</a></p>
+                    <p>
+                        <small class="text-info">{{ blog.createdAt|date('d.m.Y') }}</small>
+                        Comments 0
+                        Watched 0
+                    </p>
+                    <p><a class="btn btn-sm btn-outline-info" href="{{ path('blog_show', {slug:blog.slug}) }}" role="button">Read more »</a></p>
                 </div>
             {% else %}
                 <h2>No blogs found</h2>
