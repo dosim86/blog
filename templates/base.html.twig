@@ -6,7 +6,6 @@
         <title>{% block title %}Welcome to Blog!{% endblock %}</title>
 
         <link rel="stylesheet" href="{{ asset('build/vendor.css') }}">
-
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
@@ -25,16 +24,43 @@
                             <a class="nav-link" href="{{ path('blog_add') }}">New blog</a>
                         </li>
                     </ul>
-                    {#{% if is_granted() %}#}
-                    <a class="nav-link btn btn-outline-info" href="{{ path('app_login') }}">Sign in</a>
-                    <a class="ml-1 nav-link btn btn-info" href="{{ path('blog_add') }}">Register</a>
+                    <ul class="navbar-nav ml-auto">
+                        {% if is_granted('ROLE_USER') %}
+                            <li class="nav-item dropdown" style="margin-right: 75px;">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {#<img class="nav-profile-img rounded-circle" src="#">#}
+                                    {{ app.user.firstname }}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    {#<a class="dropdown-item" href="{{ path('app_account') }}">Profile</a>#}
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        {#<a class="dropdown-item" href="{{ path('admin_article_new') }}">Create Post</a>#}
+                                    {% endif %}
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_login') }}">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_login') }}">Register</a>
+                            </li>
+                        {% endif %}
+                    </ul>
                 </div>
             </div>
         </nav>
         {% block body %}{% endblock %}
 
         {% block javascripts %}
+            <script src="{{ asset('build/runtime.js') }}"></script>
             <script src="{{ asset('build/vendor.js') }}"></script>
+            <script src="{{ asset('build/js/app.js') }}"></script>
+            <script>
+                $('.dropdown-toggle').dropdown();
+            </script>
         {% endblock %}
     </body>
 </html>
