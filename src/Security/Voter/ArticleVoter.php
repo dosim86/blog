@@ -5,11 +5,22 @@ namespace App\Security\Voter;
 use App\Entity\Article;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class ArticleVoter extends Voter
 {
-    const EDIT = 'edit';
+    const EDIT = 'EDIT';
+
+    /**
+     * @var Security
+     */
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
 
     protected function supports($attribute, $subject)
     {
@@ -26,9 +37,15 @@ class ArticleVoter extends Voter
 
         switch ($attribute) {
             case self::EDIT:
-
-                /** @var Article $article */
-                return true;
+                if ($article->getAuthor() === $user) {
+                    return true;
+                }
+                if ($this->security->isGranted('ROLE_ADMIN_ARTICLE')) {
+                    return true;
+                }
+                if ($this->security->isGranted('ROLE_ADMIN')) {
+                    return true;
+                }
                 break;
         }
 
