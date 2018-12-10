@@ -1,0 +1,29 @@
+<div class="comments">
+    <div class="comments__header">
+        <div class="clearfix">
+            <h4 class="float-left text-primary">Comments</h4>
+            <h6 class="float-right text-muted">{{ comments|length }} comments <a href="#" class="btn btn-sm btn-outline-success"><i class="fas fa-comment"></i> add comment</a></h6>
+        </div>
+    </div>
+    <hr>
+    <div class="comments__list">
+        {% for comment in comments %}
+            <div class="row">
+                <div class="col-md-1">
+                    <a href="#">
+                        <img class="img-fluid rounded mb-3 mb-md-0" src="http://placehold.it/200x200" alt="">
+                    </a>
+                </div>
+                <div class="col-md-11">
+                    <div class="clearfix">
+                        <h5 class="float-left media-heading user_name">{{ comment.owner.firstname }}</h5>
+                        <p class="float-right text-info small">{{ comment.createdAt|ago }}</p>
+                    </div>
+                    <p class="text-success">{{ comment.text }}</p>
+                    <p class="small"><a href="#">Like</a> - <a href="#">Share</a></p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+

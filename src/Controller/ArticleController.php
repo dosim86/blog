@@ -76,8 +76,13 @@ class ArticleController extends AbstractController
     /**
      * @Route("/article/{slug}", name="article_show")
      */
-    public function show(Article $article)
+    public function show($slug, ArticleRepository $articleRepository)
     {
+        $article = $articleRepository->getArticleBySlug($slug);
+        if (!$article) {
+            throw $this->createNotFoundException('Article not found');
+        }
+
         return $this->render('article/show.html.twig', [
             'article' => $article
         ]);

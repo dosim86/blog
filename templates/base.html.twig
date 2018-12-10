@@ -26,7 +26,7 @@
                         </li>
                         {% endif %}
                     </ul>
-                    <form class="form-inline my-2 my-lg-0">
+                    <form class="form-inline my-2 my-lg-0" action="{{ path('article_index') }}">
                         <div class="input-group mr-sm-2">
                             <input type="text" class="form-control" placeholder="Search for..." name="q" value="{{ app.request.get('q') }}">
                             <div class="input-group-append">

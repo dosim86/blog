@@ -34,15 +34,22 @@ class ArticleRepository extends ServiceEntityRepository
         return $qb;
     }
 
-    /*
-    public function findOneBySomeField($value): ?Article
+    /**
+     * @param $slug
+     * @return Article|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getArticleBySlug($slug): ?Article
     {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('a')
+            ->addSelect('c')
+            ->addSelect('o')
+            ->leftJoin('a.comments', 'c')
+            ->leftJoin('c.owner', 'o')
+            ->andWhere('a.slug = :slug')
+            ->setParameter('slug', $slug)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
 }
