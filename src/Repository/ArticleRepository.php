@@ -22,6 +22,8 @@ class ArticleRepository extends ServiceEntityRepository
     public function getWithQueryBuilder($q)
     {
         $qb = $this->createQueryBuilder('a')
+            ->addSelect('c')
+            ->leftJoin('a.comments', 'c')
             ->orderBy('a.id', 'ASC');
 
         if ($q) {
