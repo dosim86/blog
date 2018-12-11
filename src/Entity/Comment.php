@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
+use App\Service\Like\LikeableInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
  */
-class Comment
+class Comment implements LikeableInterface
 {
     /**
      * @ORM\Id()
@@ -41,9 +43,15 @@ class Comment
      */
     private $createdAt;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\LikeComment", mappedBy="target", orphanRemoval=true)
+     */
+    private $likes;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -97,5 +105,36 @@ class Comment
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    public static function getLikeClass()
+    {
+        return LikeComment::class;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLikes()
+    {
+        $likes = 0;
+        /** @var LikeComment $like */
+        foreach ($this->likes as $like) {
+            if ($like->getValue() === 1) $likes++;
+        }
+        return $likes;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDislikes()
+    {
+        $dislikes = 0;
+        /** @var LikeComment $like */
+        foreach ($this->likes as $like) {
+            if ($like->getValue() === -1) $dislikes++;
+        }
+        return $dislikes;
     }
 }

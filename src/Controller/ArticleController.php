@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Entity\Comment;
+use App\Exception\Like\FailLikeException;
 use App\Form\ArticleType;
 use App\Form\CommentType;
 use App\Repository\ArticleRepository;
+use App\Service\Like\LikeManager;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,8 +23,9 @@ class ArticleController extends AbstractController
      */
     public function index(Request $request, ArticleRepository $articleRepository, PaginatorInterface $paginator)
     {
-        $queryBuilder = $articleRepository->getWithQueryBuilder($request->get('q'));
-        $pagination = $paginator->paginate($queryBuilder, $request->query->getInt('page', 1), 9);
+        $page = $request->query->getInt('page', 1);
+        $qb = $articleRepository->getWithQueryBuilder($request->get('q'));
+        $pagination = $paginator->paginate($qb, $page, 10);
 
         return $this->render('article/index.html.twig', [
             'pagination' => $pagination
@@ -105,5 +108,57 @@ class ArticleController extends AbstractController
             'article' => $article,
             'commentForm' => $commentForm->createView()
         ]);
+    }
+
+    /**
+     * @IsGranted("ROLE_USER")
+     * @Route("/article/{id}/like", name="article_like")
+     */
+    public function like(Article $article, Request $request, LikeManager $likeManager)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            throw $this->createNotFoundException();
+        }
+        
+        try {
+            $likeManager->like($article, $this->getUser());
+            $data = $likeManager->getCountAsValue($article);
+
+            return $this->json([
+                'type' => 'success',
+                'data' => $data
+            ]);
+        } catch (FailLikeException $e) {
+            return $this->json([
+                'type' => 'error',
+                'message' => 'Sorry, there is a system fault'
+            ]);
+        }
+    }
+
+    /**
+     * @IsGranted("ROLE_USER")
+     * @Route("/article/{id}/dislike", name="article_dislike")
+     */
+    public function dislike(Article $article, Request $request, LikeManager $likeManager)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            throw $this->createNotFoundException();
+        }
+
+        try {
+            $likeManager->dislike($article, $this->getUser());
+            $data = $likeManager->getCountAsValue($article);
+
+            return $this->json([
+                'type' => 'success',
+                'data' => $data
+            ]);
+        } catch (FailLikeException $e) {
+            return $this->json([
+                'type' => 'error',
+                'message' => 'Sorry, there is a system fault'
+            ]);
+        }
     }
 }

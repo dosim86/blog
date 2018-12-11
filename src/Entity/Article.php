@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Service\Like\LikeableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +12,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
  */
-class Article
+class Article implements LikeableInterface
 {
     use TimestampableEntity;
 
@@ -49,9 +50,15 @@ class Article
      */
     private $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\LikeArticle", mappedBy="target", orphanRemoval=true)
+     */
+    private $likes;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -136,5 +143,36 @@ class Article
         }
 
         return $this;
+    }
+
+    public static function getLikeClass()
+    {
+        return LikeArticle::class;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLikes()
+    {
+        $likes = 0;
+        /** @var LikeArticle $like */
+        foreach ($this->likes as $like) {
+            if ($like->getValue() === 1) $likes++;
+        }
+        return $likes;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDislikes()
+    {
+        $dislikes = 0;
+        /** @var LikeArticle $like */
+        foreach ($this->likes as $like) {
+            if ($like->getValue() === -1) $dislikes++;
+        }
+        return $dislikes;
     }
 }
