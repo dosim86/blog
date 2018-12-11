@@ -6,6 +6,7 @@
         <title>{% block title %}Welcome to Blog!{% endblock %}</title>
 
         <link rel="stylesheet" href="{{ asset('build/vendor.css') }}">
+        <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
@@ -37,9 +38,9 @@
                     </form>
                     <ul class="navbar-nav">
                         {% if is_granted('ROLE_USER') %}
-                            <li class="nav-item dropdown" style="margin-right: 75px;">
+                            <li class="nav-item dropdown mr-auto" style="margin-right: 75px;">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {#<img class="nav-profile-img rounded-circle" src="#">#}
+                                    <img class="nav-profile-img rounded-circle" src="//i.pravatar.cc/40">
                                     {{ app.user.firstname }}
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">

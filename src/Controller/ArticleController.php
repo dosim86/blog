@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Comment;
 use App\Form\ArticleType;
+use App\Form\CommentType;
 use App\Repository\ArticleRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -76,15 +78,32 @@ class ArticleController extends AbstractController
     /**
      * @Route("/article/{slug}", name="article_show")
      */
-    public function show($slug, ArticleRepository $articleRepository)
+    public function show($slug, Request $request, ArticleRepository $articleRepository)
     {
         $article = $articleRepository->getArticleBySlug($slug);
         if (!$article) {
             throw $this->createNotFoundException('Article not found');
         }
 
+        $commentForm = $this->createForm(CommentType::class, new Comment());
+        $commentForm->handleRequest($request);
+
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            /** @var Comment $comment */
+            $comment = $commentForm->getData();
+            $comment->setOwner($this->getUser());
+            $comment->setArticle($article);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($comment);
+            $em->flush();
+
+            return $this->redirectToRoute('article_show', ['slug' => $article->getSlug()]);
+        }
+
         return $this->render('article/show.html.twig', [
-            'article' => $article
+            'article' => $article,
+            'commentForm' => $commentForm->createView()
         ]);
     }
 }

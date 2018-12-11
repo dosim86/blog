@@ -3,17 +3,43 @@
 {% block title %}{{ article.title }}{% endblock %}
 
 {% block body %}
-    <div class="container">
-        {% if is_granted('EDIT', article) %}
-            <a href="{{ path('article_edit', {id:article.id}) }}" class="btn btn-outline-success"><i class="fas fa-pencil-alt"></i> Edit</a>
-            <hr>
-        {% endif %}
-        <h1>{{ article.title }}</h1>
-        <p>
-            {{ article.content }}
-        </p>
-        <p>
-            {% include 'comment/index.html.twig' with {comments: article.comments} %}
-        </p>
+    <div class="container card p-4">
+        <div class="row">
+            <div class="col-8">
+                {% if is_granted('EDIT', article) %}
+                    <a href="{{ path('article_edit', {id:article.id}) }}" class="btn btn-outline-success"><i class="fas fa-pencil-alt"></i> Edit</a>
+                    <hr>
+                {% endif %}
+                <h1><span class="font-weight-bold">{{ article.title }}</span></h1>
+                <div class="clearfix py-2">
+                    <div class="float-left">
+                        <img class="img-fluid rounded-circle" src="//i.pravatar.cc/40">
+                        <a href="#">{{ article.author.firstname }}</a>
+                    </div>
+                    <div class="float-right">
+                        <span class="text-info">
+                            {{ article.createdAt|date('d.m.Y') }}
+                            <i class="fas fa-eye"></i> 0
+                            <i class="fas fa-comment"></i> {{ article.comments|length }}
+                        </span>
+                    </div>
+                </div>
+                <p>
+                    {{ article.content }}
+                </p>
+                <div class="d-flex justify-content-center">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <a href="#" class="btn btn-sm btn-success"><i class="fas fa-thumbs-up"></i> 0</a>
+                        <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-thumbs-down"></i> 0</a>
+                    </div>
+                </div>
+                <div class="pt-3">
+                    {% include 'comment/index.html.twig' with {comments: article.comments, commentForm: commentForm} %}
+                </div>
+            </div>
+            <div class="col-4">
+                {% include 'sidebar.html.twig' %}
+            </div>
+        </div>
     </div>
 {% endblock %}

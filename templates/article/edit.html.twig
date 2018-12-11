@@ -3,7 +3,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="container card p-3">
         {% if form.vars.data.slug %}
             <a href="{{ path('article_show', {slug:form.vars.data.slug}) }}" class="btn btn-light">Back</a>
         {% else %}
