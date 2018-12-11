@@ -17,11 +17,11 @@
                         <a href="#">{{ article.author.firstname }}</a>
                     </div>
                     <div class="float-right">
-                        <span class="text-info">
-                            {{ article.createdAt|date('d.m.Y') }}
-                            <i class="fas fa-eye"></i> 0
-                            <i class="fas fa-comment"></i> {{ article.comments|length }}
-                        </span>
+                        <ul class="icons-inline text-info small">
+                            <li>{{ article.createdAt|date('H:i d.m.Y') }}</li>
+                            <li><i class="fas fa-eye"></i><span>0</span></li>
+                            <li><i class="fas fa-comment"></i><span>{{ article.comments|length }}</span></li>
+                        </ul>
                     </div>
                 </div>
                 <p>
@@ -29,8 +29,8 @@
                 </p>
                 <div class="d-flex justify-content-center">
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <a href="#" class="btn btn-sm btn-success"><i class="fas fa-thumbs-up"></i> 0</a>
-                        <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-thumbs-down"></i> 0</a>
+                        <a href="#" class="btn btn-sm btn-outline-success"><i class="fas fa-thumbs-up"></i> 0</a>
+                        <a href="#" class="btn btn-sm btn-outline-danger"><i class="fas fa-thumbs-down"></i> 0</a>
                     </div>
                 </div>
                 <div class="pt-3">
