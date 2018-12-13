@@ -6,10 +6,6 @@
     <div class="container card p-4">
         <div class="row">
             <div class="col-8">
-                {% if is_granted('EDIT', article) %}
-                    <a href="{{ path('article_edit', {id:article.id}) }}" class="btn btn-outline-success"><i class="fas fa-pencil-alt"></i> Edit</a>
-                    <hr>
-                {% endif %}
                 <h1><span class="font-weight-bold">{{ article.title }}</span></h1>
                 <div class="clearfix py-2">
                     <div class="float-left">
@@ -17,6 +13,9 @@
                         <a href="#">{{ article.author.firstname }}</a>
                     </div>
                     <div class="float-right">
+                        {% if is_granted('EDIT', article) %}
+                            <a href="{{ path('article_edit', {id:article.id}) }}" class="btn btn-sm btn-outline-success"><i class="fas fa-pencil-alt"></i> Edit</a>
+                        {% endif %}
                         <ul class="icons-inline text-info small">
                             <li>{{ article.createdAt|date('H:i d.m.Y') }}</li>
                             <li><i class="fas fa-eye"></i><span>0</span></li>
@@ -61,9 +60,8 @@
                     if (data.type === 'success') {
                         $like.html(data.data.likes);
                         $dislike.html(data.data.dislikes);
-                    } else {
-                        alert('Error');
                     }
+                    notify(data.type, data.message);
                 });
             })
         });

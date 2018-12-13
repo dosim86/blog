@@ -47,6 +47,7 @@ class ArticleController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
             $em->flush();
+            $this->addFlash('success', 'Article is created');
 
             return $this->redirectToRoute('article_show', ['slug' => $article->getSlug()]);
         }
@@ -69,6 +70,8 @@ class ArticleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', 'Article is updated');
+
             return $this->redirectToRoute('article_show', ['slug' => $article->getSlug()]);
         }
 
@@ -119,14 +122,15 @@ class ArticleController extends AbstractController
         if (!$request->isXmlHttpRequest()) {
             throw $this->createNotFoundException();
         }
-        
+
         try {
             $likeManager->like($article, $this->getUser());
             $data = $likeManager->getCountAsValue($article);
 
             return $this->json([
                 'type' => 'success',
-                'data' => $data
+                'message' => 'Article is liked',
+                'data' => $data,
             ]);
         } catch (FailLikeException $e) {
             return $this->json([
@@ -152,7 +156,8 @@ class ArticleController extends AbstractController
 
             return $this->json([
                 'type' => 'success',
-                'data' => $data
+                'message' => 'Article is disliked',
+                'data' => $data,
             ]);
         } catch (FailLikeException $e) {
             return $this->json([

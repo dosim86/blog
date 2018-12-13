@@ -67,6 +67,16 @@
             <script src="{{ asset('build/runtime.js') }}"></script>
             <script src="{{ asset('build/vendor.js') }}"></script>
             <script src="{{ asset('build/js/app.js') }}"></script>
+            {% if app.session.flashbag.has('success') or app.session.flashbag.has('error') %}
+            <script>
+                {% for flash in app.session.flashbag.get('success') %}
+                    notify('success', '{{ flash }}');
+                {% endfor %}
+                {% for flash in app.session.flashbag.get('error') %}
+                    notify('error', '{{ flash }}');
+                {% endfor %}
+            </script>
+            {% endif %}
         {% endblock %}
     </body>
 </html>

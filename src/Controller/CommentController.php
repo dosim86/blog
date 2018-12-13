@@ -28,6 +28,7 @@ class CommentController extends AbstractController
 
             return $this->json([
                 'type' => 'success',
+                'message' => 'Comment is liked',
                 'data' => $data
             ]);
         } catch (FailLikeException $e) {
@@ -54,6 +55,7 @@ class CommentController extends AbstractController
 
             return $this->json([
                 'type' => 'success',
+                'message' => 'Comment is disliked',
                 'data' => $data
             ]);
         } catch (FailLikeException $e) {
