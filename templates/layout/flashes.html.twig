@@ -1,0 +1,10 @@
+{% if app.session.flashbag.has('success') or app.session.flashbag.has('error') %}
+    <script>
+        {% for flash in app.session.flashbag.get('success') %}
+        notify('success', '{{ flash }}');
+        {% endfor %}
+        {% for flash in app.session.flashbag.get('error') %}
+        notify('error', '{{ flash }}');
+        {% endfor %}
+    </script>
+{% endif %}

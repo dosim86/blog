@@ -1,0 +1,15 @@
+{% extends 'user/layout.html.twig' %}
+
+{% block title %}User profile{% endblock %}
+
+{% block user_content %}
+    <h6 class="font-weight-bold">
+        About me
+        {% if is_granted('EDIT', user) %}
+            <a href="{{ path('user_edit', {email:user.username}) }}" class="btn btn-sm btn-outline-success"><i class="fas fa-pencil-alt"></i> Edit</a>
+        {% endif %}
+    </h6>
+    <p class="f14">
+        {{ user.aboutMe|default('I\'m very shy person :)') }}
+    </p>
+{% endblock %}

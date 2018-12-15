@@ -34,7 +34,7 @@ class UserFixture extends BaseFixture
         $this->createMany(1, self::REF_NAME_ADMIN, function($index) use ($manager) {
             $user = new User();
             $user->setRoles(['ROLE_ADMIN']);
-            $user->setEmail($this->faker->email);
+            $user->setEmail(sprintf('admin%s@email.com', $index));
             $user->setFirstname($this->faker->firstName);
             $user->setPassword($this->encoder->encodePassword($user, '123'));
             return $user;

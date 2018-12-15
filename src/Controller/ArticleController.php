@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Entity\Comment;
+use App\Entity\User;
 use App\Exception\Like\FailLikeException;
 use App\Form\ArticleType;
 use App\Form\CommentType;

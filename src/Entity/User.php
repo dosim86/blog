@@ -50,6 +50,11 @@ class User implements UserInterface
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $aboutMe;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
@@ -204,6 +209,18 @@ class User implements UserInterface
                 $comment->setOwner(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAboutMe(): ?string
+    {
+        return $this->aboutMe;
+    }
+
+    public function setAboutMe(?string $aboutMe): self
+    {
+        $this->aboutMe = $aboutMe;
 
         return $this;
     }

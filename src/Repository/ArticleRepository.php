@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Article;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -19,7 +20,7 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
-    public function getWithQueryBuilder($q)
+    public function getWithQueryBuilder(?string $q)
     {
         $qb = $this->createQueryBuilder('a')
             ->addSelect('c')
@@ -31,6 +32,23 @@ class ArticleRepository extends ServiceEntityRepository
         if ($q) {
             $qb->andWhere('a.title LIKE :a_title')
                 ->setParameter('a_title', '%'.$q.'%');
+        }
+
+        return $qb;
+    }
+
+    public function getUserArticles(User $user)
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->addSelect('c')
+            ->addSelect('la')
+            ->leftJoin('a.likes', 'la')
+            ->leftJoin('a.comments', 'c')
+            ->orderBy('a.createdAt', 'DESC');
+
+        if ($user) {
+            $qb->andWhere('a.author = :a_author')
+                ->setParameter('a_author', $user);
         }
 
         return $qb;

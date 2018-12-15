@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User profile{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="card p-3">
+        <div class="d-flex">
+            <div class="pr-3">
+                <img class="img-fluid rounded-circle" src="//i.pravatar.cc/53">
+            </div>
+            <div class="w-100">
+                {{ user.firstname }} <a href="{{ path('user_profile', {email:user.username}) }}">@{{ user.username }}</a><br>
+                <span class="text-info small">Last activity 1 minute ago</span>
+            </div>
+        </div>
+        {% set menu = [
+            { title: 'Profile', route: 'user_profile' },
+            { title: 'Articles', route: 'user_articles' },
+            { title: 'Comments', route: 'user_comments' },
+            { title: 'Bookmarks', route: 'user_profile' },
+            { title: 'Subscribe', route: 'user_profile' },
+            { title: 'Followers', route: 'user_profile' },
+        ] %}
+        <div class="tabs mb-4">
+        {% for item in menu %}
+            <a href="{{ path(item.route, {email:user.username}) }}"
+               class="tab__item {{ item.route == app.request.attributes.get('_route') ? 'active' : '' }}"
+            >{{ item.title }}</a>
+        {% endfor %}
+        </div>
+        {% block user_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

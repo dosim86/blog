@@ -10,7 +10,7 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
             <div class="container">
                 <a class="navbar-brand font-weight-bold" href="{{ path('homepage') }}">Blog</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,10 @@
                                     {{ app.user.firstname }}
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="{{ path('app_account') }}">Profile</a>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                    <a class="dropdown-item" href="{{ path('easyadmin') }}">Admin panel</a>
+                                    {% endif %}
+                                    <a class="dropdown-item" href="{{ path('user_profile', {email:app.user.username}) }}">Profile</a>
                                     <span class="dropdown-divider"></span>
                                     <a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a>
                                 </div>
@@ -67,16 +70,7 @@
             <script src="{{ asset('build/runtime.js') }}"></script>
             <script src="{{ asset('build/vendor.js') }}"></script>
             <script src="{{ asset('build/js/app.js') }}"></script>
-            {% if app.session.flashbag.has('success') or app.session.flashbag.has('error') %}
-            <script>
-                {% for flash in app.session.flashbag.get('success') %}
-                    notify('success', '{{ flash }}');
-                {% endfor %}
-                {% for flash in app.session.flashbag.get('error') %}
-                    notify('error', '{{ flash }}');
-                {% endfor %}
-            </script>
-            {% endif %}
+            {{ include('layout/flashes.html.twig') }}
         {% endblock %}
     </body>
 </html>
