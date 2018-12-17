@@ -41,6 +41,7 @@ class ArticleController extends AbstractController
     public function add(Request $request)
     {
         $article = new Article();
+        $article->setAuthor($this->getUser());
 
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);

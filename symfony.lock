@@ -92,6 +92,15 @@
             "ref": "66070ea553247b0cd5275e21d0fe5399a25f40be"
         }
     },
+    "friendsofsymfony/ckeditor-bundle": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "8eb1cd0962ded6a6d6e1e5a9b6d3e888f9f94ff6"
+        }
+    },
     "fzaninotto/faker": {
         "version": "v1.8.0"
     },
@@ -187,6 +196,9 @@
     },
     "symfony/event-dispatcher": {
         "version": "v4.2.0"
+    },
+    "symfony/expression-language": {
+        "version": "v4.2.1"
     },
     "symfony/filesystem": {
         "version": "v4.2.0"

@@ -25,8 +25,10 @@ class ArticleRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('a')
             ->addSelect('c')
             ->addSelect('la')
+            ->addSelect('au')
             ->leftJoin('a.likes', 'la')
             ->leftJoin('a.comments', 'c')
+            ->leftJoin('a.author', 'au')
             ->orderBy('a.createdAt', 'DESC');
 
         if ($q) {
