@@ -23,7 +23,7 @@ framework:
         #prefix_seed: your_vendor_name/app_name
 
         # The app cache caches to the filesystem by default.
-        # Other options include:
+        # Other options _include:
 
         # Redis
         #app: cache.adapter.redis

@@ -1,11 +1,11 @@
-{% extends 'user/layout.html.twig' %}
+{% extends 'user/_layout.html.twig' %}
 
 {% block title %}User articles{% endblock %}
 
 {% block user_content %}
     <div class="row">
         <div class="col">
-            {% include('article/include/article_list.html.twig') %}
+            {% include('article/_include/_article_list.html.twig') %}
         </div>
     </div>
 {% endblock %}
