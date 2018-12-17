@@ -60,11 +60,27 @@ class User implements UserInterface
      */
     private $bookmarkArticles;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="subscribs")
+     * @ORM\JoinTable(name="follower_subscribe",
+     *      joinColumns={@ORM\JoinColumn(name="subscribe_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="follower_id", referencedColumnName="id")}
+     *      )
+     */
+    private $followers;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="followers")
+     */
+    private $subscribs;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->bookmarkArticles = new ArrayCollection();
+        $this->followers = new ArrayCollection();
+        $this->subscribs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -257,6 +273,60 @@ class User implements UserInterface
             if ($bookmarkArticle->getUser() === $this) {
                 $bookmarkArticle->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getFollowers(): Collection
+    {
+        return $this->followers;
+    }
+
+    public function addFollower(self $follower): self
+    {
+        if (!$this->followers->contains($follower)) {
+            $this->followers[] = $follower;
+        }
+
+        return $this;
+    }
+
+    public function removeFollower(self $follower): self
+    {
+        if ($this->followers->contains($follower)) {
+            $this->followers->removeElement($follower);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getSubscribs(): Collection
+    {
+        return $this->subscribs;
+    }
+
+    public function addSubscrib(self $subscrib): self
+    {
+        if (!$this->subscribs->contains($subscrib)) {
+            $this->subscribs[] = $subscrib;
+            $subscrib->addFollower($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubscrib(self $subscrib): self
+    {
+        if ($this->subscribs->contains($subscrib)) {
+            $this->subscribs->removeElement($subscrib);
+            $subscrib->removeFollower($this);
         }
 
         return $this;

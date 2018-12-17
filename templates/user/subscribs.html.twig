@@ -1,0 +1,28 @@
+{% extends 'user/layout.html.twig' %}
+
+{% block title %}User subscribs{% endblock %}
+
+{% block user_content %}
+<div class="row">
+    {% for subscribe in subscribs %}
+        <div class="col-6 unsubscribe-item">
+            <div class="bg-light p-3 mb-3 rounded">
+                <div class="clearfix">
+                    <span class="float-left">
+                        {{ subscribe.firstname }} <a href="{{ path('user_profile', {email:subscribe.username}) }}">@{{ subscribe.username }}</a>
+                        <span class="rank-rect text-secondary"><i class="fas fa-star"></i> 0</span>
+                    </span>
+                    <div class="float-right">
+                    {% if is_granted('UNSUBSCRIBE', subscribe) %}
+                        <a href="{{ path('user_unsubscribe', {email:subscribe.email}) }}" class="btn btn-sm btn-outline-secondary js-unsubscribe">Unsubscribe <i class="fas fa-bell"></i></a>
+                    {% endif %}
+                    </div>
+                </div>
+                <span class="text-info small">Last activity 1 minute ago</span>
+            </div>
+        </div>
+    {% else %}
+        <h6 class="col pb-4">No subscribs</h6>
+    {% endfor %}
+</div>
+{% endblock %}

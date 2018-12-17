@@ -9,9 +9,15 @@
             <div class="pr-3">
                 <img class="img-fluid rounded-circle" src="//i.pravatar.cc/53">
             </div>
-            <div class="w-100">
-                {{ user.firstname }} <a href="{{ path('user_profile', {email:user.username}) }}">@{{ user.username }}</a><br>
+            <div class="w-75">
+                {{ user.firstname }} <a href="{{ path('user_profile', {email:user.username}) }}">@{{ user.username }}</a>
+                <span class="rank-rect text-secondary"><i class="fas fa-star"></i> 0</span><br>
                 <span class="text-info small">Last activity 1 minute ago</span>
+            </div>
+            <div class="pl-3 w-25 text-info">
+            {% if is_granted('ROLE_USER') and app.user != user %}
+                <a href="{{ path('user_subscribe', {email:user.email}) }}" class="float-right btn btn-sm btn-outline-info js-subscribe">Subscribe <i class="fas fa-bell"></i></a>
+            {% endif %}
             </div>
         </div>
         {% set menu = [
@@ -19,8 +25,8 @@
             { title: 'Articles', route: 'user_articles' },
             { title: 'Comments', route: 'user_comments' },
             { title: 'Bookmarks', route: 'user_bookmarks' },
-            { title: 'Subscribe', route: 'user_profile' },
-            { title: 'Followers', route: 'user_profile' },
+            { title: 'Subscribe', route: 'user_subscribs' },
+            { title: 'Followers', route: 'user_followers' },
         ] %}
         <div class="tabs mb-4">
         {% for item in menu %}
@@ -32,4 +38,31 @@
         {% block user_content %}{% endblock %}
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $('.js-subscribe').on('click', function (e) {
+                e.preventDefault();
+
+                let $this = $(this);
+                $.get($this.attr('href')).then(function(data) {
+                    notify(data.type, data.message);
+                });
+            });
+            $('.js-unsubscribe').on('click', function (e) {
+                e.preventDefault();
+
+                let $this = $(this);
+                $.get($this.attr('href')).then(function(data) {
+                    if (data.type === 'success') {
+                        $this.closest('.unsubscribe-item').remove();
+                    }
+                    notify(data.type, data.message);
+                });
+            });
+        });
+    </script>
 {% endblock %}

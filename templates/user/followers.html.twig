@@ -1,0 +1,19 @@
+{% extends 'user/layout.html.twig' %}
+
+{% block title %}User subscribs{% endblock %}
+
+{% block user_content %}
+    <div class="row">
+        {% for follower in followers %}
+            <div class="col-6">
+                <div class="bg-light p-3 mb-3 rounded">
+                    {{ follower.firstname }} <a href="{{ path('user_profile', {email:follower.username}) }}">@{{ follower.username }}</a>
+                    <span class="rank-rect text-secondary"><i class="fas fa-star"></i> 0</span><br>
+                    <span class="text-info small">Last activity 1 minute ago</span>
+                </div>
+            </div>
+        {% else %}
+            <h6 class="col pb-4">No followers</h6>
+        {% endfor %}
+    </div>
+{% endblock %}

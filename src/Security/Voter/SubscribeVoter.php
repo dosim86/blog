@@ -2,15 +2,15 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Article;
+use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class ArticleVoter extends Voter
+class SubscribeVoter extends Voter
 {
-    const EDIT = 'EDIT';
+    const UNSUBSCRIBE = 'UNSUBSCRIBE';
 
     private $security;
 
@@ -21,26 +21,21 @@ class ArticleVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, [self::EDIT])
-            && $subject instanceof Article;
+        return in_array($attribute, [self::UNSUBSCRIBE])
+            && $subject instanceof User;
     }
 
-    protected function voteOnAttribute($attribute, $article, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $unsubscribeUser, TokenInterface $token)
     {
+        /** @var User $user */
         $user = $token->getUser();
         if (!$user instanceof UserInterface) {
             return false;
         }
 
         switch ($attribute) {
-            case self::EDIT:
-                if ($article->getAuthor() === $user) {
-                    return true;
-                }
-                if ($this->security->isGranted('ROLE_ADMIN_ARTICLE')) {
-                    return true;
-                }
-                if ($this->security->isGranted('ROLE_ADMIN')) {
+            case self::UNSUBSCRIBE:
+                if ($user->getSubscribs()->contains($unsubscribeUser)) {
                     return true;
                 }
                 break;
