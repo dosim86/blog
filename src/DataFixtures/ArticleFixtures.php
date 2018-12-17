@@ -12,7 +12,7 @@ class ArticleFixtures extends BaseFixture implements DependentFixtureInterface
 
     public function loadData(ObjectManager $manager)
     {
-        $this->createMany(30, self::REF_NAME, function($index) use ($manager) {
+        $this->createMany(30, self::REF_NAME, function ($index) use ($manager) {
             $article = new Article();
             $article->setTitle($this->faker->sentence);
             $article->setContent($this->faker->realText(2000));

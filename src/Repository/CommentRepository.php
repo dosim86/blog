@@ -24,6 +24,9 @@ class CommentRepository extends ServiceEntityRepository
 
     public function getUserComments(User $user)
     {
-        return $this->findBy(['owner' => $user]);
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.owner = :c_owner')
+            ->setParameter('c_owner', $user)
+            ;
     }
 }

@@ -55,10 +55,16 @@ class User implements UserInterface
      */
     private $aboutMe;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BookmarkArticle", mappedBy="user", orphanRemoval=true)
+     */
+    private $bookmarkArticles;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->bookmarkArticles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -221,6 +227,37 @@ class User implements UserInterface
     public function setAboutMe(?string $aboutMe): self
     {
         $this->aboutMe = $aboutMe;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BookmarkArticle[]
+     */
+    public function getBookmarkArticles(): Collection
+    {
+        return $this->bookmarkArticles;
+    }
+
+    public function addBookmarkArticle(BookmarkArticle $bookmarkArticle): self
+    {
+        if (!$this->bookmarkArticles->contains($bookmarkArticle)) {
+            $this->bookmarkArticles[] = $bookmarkArticle;
+            $bookmarkArticle->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBookmarkArticle(BookmarkArticle $bookmarkArticle): self
+    {
+        if ($this->bookmarkArticles->contains($bookmarkArticle)) {
+            $this->bookmarkArticles->removeElement($bookmarkArticle);
+            // set the owning side to null (unless already changed)
+            if ($bookmarkArticle->getUser() === $this) {
+                $bookmarkArticle->setUser(null);
+            }
+        }
 
         return $this;
     }

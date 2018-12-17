@@ -55,10 +55,16 @@ class Article implements LikeableInterface
      */
     private $likes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BookmarkArticle", mappedBy="article", orphanRemoval=true)
+     */
+    private $bookmarkArticles;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
+        $this->bookmarkArticles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -174,5 +180,36 @@ class Article implements LikeableInterface
             if ($like->getValue() === -1) $dislikes++;
         }
         return $dislikes;
+    }
+
+    /**
+     * @return Collection|BookmarkArticle[]
+     */
+    public function getBookmarkArticles(): Collection
+    {
+        return $this->bookmarkArticles;
+    }
+
+    public function addBookmarkArticle(BookmarkArticle $bookmarkArticle): self
+    {
+        if (!$this->bookmarkArticles->contains($bookmarkArticle)) {
+            $this->bookmarkArticles[] = $bookmarkArticle;
+            $bookmarkArticle->setArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBookmarkArticle(BookmarkArticle $bookmarkArticle): self
+    {
+        if ($this->bookmarkArticles->contains($bookmarkArticle)) {
+            $this->bookmarkArticles->removeElement($bookmarkArticle);
+            // set the owning side to null (unless already changed)
+            if ($bookmarkArticle->getArticle() === $this) {
+                $bookmarkArticle->setArticle(null);
+            }
+        }
+
+        return $this;
     }
 }

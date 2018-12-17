@@ -13,15 +13,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class CommentController extends AbstractController
 {
     /**
-     * @IsGranted("ROLE_USER")
-     * @Route("/comment/{id}/like", name="comment_like")
+     * @Route("/api/comment/{id}/like", name="comment_like")
      */
-    public function like(Comment $comment, Request $request, LikeManager $likeManager)
+    public function like(Comment $comment, LikeManager $likeManager)
     {
-        if (!$request->isXmlHttpRequest()) {
-            throw $this->createNotFoundException();
-        }
-
         try {
             $likeManager->like($comment, $this->getUser());
             $data = $likeManager->getCountAsValue($comment);
@@ -40,15 +35,10 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_USER")
-     * @Route("/comment/{id}/dislike", name="comment_dislike")
+     * @Route("/api/comment/{id}/dislike", name="comment_dislike")
      */
-    public function dislike(Comment $comment, Request $request, LikeManager $likeManager)
+    public function dislike(Comment $comment, LikeManager $likeManager)
     {
-        if (!$request->isXmlHttpRequest()) {
-            throw $this->createNotFoundException();
-        }
-
         try {
             $likeManager->dislike($comment, $this->getUser());
             $data = $likeManager->getCountAsValue($comment);

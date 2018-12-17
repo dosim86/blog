@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserProfileType;
 use App\Repository\ArticleRepository;
+use App\Repository\BookmarkArticleRepository;
 use App\Repository\CommentRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -76,6 +77,21 @@ class UserController extends AbstractController
         $pagination = $paginator->paginate($qb, $page, 10);
 
         return $this->render('user/comments.html.twig', [
+            'user' => $user,
+            'pagination' => $pagination,
+        ]);
+    }
+
+    /**
+     * @Route("/{email}/bookmarks", name="user_bookmarks")
+     */
+    public function bookmarks(User $user, Request $request, BookmarkArticleRepository $rep, PaginatorInterface $paginator)
+    {
+        $page = $request->query->getInt('page', 1);
+        $qb = $rep->getArticlesFromBookmarkByUser($user);
+        $pagination = $paginator->paginate($qb, $page, 10);
+
+        return $this->render('user/bookmarks.html.twig', [
             'user' => $user,
             'pagination' => $pagination,
         ]);

@@ -3,13 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\BookmarkArticle;
 use App\Entity\Comment;
-use App\Entity\User;
 use App\Exception\Like\FailLikeException;
 use App\Form\ArticleType;
 use App\Form\CommentType;
 use App\Repository\ArticleRepository;
 use App\Service\Like\LikeManager;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -115,15 +116,10 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_USER")
-     * @Route("/article/{id}/like", name="article_like")
+     * @Route("/api/article/{id}/like", name="article_like")
      */
-    public function like(Article $article, Request $request, LikeManager $likeManager)
+    public function like(Article $article, LikeManager $likeManager)
     {
-        if (!$request->isXmlHttpRequest()) {
-            throw $this->createNotFoundException();
-        }
-
         try {
             $likeManager->like($article, $this->getUser());
             $data = $likeManager->getCountAsValue($article);
@@ -142,15 +138,10 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_USER")
-     * @Route("/article/{id}/dislike", name="article_dislike")
+     * @Route("/api/article/{id}/dislike", name="article_dislike")
      */
-    public function dislike(Article $article, Request $request, LikeManager $likeManager)
+    public function dislike(Article $article, LikeManager $likeManager)
     {
-        if (!$request->isXmlHttpRequest()) {
-            throw $this->createNotFoundException();
-        }
-
         try {
             $likeManager->dislike($article, $this->getUser());
             $data = $likeManager->getCountAsValue($article);
@@ -161,6 +152,41 @@ class ArticleController extends AbstractController
                 'data' => $data,
             ]);
         } catch (FailLikeException $e) {
+            return $this->json([
+                'type' => 'error',
+                'message' => 'Sorry, there is a system fault'
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/api/article/{id}/bookmark", name="article_bookmark")
+     */
+    public function bookmark(Article $article)
+    {
+        try {
+            $bookmark = new BookmarkArticle();
+            $bookmark->setUser($this->getUser());
+            $bookmark->setArticle($article);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($bookmark);
+            $em->flush();
+
+            $repository = $em->getRepository(BookmarkArticle::class);
+            $bookmarkCount = $repository->getBookmarkCountForArticle($article);
+
+            return $this->json([
+                'type' => 'success',
+                'message' => 'Article is added to bookmark',
+                'data' => $bookmarkCount,
+            ]);
+        } catch (UniqueConstraintViolationException $e) {
+            return $this->json([
+                'type' => 'info',
+                'message' => 'You already added the article'
+            ]);
+        } catch (\Exception $e) {
             return $this->json([
                 'type' => 'error',
                 'message' => 'Sorry, there is a system fault'

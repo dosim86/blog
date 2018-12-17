@@ -35,7 +35,8 @@ abstract class BaseFixture extends Fixture
         }
     }
 
-    protected function getRandomReference(string $refName) {
+    protected function getRandomReference(string $refName)
+    {
         if (!isset($this->referencesIndex[$refName])) {
             $this->referencesIndex[$refName] = [];
             foreach ($this->referenceRepository->getReferences() as $key => $ref) {

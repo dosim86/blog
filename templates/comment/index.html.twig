@@ -4,16 +4,22 @@
             <h4 class="float-left text-primary">Comments</h4>
             <h6 class="float-right text-muted">{{ comments|length }} comments</h6>
         </div>
-        {{ form_start(commentForm) }}
-        <div class="d-flex">
-            <div class="w-100">
-                {{ form_widget(commentForm) }}
+        {% if is_granted('ROLE_USER') %}
+            {{ form_start(commentForm) }}
+            <div class="d-flex">
+                <div class="w-100">
+                    {{ form_widget(commentForm) }}
+                </div>
+                <div class="pl-2">
+                    <button type="submit" class="btn btn-outline-success float-right d-block"><i class="fas fa-plus-circle"></i> Send</button>
+                </div>
             </div>
-            <div class="pl-2">
-                <button type="submit" class="btn btn-outline-success float-right d-block"><i class="fas fa-plus-circle"></i> Send</button>
-            </div>
-        </div>
-        {{ form_end(commentForm) }}
+            {{ form_end(commentForm) }}
+        {% else %}
+            <p class="bg-light rounded p-4 text-center text-info">
+                Please <a href="{{ path('app_login') }}">sign in</a> or <a href="{{ path('app_register') }}">register</a> for commenting
+            </p>
+        {% endif %}
     </div>
     <div class="comments__list">
         {% for comment in comments %}
@@ -27,6 +33,7 @@
                         <p class="float-right text-info small">{{ comment.createdAt|ago }}</p>
                     </div>
                     <p class="text-success">{{ comment.text }}</p>
+                    {% if is_granted('ROLE_USER') %}
                     <div class="clearfix">
                         <div class="float-left">
                             <div class="btn-group btn-group-sm js-like">
@@ -38,6 +45,7 @@
                             <a href="#" class="btn btn-sm btn-outline-info px-4"><i class="fas fa-reply"></i></a>
                         </div>
                     </div>
+                    {% endif %}
                     <hr>
                 </div>
             </div>
