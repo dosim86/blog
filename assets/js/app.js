@@ -1,9 +1,10 @@
 let toastr = require('toastr/toastr.js');
-
-global.$ = global.jQuery = $;
+let Swal = require('sweetalert2/dist/sweetalert2.min.js');
 
 $('.dropdown-toggle').dropdown();
 
+global.$ = global.jQuery = $;
+global.Swal = Swal;
 global.notify = (function(type, message){
     if (type.toLowerCase() === 'error') {
         toastr.error(message, 'Error');

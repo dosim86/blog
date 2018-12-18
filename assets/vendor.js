@@ -8,3 +8,5 @@ require('@fortawesome/fontawesome-free/js/all.js');
 
 // global.toastr = require('toastr/toastr.js');
 require('toastr/toastr.scss');
+
+require('sweetalert2/dist/sweetalert2.min.css');

@@ -6,7 +6,7 @@
                     {{ article.title }}
                 </a>
             </h3>
-            <p>{{ article.content|truncate(400) }}</p>
+            <p>{{ article.content|truncate(400)|raw }}</p>
             <div class="clearfix">
                 <div class="float-left">
                     <a class="btn btn-sm btn-outline-info" href="{{ path('article_show', {slug:article.slug}) }}" role="button">Read more&nbsp;&nbsp;<i class="fa fa-angle-double-right"></i></a>
