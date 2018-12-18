@@ -6,6 +6,9 @@
                     {{ article.title }}
                 </a>
             </h3>
+            <p class="text-info small">
+                <span class="border px-1 rounded">{{ article.tags|join('</span> <span class="border px-1 rounded">')|raw }}</span>
+            </p>
             <p>{{ article.content|truncate(400)|raw }}</p>
             <div class="clearfix">
                 <div class="float-left">
