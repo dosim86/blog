@@ -65,6 +65,11 @@ class Article implements LikeableInterface
      */
     private $tags;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="articles")
+     */
+    private $category;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -241,6 +246,18 @@ class Article implements LikeableInterface
         if ($this->tags->contains($tag)) {
             $this->tags->removeElement($tag);
         }
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }

@@ -17,6 +17,7 @@ class ArticleFixtures extends BaseFixture implements DependentFixtureInterface
             $article->setTitle($this->faker->sentence);
             $article->setContent($this->faker->realText(2000));
             $article->setAuthor($this->getRandomReference(UserFixture::REF_NAME));
+            $article->setCategory($this->getRandomReference(CategoryFixture::REF_NAME));
             $article->addTag($this->getRandomReference(TagFixture::REF_NAME));
             $article->addTag($this->getRandomReference(TagFixture::REF_NAME));
             $article->addTag($this->getRandomReference(TagFixture::REF_NAME));
@@ -31,8 +32,9 @@ class ArticleFixtures extends BaseFixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            UserFixture::class,
             TagFixture::class,
+            UserFixture::class,
+            CategoryFixture::class,
         ];
     }
 }

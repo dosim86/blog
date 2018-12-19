@@ -24,10 +24,10 @@
                         </ul>
                     </div>
                 </div>
+                <p>{{ article.content|raw }}</p>
                 <p class="text-info small">
                     <span class="border px-1 rounded">{{ article.tags|join('</span> <span class="border px-1 rounded">')|raw }}</span>
                 </p>
-                <p>{{ article.content|raw }}</p>
                 {% if is_granted('ROLE_USER') %}
                 <div class="d-flex justify-content-center">
                     <div class="btn-group btn-group-toggle js-like">
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 {% endif %}
-                <div class="pt-3">
+                <div class="pt-2">
                     {% include 'comment/index.html.twig' with {comments: article.comments, commentForm: commentForm} %}
                 </div>
             </div>
