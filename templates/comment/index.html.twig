@@ -25,7 +25,7 @@
         {% for comment in comments %}
             <div class="d-flex">
                 <div class="pr-3">
-                    <img class="img-fluid rounded-circle" src="//i.pravatar.cc/5{{ random(5) }}">
+                    <img class="img-fluid rounded-circle" style="width: 50px" src="{{ comment.owner.avatarPath }}">
                 </div>
                 <div class="w-100">
                     <div class="clearfix">

@@ -75,6 +75,11 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
+        /** @var User $user */
+        if ($user->isDisabled()) {
+            throw new CustomUserMessageAuthenticationException('Account is disable.');
+        }
+
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
     }
 

@@ -74,6 +74,11 @@ class User implements UserInterface
      */
     private $subscribs;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $disabled;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
@@ -330,5 +335,22 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    public function isDisabled(): ?bool
+    {
+        return $this->disabled;
+    }
+
+    public function setDisabled(bool $disabled): self
+    {
+        $this->disabled = $disabled;
+
+        return $this;
+    }
+
+    public function getAvatarPath()
+    {
+        return '//i.pravatar.cc/40';
     }
 }

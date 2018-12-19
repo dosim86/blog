@@ -1,12 +1,70 @@
 easy_admin:
-    site_name: 'Admin Panel'
+    disabled_actions: ['delete']
+    site_name: '<span class="text-black">Blog <em>Admin</em></span>'
     design:
         menu:
-            - { label: 'Homepage', route: 'homepage' }
-            - User
-            - Article
-    search:
-        title: 'ssdf'
+            - { label: 'Home', route: 'homepage', icon: 'home', target: '_blank' }
+            - { entity: 'Comment', icon: 'comments', params: { sortField: 'createdAt' }, default: true }
+            - { entity: 'User', icon: 'users' }
+            - { label: 'Configuration' }
+            - { entity: 'Category', icon: 'columns' }
+            - { entity: 'Tag', icon: 'tags' }
+        brand_color: '#dee2e9'
+        assets:
+            css:
+                - 'build/css/custom_admin.css'
+    list:
+        title: '%%entity_label%% list'
+        actions:
+            - { name: 'new', label: 'Add', icon: 'plus-circle' }
+            - { name: 'edit', label: false, icon: 'edit fa-lg' }
+            - -delete
+
+    edit:
+        actions: ['-delete']
+    formats:
+        date:     'd.m.Y'
+        time:     'H:i'
+        datetime: 'd.m.Y H:i'
     entities:
-        - App\Entity\Article
-        - App\Entity\User
+        Comment:
+            class: App\Entity\Comment
+            list:
+                sort: ['createdAt', 'DESC']
+                actions: ['-edit']
+                fields:
+                    - { property: 'createdAt' }
+                    - { property: 'owner', label: 'Commentor', template: 'list/commentor_link.html.twig', sortable: false }
+                    - { property: 'text', sortable: false }
+                    - { property: 'likes' }
+                    - { property: 'dislikes' }
+                    - { property: 'blocked', sortable: false, label: 'Blocked ?' }
+                    - { property: 'article', template: 'list/article_link.html.twig', sortable: false }
+        Category:
+            class: App\Entity\Category
+            list:
+                fields:
+                    - { property: 'name' }
+                    - { property: 'articles', label: 'Article count', css_class: 'count-entity-bg' }
+            form:
+                fields: ['name']
+        Tag:
+            class: App\Entity\Tag
+            list:
+                fields:
+                    - { property: 'name' }
+                    - { property: 'articles', label: 'Article count', css_class: 'count-entity-bg' }
+            form:
+                fields: ['name']
+        User:
+            class: App\Entity\User
+            list:
+                actions: ['-edit']
+                fields:
+                    - { property: 'id' }
+                    - { property: 'email', sortable: false, type: email }
+                    - { property: 'firstname', sortable: false }
+                    - { property: 'disabled', label: 'Disabled ?' }
+                    - { property: 'articles', label: 'Article count', css_class: 'count-entity-bg' }
+                    - { property: 'comments', label: 'Comments count', css_class: 'count-entity-bg' }
+                    - { property: 'roles', template: 'list/roles.html.twig' }

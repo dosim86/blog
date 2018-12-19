@@ -1,0 +1,3 @@
+{% for role in value %}
+    <span class="label label-{{ role == 'ROLE_ADMIN' ? 'danger' : 'default' }}">{{ role }}</span>
+{% endfor %}

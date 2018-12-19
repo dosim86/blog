@@ -9,7 +9,7 @@
                 <h1><span class="font-weight-bold">{{ article.title }}</span></h1>
                 <div class="clearfix py-2">
                     <div class="float-left">
-                        <img class="img-fluid rounded-circle" src="//i.pravatar.cc/40">
+                        <img class="img-fluid rounded-circle" src="{{ article.author.avatarPath }}">
                         <a href="{{ path('user_profile', {email:article.author.email}) }}">{{ article.author.firstname }}</a>
                     </div>
                     <div class="float-right">

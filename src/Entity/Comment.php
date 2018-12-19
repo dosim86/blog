@@ -48,6 +48,11 @@ class Comment implements LikeableInterface
      */
     private $likes;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $blocked;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -120,7 +125,9 @@ class Comment implements LikeableInterface
         $likes = 0;
         /** @var LikeComment $like */
         foreach ($this->likes as $like) {
-            if ($like->getValue() === 1) $likes++;
+            if ($like->getValue() === 1) {
+                $likes++;
+            }
         }
         return $likes;
     }
@@ -133,8 +140,27 @@ class Comment implements LikeableInterface
         $dislikes = 0;
         /** @var LikeComment $like */
         foreach ($this->likes as $like) {
-            if ($like->getValue() === -1) $dislikes++;
+            if ($like->getValue() === -1) {
+                $dislikes++;
+            }
         }
         return $dislikes;
+    }
+
+    public function __toString()
+    {
+        return $this->getText();
+    }
+
+    public function getBlocked(): ?bool
+    {
+        return $this->blocked;
+    }
+
+    public function setBlocked(bool $blocked): self
+    {
+        $this->blocked = $blocked;
+
+        return $this;
     }
 }
