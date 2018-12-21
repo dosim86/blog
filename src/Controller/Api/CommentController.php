@@ -1,19 +1,22 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use App\Entity\Comment;
+use App\Exception\Api\FailApiException;
 use App\Exception\Like\FailLikeException;
 use App\Service\Like\LikeManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/api/comment")
+ */
 class CommentController extends AbstractController
 {
     /**
-     * @Route("/api/comment/{id}/like", name="comment_like")
+     * @Route("/like/{id}", name="api_comment_like")
+     * @throws \Exception
      */
     public function like(Comment $comment, LikeManager $likeManager)
     {
@@ -27,15 +30,13 @@ class CommentController extends AbstractController
                 'data' => $data
             ]);
         } catch (FailLikeException $e) {
-            return $this->json([
-                'type' => 'error',
-                'message' => 'Sorry, there is a system fault'
-            ]);
+            throw new FailApiException();
         }
     }
 
     /**
-     * @Route("/api/comment/{id}/dislike", name="comment_dislike")
+     * @Route("/dislike/{id}", name="api_comment_dislike")
+     * @throws \Exception
      */
     public function dislike(Comment $comment, LikeManager $likeManager)
     {
@@ -49,10 +50,7 @@ class CommentController extends AbstractController
                 'data' => $data
             ]);
         } catch (FailLikeException $e) {
-            return $this->json([
-                'type' => 'error',
-                'message' => 'Sorry, there is a system fault'
-            ]);
+            throw new FailApiException();
         }
     }
 }

@@ -19,20 +19,10 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active"><a class="nav-link" href="#">Authors <span class="sr-only">(current)</span></a></li>
-                        <li><a class="nav-link" href="#">Search</a></li>
                         {% if is_granted('ROLE_USER') %}
-                            <li class="nav-item"><a class="nav-link" href="{{ path('article_add') }}">New blog</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ path('article_add') }}">New article</a></li>
                         {% endif %}
                     </ul>
-                    <form class="form-inline my-2 my-lg-0" action="{{ path('article_index') }}">
-                        <div class="input-group mr-sm-2">
-                            <input type="text" class="form-control" placeholder="Search for..." name="q" value="{{ app.request.get('q') }}">
-                            <div class="input-group-append">
-                                <a class="btn btn-outline-info" href="{{ path('article_index') }}"><i class="fas fa-times"></i></a>
-                                <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
-                            </div>
-                        </div>
-                    </form>
                     <ul class="navbar-nav">
                         {% if is_granted('ROLE_USER') %}
                             <li class="nav-item dropdown mr-auto" style="margin-right: 75px;">

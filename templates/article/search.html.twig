@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme filter 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-8 card p-4">
+                {{ include('article/_include/_article_list.html.twig') }}
+            </div>
+            <div class="col-4 card p-4">
+                <button class="btn btn-light" data-toggle="collapse" data-target="#collapseFilter">
+                    <span class="text-info">Search articles</span>
+                </button>
+                <div class="collapse my-2 {{ filterCollapse }}" id="collapseFilter">
+                    {{ form_start(filter) }}
+                        {{ form_row(filter.query) }}
+                        {{ form_row(filter.queryfor) }}
+                        {{ form_row(filter.period) }}
+                        {{ form_row(filter.author) }}
+                        {{ form_row(filter.tags) }}
+                        {{ form_row(filter.category) }}
+                        <div class="row">
+                            <div class="col-6">
+                                {{ form_row(filter.reset) }}
+                            </div>
+                            <div class="col-6">
+                                {{ form_row(filter.search) }}
+                            </div>
+                        </div>
+                    {{ form_end(filter) }}
+                </div>
+                {% include '_include/_sidebar.html.twig' %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('#article_filter_tags').select2({
+            theme: 'bootstrap',
+            placeholder: 'Choose tags...'
+        });
+
+        $('#article_filter_author').select2({
+            theme: 'bootstrap',
+            ajax: {
+                url: '/api/author/list',
+                delay: 250, // wait 250 before the request
+                data: function (params) {
+                    return {
+                        q: params.term,
+                    };
+                },
+                processResults: function (resp) {
+                    return {
+                        results: resp.type === 'success' ? resp.data : []
+                    };
+                }
+            }
+        });
+    </script>
+{% endblock %}

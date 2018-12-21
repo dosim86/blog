@@ -3,9 +3,9 @@
 {% block title %}{{ article.title }}{% endblock %}
 
 {% block body %}
-    <div class="container card p-4">
+    <div class="container">
         <div class="row">
-            <div class="col-8">
+            <div class="col-8 card p-4">
                 <h1><span class="font-weight-bold">{{ article.title }}</span></h1>
                 <div class="clearfix py-2">
                     <div class="float-left">
@@ -18,7 +18,7 @@
                         {% endif %}
                         <ul class="icons-inline text-info small">
                             <li>{{ article.createdAt|date('H:i d.m.Y') }}</li>
-                            <li><a href="{{ path('article_bookmark', {id: article.id}) }}" class="text-info js-bookmark-article-btn {{ not is_granted('ROLE_USER') ? 'not-allowed' : '' }}"><i class="fas fa-bookmark"></i><span>0</span></a></li>
+                            <li><a href="{{ path('api_article_bookmark', {id: article.id}) }}" class="text-info js-bookmark-article-btn {{ not is_granted('ROLE_USER') ? 'not-allowed' : '' }}"><i class="fas fa-bookmark"></i><span>0</span></a></li>
                             <li><i class="fas fa-eye"></i><span>0</span></li>
                             <li><i class="fas fa-comment"></i><span>{{ article.comments|length }}</span></li>
                         </ul>
@@ -31,8 +31,8 @@
                 {% if is_granted('ROLE_USER') %}
                 <div class="d-flex justify-content-center">
                     <div class="btn-group btn-group-toggle js-like">
-                        <a href="{{ path('article_like', {id: article.id}) }}" class="btn btn-sm btn-outline-success js-like-btn" data-type="1"><i class="fas fa-thumbs-up"></i> <span>{{ article.likes }}</span></a>
-                        <a href="{{ path('article_dislike', {id: article.id}) }}" class="btn btn-sm btn-outline-danger js-like-btn" data-type="-1"><i class="fas fa-thumbs-down"></i> <span>{{ article.dislikes }}</span></a>
+                        <a href="{{ path('api_article_like', {id: article.id}) }}" class="btn btn-sm btn-outline-success js-like-btn" data-type="1"><i class="fas fa-thumbs-up"></i> <span>{{ article.likes }}</span></a>
+                        <a href="{{ path('api_article_dislike', {id: article.id}) }}" class="btn btn-sm btn-outline-danger js-like-btn" data-type="-1"><i class="fas fa-thumbs-down"></i> <span>{{ article.dislikes }}</span></a>
                     </div>
                 </div>
                 {% endif %}
@@ -40,7 +40,7 @@
                     {% include 'comment/index.html.twig' with {comments: article.comments, commentForm: commentForm} %}
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-4 card p-4">
                 {% include '_include/_sidebar.html.twig' %}
             </div>
         </div>
@@ -61,7 +61,7 @@
                     $dislike = $btnGroup.find('[data-type="-1"] span')
                 ;
 
-                $.get($this.attr('href')).then(function(data) {
+                appGet($this.attr('href')).then(function(data) {
                     if (data.type === 'success') {
                         $like.html(data.data.likes);
                         $dislike.html(data.data.dislikes);
@@ -78,7 +78,7 @@
                     $bookmarkValue = $this.find('span')
                 ;
 
-                $.get($this.attr('href')).then(function(data) {
+                appGet($this.attr('href')).then(function(data) {
                     if (data.type === 'success') {
                         $bookmarkValue.html(data.data);
                     }

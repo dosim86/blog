@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
@@ -7,7 +9,7 @@
         {% if form.vars.data.slug %}
             <a href="{{ path('article_show', {slug:form.vars.data.slug}) }}" class="btn btn-light">Back</a>
         {% else %}
-            <a href="{{ path('article_index') }}" class="btn btn-light">Back</a>
+            <a href="{{ path('article_list') }}" class="btn btn-light">Back</a>
         {% endif %}
         <hr>
         {{ form(form) }}

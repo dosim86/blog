@@ -29,7 +29,7 @@ class ArticleSubscriber implements EventSubscriber
     {
         $article = $args->getObject();
         if ($article instanceof Article) {
-            $article->setContent(Html::sanititzeJs($article->getContent()));
+            $article->setContent(Html::sanitizeJs($article->getContent()));
         }
     }
 }

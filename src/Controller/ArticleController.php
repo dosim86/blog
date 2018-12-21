@@ -3,17 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Article;
-use App\Entity\BookmarkArticle;
 use App\Entity\Comment;
-use App\Exception\Like\FailLikeException;
+use App\Form\Filter\ArticleFilter;
 use App\Form\ArticleType;
 use App\Form\CommentType;
 use App\Repository\ArticleRepository;
-use App\Service\Like\LikeManager;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -21,16 +19,30 @@ class ArticleController extends AbstractController
 {
     /**
      * @Route("/", name="homepage")
-     * @Route("/article", name="article_index")
+     * @Route("/article", name="article_list")
      */
-    public function index(Request $request, ArticleRepository $articleRepository, PaginatorInterface $paginator)
+    public function search(Request $request, ArticleRepository $articleRepository, PaginatorInterface $paginator)
     {
-        $page = $request->query->getInt('page', 1);
-        $qb = $articleRepository->getWithQueryBuilder($request->get('q'));
-        $pagination = $paginator->paginate($qb, $page, 10);
+        /** @var Form $filter */
+        $filter = $this->createForm(ArticleFilter::class);
+        $filter->handleRequest($request);
 
-        return $this->render('article/index.html.twig', [
-            'pagination' => $pagination
+        if ($filter->isSubmitted()) {
+            if ($filter->get('reset')->isClicked()) {
+                $filter = $this->createForm(ArticleFilter::class, null);
+            } else {
+                $collapse = 'show';
+            }
+        }
+
+        $page = $request->query->getInt('page', 1);
+        $qb = $articleRepository->searchArticles($filter->getData());
+        $pagination = $paginator->paginate($qb, $page, Article::ITEMS);
+
+        return $this->render('article/search.html.twig', [
+            'pagination' => $pagination,
+            'filter' => $filter->createView(),
+            'filterCollapse' => $collapse ?? ''
         ]);
     }
 
@@ -114,84 +126,5 @@ class ArticleController extends AbstractController
             'article' => $article,
             'commentForm' => $commentForm->createView()
         ]);
-    }
-
-    /**
-     * @Route("/api/article/{id}/like", name="article_like")
-     */
-    public function like(Article $article, LikeManager $likeManager)
-    {
-        try {
-            $likeManager->like($article, $this->getUser());
-            $data = $likeManager->getCountAsValue($article);
-
-            return $this->json([
-                'type' => 'success',
-                'message' => 'Article is liked',
-                'data' => $data,
-            ]);
-        } catch (FailLikeException $e) {
-            return $this->json([
-                'type' => 'error',
-                'message' => 'Sorry, there is a system fault'
-            ]);
-        }
-    }
-
-    /**
-     * @Route("/api/article/{id}/dislike", name="article_dislike")
-     */
-    public function dislike(Article $article, LikeManager $likeManager)
-    {
-        try {
-            $likeManager->dislike($article, $this->getUser());
-            $data = $likeManager->getCountAsValue($article);
-
-            return $this->json([
-                'type' => 'success',
-                'message' => 'Article is disliked',
-                'data' => $data,
-            ]);
-        } catch (FailLikeException $e) {
-            return $this->json([
-                'type' => 'error',
-                'message' => 'Sorry, there is a system fault'
-            ]);
-        }
-    }
-
-    /**
-     * @Route("/api/article/{id}/bookmark", name="article_bookmark")
-     */
-    public function bookmark(Article $article)
-    {
-        try {
-            $bookmark = new BookmarkArticle();
-            $bookmark->setUser($this->getUser());
-            $bookmark->setArticle($article);
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($bookmark);
-            $em->flush();
-
-            $repository = $em->getRepository(BookmarkArticle::class);
-            $bookmarkCount = $repository->getBookmarkCountForArticle($article);
-
-            return $this->json([
-                'type' => 'success',
-                'message' => 'Article is added to bookmark',
-                'data' => $bookmarkCount,
-            ]);
-        } catch (UniqueConstraintViolationException $e) {
-            return $this->json([
-                'type' => 'info',
-                'message' => 'You already added the article'
-            ]);
-        } catch (\Exception $e) {
-            return $this->json([
-                'type' => 'error',
-                'message' => 'Sorry, there is a system fault'
-            ]);
-        }
     }
 }

@@ -14,6 +14,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  */
 class Article implements LikeableInterface
 {
+    const ITEMS = 10;
+
     use TimestampableEntity;
 
     /**

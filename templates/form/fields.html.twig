@@ -1,0 +1,18 @@
+{%- block iconbtn_widget -%}
+    {%- set type = type|default('submit') -%}
+
+    {%- if label is empty -%}
+        {%- if label_format is not empty -%}
+            {% set label = label_format|replace({
+                '%name%': name,
+                '%id%': id,
+            }) %}
+        {%- else -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+    {%- endif -%}
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
+        <i class="fas fa-envelope"></i>
+        {{ label|trans({}, translation_domain) }}
+    </button>
+{%- endblock iconbtn_widget -%}

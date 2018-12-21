@@ -12,6 +12,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    const AUTHOR_ITEM = 10;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

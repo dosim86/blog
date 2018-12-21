@@ -22,6 +22,8 @@
   },
   "dependencies": {
     "fontawesome": "^4.7.2",
+    "select2": "4.0.1",
+    "select2-bootstrap-theme": "^0.1.0-beta.10",
     "toastr": "^2.1.4"
   }
 }
