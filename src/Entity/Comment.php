@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Service\Like\LikeableInterface;
+use App\Service\Like\Traits\LikeDislikeTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -12,6 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Comment implements LikeableInterface
 {
+    use LikeDislikeTrait;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -42,11 +45,6 @@ class Comment implements LikeableInterface
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\LikeComment", mappedBy="target", orphanRemoval=true)
-     */
-    private $likes;
 
     /**
      * @ORM\Column(type="boolean")
@@ -115,36 +113,6 @@ class Comment implements LikeableInterface
     public static function getLikeClass()
     {
         return LikeComment::class;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLikes()
-    {
-        $likes = 0;
-        /** @var LikeComment $like */
-        foreach ($this->likes as $like) {
-            if ($like->getValue() === 1) {
-                $likes++;
-            }
-        }
-        return $likes;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDislikes()
-    {
-        $dislikes = 0;
-        /** @var LikeComment $like */
-        foreach ($this->likes as $like) {
-            if ($like->getValue() === -1) {
-                $dislikes++;
-            }
-        }
-        return $dislikes;
     }
 
     public function __toString()

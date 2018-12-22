@@ -22,7 +22,7 @@ class CommentController extends AbstractController
     {
         try {
             $likeManager->like($comment, $this->getUser());
-            $data = $likeManager->getCountAsValue($comment);
+            $data = $likeManager->getFullSeparatedCount($comment);
 
             return $this->json([
                 'type' => 'success',
@@ -42,7 +42,7 @@ class CommentController extends AbstractController
     {
         try {
             $likeManager->dislike($comment, $this->getUser());
-            $data = $likeManager->getCountAsValue($comment);
+            $data = $likeManager->getFullSeparatedCount($comment);
 
             return $this->json([
                 'type' => 'success',

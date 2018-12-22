@@ -90,9 +90,7 @@ class ArticleRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('a')
             ->addSelect('c')
             ->addSelect('t')
-            ->addSelect('la')
             ->addSelect('au')
-            ->leftJoin('a.likes', 'la')
             ->leftJoin('a.comments', 'c')
             ->leftJoin('a.author', 'au')
             ->leftJoin('a.tags', 't')
@@ -106,8 +104,6 @@ class ArticleRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('a')
             ->addSelect('c')
-            ->addSelect('la')
-            ->leftJoin('a.likes', 'la')
             ->leftJoin('a.comments', 'c')
             ->orderBy('a.createdAt', 'DESC');
 
@@ -129,12 +125,8 @@ class ArticleRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->addSelect('c')
             ->addSelect('o')
-            ->addSelect('la')
-            ->addSelect('lc')
             ->leftJoin('a.comments', 'c')
             ->leftJoin('c.owner', 'o')
-            ->leftJoin('a.likes', 'la')
-            ->leftJoin('c.likes', 'lc')
             ->andWhere('a.slug = :slug')
             ->setParameter('slug', $slug)
             ->getQuery()

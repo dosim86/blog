@@ -82,7 +82,7 @@ class LikeManager
      * @return array
      * @throws NotFoundLikeClassException
      */
-    public function getCountAsValue(LikeableInterface $entity): array
+    public function getFullSeparatedCount(LikeableInterface $entity): array
     {
         if (empty($likeClass = $entity::getLikeClass())) {
             throw new NotFoundLikeClassException();
@@ -90,7 +90,7 @@ class LikeManager
 
         /** @var LikeRepositoryInterface $likeRepository */
         $likeRepository = $this->em->getRepository($likeClass);
-        return $likeRepository->getCountAsValue($entity);
+        return $likeRepository->getFullSeparatedCount($entity);
     }
 
     /**
@@ -119,23 +119,38 @@ class LikeManager
         /** @var LikeInterface $like */
         $like = $this->em->getRepository($likeClass)->findOneBy([
             'userId' => $user->getId(),
-            'target' => $entity,
+            'targetId' => $entity->getId(),
         ]);
 
         try {
             if ($like) {
                 if ($like->getValue() === $action) {
                     $this->em->remove($like);
+
+                    $action === self::LIKE ? $entity->decLike() : $entity->decDislike();
+                    $this->em->persist($entity);
                 } else {
                     $like->setValue($action);
                     $this->em->persist($like);
+
+                    if ($action === self::LIKE) {
+                        $entity->decDislike();
+                        $entity->incLike();
+                    } else {
+                        $entity->decLike();
+                        $entity->incDislike();
+                    }
+                    $this->em->persist($entity);
                 }
             } else {
                 $like = new $likeClass;
                 $like->setUserId($user->getId());
-                $like->setTarget($entity);
+                $like->setTargetId($entity->getId());
                 $like->setValue($action);
                 $this->em->persist($like);
+
+                $action === self::LIKE ? $entity->incLike() : $entity->incDislike();
+                $this->em->persist($entity);
             }
             $this->em->flush();
         } catch (AppException $e) {

@@ -24,7 +24,7 @@ class ArticleController extends AbstractController
     {
         try {
             $likeManager->like($article, $this->getUser());
-            $data = $likeManager->getCountAsValue($article);
+            $data = $likeManager->getFullSeparatedCount($article);
 
             return $this->json([
                 'type' => 'success',
@@ -44,7 +44,7 @@ class ArticleController extends AbstractController
     {
         try {
             $likeManager->dislike($article, $this->getUser());
-            $data = $likeManager->getCountAsValue($article);
+            $data = $likeManager->getFullSeparatedCount($article);
 
             return $this->json([
                 'type' => 'success',

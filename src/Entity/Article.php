@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Service\Like\LikeableInterface;
+use App\Service\Like\Traits\LikeDislikeTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,7 +17,7 @@ class Article implements LikeableInterface
 {
     const ITEMS = 10;
 
-    use TimestampableEntity;
+    use TimestampableEntity, LikeDislikeTrait;
 
     /**
      * @ORM\Id()
@@ -53,11 +54,6 @@ class Article implements LikeableInterface
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\LikeArticle", mappedBy="target", orphanRemoval=true)
-     */
-    private $likes;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\BookmarkArticle", mappedBy="article", orphanRemoval=true)
      */
     private $bookmarkArticles;
@@ -75,7 +71,6 @@ class Article implements LikeableInterface
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->likes = new ArrayCollection();
         $this->bookmarkArticles = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
@@ -167,32 +162,6 @@ class Article implements LikeableInterface
     public static function getLikeClass()
     {
         return LikeArticle::class;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLikes()
-    {
-        $likes = 0;
-        /** @var LikeArticle $like */
-        foreach ($this->likes as $like) {
-            if ($like->getValue() === 1) $likes++;
-        }
-        return $likes;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDislikes()
-    {
-        $dislikes = 0;
-        /** @var LikeArticle $like */
-        foreach ($this->likes as $like) {
-            if ($like->getValue() === -1) $dislikes++;
-        }
-        return $dislikes;
     }
 
     /**

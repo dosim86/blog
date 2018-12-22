@@ -8,5 +8,5 @@ interface LikeRepositoryInterface
 
     public function getDislikeCountByEntity(LikeableInterface $entity): int;
 
-    public function getCountAsValue(LikeableInterface $entity): array;
+    public function getFullSeparatedCount(LikeableInterface $entity): array;
 }

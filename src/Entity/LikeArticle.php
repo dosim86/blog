@@ -2,44 +2,13 @@
 
 namespace App\Entity;
 
-use App\Service\Like\LikeableInterface;
-use App\Service\Like\LikeInterface;
-use App\Service\Like\Traits\ValueTrait;
+use App\Service\Like\AbstractLike;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\LikeArticleRepository")
  */
-class LikeArticle implements LikeInterface
+class LikeArticle extends AbstractLike
 {
-    use ValueTrait;
 
-    /**
-     * @ORM\Id()
-     * @ORM\Column(type="integer")
-     */
-    protected $userId;
-
-    /**
-     * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="App\Entity\Article", inversedBy="likes")
-     * @ORM\JoinColumn(name="target_id", referencedColumnName="id", nullable=false)
-     */
-    protected $target;
-
-    /**
-     * @param int $userId
-     */
-    public function setUserId(int $userId)
-    {
-        $this->userId = $userId;
-    }
-
-    /**
-     * @param LikeableInterface $target
-     */
-    public function setTarget(LikeableInterface $target)
-    {
-        $this->target = $target;
-    }
 }

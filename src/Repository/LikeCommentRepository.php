@@ -30,9 +30,9 @@ class LikeCommentRepository extends ServiceEntityRepository implements LikeRepos
     {
         return $this->createQueryBuilder('lc')
             ->select('COUNT(lc)')
-            ->andWhere('lc.target = :target')
+            ->andWhere('lc.targetId = :targetId')
             ->andWhere('lc.value = 1')
-            ->setParameter('target', $entity)
+            ->setParameter('target', $entity->getId())
             ->getQuery()
             ->getSingleScalarResult()
             ;
@@ -47,9 +47,9 @@ class LikeCommentRepository extends ServiceEntityRepository implements LikeRepos
     {
         return $this->createQueryBuilder('lc')
             ->select('COUNT(lc)')
-            ->andWhere('lc.target = :target')
+            ->andWhere('lc.target = :targetId')
             ->andWhere('lc.value = -1')
-            ->setParameter('target', $entity)
+            ->setParameter('targetId', $entity->getId())
             ->getQuery()
             ->getSingleScalarResult()
             ;
@@ -61,13 +61,13 @@ class LikeCommentRepository extends ServiceEntityRepository implements LikeRepos
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getCountAsValue(LikeableInterface $entity): array
+    public function getFullSeparatedCount(LikeableInterface $entity): array
     {
         return $this->createQueryBuilder('lc')
             ->select('IFNULL(SUM(IFELSE(lc.value=1,1,0)),0) as likes')
             ->addSelect('IFNULL(SUM(IFELSE(lc.value=-1,1,0)),0) as dislikes')
-            ->andWhere('lc.target = :target')
-            ->setParameter('target', $entity)
+            ->andWhere('lc.targetId = :targetId')
+            ->setParameter('targetId', $entity->getId())
             ->getQuery()
             ->getSingleResult()
         ;
