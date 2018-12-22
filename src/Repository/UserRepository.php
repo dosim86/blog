@@ -30,4 +30,16 @@ class UserRepository extends ServiceEntityRepository
             ->getArrayResult()
         ;
     }
+
+    public function getAuthors($authorName = '')
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        if ($authorName) {
+            $qb->andWhere('u.firstname LIKE :u_firstname')
+                ->setParameter('u_firstname', $authorName.'%');
+        }
+
+        return $qb;
+    }
 }

@@ -7,6 +7,7 @@ use App\Form\UserProfileType;
 use App\Repository\ArticleRepository;
 use App\Repository\BookmarkArticleRepository;
 use App\Repository\CommentRepository;
+use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +19,20 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UserController extends AbstractController
 {
+    /**
+     * @Route("/", name="user_list")
+     */
+    public function list(Request $request, UserRepository $userRepository, PaginatorInterface $paginator)
+    {
+        $page = $request->query->getInt('page', 1);
+        $qb = $userRepository->getAuthors();
+        $pagination = $paginator->paginate($qb, $page, User::AUTHOR_ITEM);
+
+        return $this->render('user/list.html.twig', [
+            'pagination' => $pagination,
+        ]);
+    }
+
     /**
      * @IsGranted("ROLE_USER")
      * @IsGranted("EDIT", subject="user")
@@ -45,7 +60,7 @@ class UserController extends AbstractController
     /**
      * @Route("/{email}", name="user_profile")
      */
-    public function index(User $user)
+    public function show(User $user)
     {
         return $this->render('user/profile.html.twig', [
             'user' => $user

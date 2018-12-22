@@ -16,7 +16,7 @@
             </div>
             <div class="pl-3 w-25 text-info">
             {% if is_granted('ROLE_USER') and app.user != user %}
-                <a href="{{ path('user_subscribe', {email:user.email}) }}" class="float-right btn btn-sm btn-outline-info js-subscribe">Subscribe <i class="fas fa-bell"></i></a>
+                <a href="{{ path('api_user_subscribe', {email:user.email}) }}" class="float-right btn btn-sm btn-outline-info js-subscribe">Subscribe <i class="fas fa-bell"></i></a>
             {% endif %}
             </div>
         </div>

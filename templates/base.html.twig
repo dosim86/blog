@@ -18,7 +18,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active"><a class="nav-link" href="#">Authors <span class="sr-only">(current)</span></a></li>
+                        <li class="nav-item active"><a class="nav-link" href="{{ path('user_list') }}">Authors <span class="sr-only">(current)</span></a></li>
                         {% if is_granted('ROLE_USER') %}
                             <li class="nav-item"><a class="nav-link" href="{{ path('article_add') }}">New article</a></li>
                         {% endif %}
