@@ -12,7 +12,7 @@
                 <button class="btn btn-light" data-toggle="collapse" data-target="#collapseFilter">
                     <span class="text-info">Search articles</span>
                 </button>
-                <div class="collapse my-2 {{ filterCollapse }}" id="collapseFilter">
+                <div class="collapse my-2 {{ collapse is defined ? collapse : '' }}" id="collapseFilter">
                     {{ form_start(filter) }}
                         {{ form_row(filter.query) }}
                         {{ form_row(filter.queryfor) }}
@@ -36,30 +36,3 @@
     </div>
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        $('#article_filter_tags').select2({
-            theme: 'bootstrap',
-            placeholder: 'Choose tags...'
-        });
-
-        $('#article_filter_author').select2({
-            theme: 'bootstrap',
-            ajax: {
-                url: '/api/author/list',
-                delay: 250, // wait 250 before the request
-                data: function (params) {
-                    return {
-                        q: params.term,
-                    };
-                },
-                processResults: function (resp) {
-                    return {
-                        results: resp.type === 'success' ? resp.data : []
-                    };
-                }
-            }
-        });
-    </script>
-{% endblock %}

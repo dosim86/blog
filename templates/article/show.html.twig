@@ -26,7 +26,9 @@
                 </div>
                 <p>{{ article.content|raw }}</p>
                 <p class="text-info small">
-                    <span class="border px-1 rounded">{{ article.tags|join('</span> <span class="border px-1 rounded">')|raw }}</span>
+                    {% for tag in article.tags %}
+                        <a href="{{ path('article_by_tag', {name: tag.name}) }}" class="border px-1 rounded text-info">{{ tag.name }}</a>
+                    {% endfor %}
                 </p>
                 {% if is_granted('ROLE_USER') %}
                 <div class="d-flex justify-content-center">

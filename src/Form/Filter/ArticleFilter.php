@@ -10,21 +10,20 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ArticleFilter extends AbstractType
 {
-    const QUERYFOR_TITLE = 0;
+    const QUERYFOR_TITLE = -1;
     const QUERYFOR_CONTENT = 1;
     const QUERYFOR_BOTH = 2;
 
-    const PERIOD_TODAY = 0;
+    const PERIOD_TODAY = -1;
     const PERIOD_LASTWEEK = 1;
     const PERIOD_LASTMONTH = 2;
     const PERIOD_LASTYEAR = 3;
@@ -44,9 +43,17 @@ class ArticleFilter extends AbstractType
         'Last year' => self::PERIOD_LASTYEAR,
     ];
 
+    private $urlGenerator;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator)
+    {
+        $this->urlGenerator = $urlGenerator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->setAction($this->urlGenerator->generate('article_list'))
             ->add('query', null, [
                 'label' => false,
                 'attr' => ['placeholder' => 'Search for...']

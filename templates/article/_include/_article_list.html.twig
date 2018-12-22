@@ -2,12 +2,14 @@
     {% for article in pagination %}
         <div class="col-md-12 pb-4">
             <h3 class="font-weight-bold pb-2">
-                <a href="{{ path('article_show', {slug:article.slug}) }}" class="text-black" style="text-decoration: none;color:#0b2e13">
+                <a href="{{ path('article_show', {slug:article.slug}) }}" class="text-black " style="text-decoration: none;color:#0b2e13">
                     {{ article.title }}
                 </a>
             </h3>
             <p class="text-info small">
-                <span class="border px-1 rounded">{{ article.tags|join('</span> <span class="border px-1 rounded">')|raw }}</span>
+            {% for tag in article.tags %}
+                <a href="{{ path('article_by_tag', {name: tag.name}) }}" class="border px-1 rounded text-info">{{ tag.name }}</a>
+            {% endfor %}
             </p>
             <p>{{ article.content|truncate(400)|raw }}</p>
             <div class="clearfix">

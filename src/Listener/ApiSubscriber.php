@@ -5,6 +5,7 @@ namespace App\Listener;
 use App\Exception\Api\FailApiException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
@@ -15,6 +16,10 @@ use Symfony\Component\Security\Core\Security;
 class ApiSubscriber implements EventSubscriberInterface
 {
     private $security;
+
+    private $publicApi = [
+        '/api/author/list'
+    ];
 
     public function __construct(Security $security)
     {
@@ -45,7 +50,7 @@ class ApiSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (!$this->security->isGranted('ROLE_USER')) {
+        if (!$this->security->isGranted('ROLE_USER') && !$this->isPublicApi($event->getRequest())) {
             throw new NotFoundHttpException();
         }
     }
@@ -63,5 +68,15 @@ class ApiSubscriber implements EventSubscriberInterface
             ], 500);
             $event->setResponse($response);
         }
+    }
+
+    private function isPublicApi(Request $request)
+    {
+        foreach ($this->publicApi as $api) {
+            if (false !== strpos($request->getRequestUri(), $api)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

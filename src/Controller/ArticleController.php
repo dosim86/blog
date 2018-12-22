@@ -4,10 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Entity\Comment;
+use App\Entity\Tag;
 use App\Form\Filter\ArticleFilter;
 use App\Form\ArticleType;
 use App\Form\CommentType;
 use App\Repository\ArticleRepository;
+use App\Repository\TagRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,7 +45,30 @@ class ArticleController extends AbstractController
         return $this->render('article/search.html.twig', [
             'pagination' => $pagination,
             'filter' => $filter->createView(),
-            'filterCollapse' => $collapse ?? ''
+            'collapse' => $collapse ?? ''
+        ]);
+    }
+
+    /**
+     * @Route("/article/tag/{name}", name="article_by_tag")
+     */
+    public function articleByTag(
+        $name,
+        Request $request,
+        TagRepository $tagRepository,
+        ArticleRepository $articleRepository,
+        PaginatorInterface $paginator
+    ) {
+        $page = $request->query->getInt('page', 1);
+        $qb = $articleRepository->searchArticles([
+            'tags' => new ArrayCollection($tagRepository->findBy(['name' => $name]))
+        ]);
+        $pagination = $paginator->paginate($qb, $page, Article::ITEMS);
+
+        $filter = $this->createForm(ArticleFilter::class);
+        return $this->render('article/search.html.twig', [
+            'pagination' => $pagination,
+            'filter' => $filter->createView(),
         ]);
     }
 
