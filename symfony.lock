@@ -101,6 +101,15 @@
             "ref": "8eb1cd0962ded6a6d6e1e5a9b6d3e888f9f94ff6"
         }
     },
+    "friendsofsymfony/jsrouting-bundle": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "370bcf99b04c0dfd0b545745aad622d757af5e1b"
+        }
+    },
     "fzaninotto/faker": {
         "version": "v1.8.0"
     },
@@ -299,6 +308,9 @@
     "symfony/security-http": {
         "version": "v4.2.0"
     },
+    "symfony/serializer": {
+        "version": "v4.2.1"
+    },
     "symfony/stopwatch": {
         "version": "v4.2.0"
     },
@@ -373,6 +385,9 @@
     },
     "twig/twig": {
         "version": "v2.5.0"
+    },
+    "willdurand/jsonp-callback-validator": {
+        "version": "v1.1.0"
     },
     "zendframework/zend-code": {
         "version": "3.3.1"

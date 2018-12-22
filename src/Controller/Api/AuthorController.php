@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AuthorController extends AbstractController
 {
     /**
-     * @Route("/list", name="api_author_list")
+     * @Route("/list", name="api_author_list", options={"expose"=true})
      * @throws \Exception
      */
     public function list(Request $request, UserRepository $repository)

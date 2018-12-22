@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Entity\Comment;
-use App\Entity\Tag;
 use App\Form\Filter\ArticleFilter;
 use App\Form\ArticleType;
 use App\Form\CommentType;
