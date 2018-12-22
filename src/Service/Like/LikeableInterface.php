@@ -8,11 +8,11 @@ interface LikeableInterface
 
     public function getId();
 
-    public function incLike();
+    public function incLikeCount();
 
-    public function decLike();
+    public function decLikeCount();
 
-    public function incDislike();
+    public function incDislikeCount();
 
-    public function decDislike();
+    public function decDislikeCount();
 }

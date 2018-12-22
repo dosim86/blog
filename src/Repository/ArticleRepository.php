@@ -88,10 +88,8 @@ class ArticleRepository extends ServiceEntityRepository
     public function searchArticles($filter)
     {
         $qb = $this->createQueryBuilder('a')
-            ->addSelect('c')
             ->addSelect('t')
             ->addSelect('au')
-            ->leftJoin('a.comments', 'c')
             ->leftJoin('a.author', 'au')
             ->leftJoin('a.tags', 't')
             ->orderBy('a.createdAt', 'DESC')

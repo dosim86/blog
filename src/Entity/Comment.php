@@ -49,12 +49,11 @@ class Comment implements LikeableInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $blocked;
+    private $blocked = false;
 
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int

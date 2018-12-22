@@ -136,13 +136,17 @@ class ArticleController extends AbstractController
         $commentForm->handleRequest($request);
 
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
             /** @var Comment $comment */
             $comment = $commentForm->getData();
             $comment->setOwner($this->getUser());
             $comment->setArticle($article);
-
-            $em = $this->getDoctrine()->getManager();
             $em->persist($comment);
+
+            $article->incCommentCount();
+            $em->persist($article);
+
             $em->flush();
 
             return $this->redirectToRoute('article_show', ['slug' => $article->getSlug()]);

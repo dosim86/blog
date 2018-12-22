@@ -22,22 +22,6 @@ class BookmarkArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, BookmarkArticle::class);
     }
 
-    /**
-     * @param Article $article
-     * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function getBookmarkCountForArticle(Article $article): int
-    {
-        return $this->createQueryBuilder('ba')
-            ->select('COUNT(ba.user)')
-            ->andWhere('ba.article = :ba_article')
-            ->setParameter('ba_article', $article)
-            ->getQuery()
-            ->getSingleScalarResult()
-        ;
-    }
-
     public function getArticlesFromBookmarkByUser(User $user)
     {
         return $this->_em->createQueryBuilder()

@@ -36,8 +36,8 @@ easy_admin:
                     - { property: 'createdAt' }
                     - { property: 'owner', label: 'Commentor', template: 'list/commentor_link.html.twig', sortable: false }
                     - { property: 'text', sortable: false }
-                    - { property: 'likes' }
-                    - { property: 'dislikes' }
+                    - { property: 'likeCount' }
+                    - { property: 'dislikeCount' }
                     - { property: 'blocked', sortable: false, label: 'Blocked ?' }
                     - { property: 'article', template: 'list/article_link.html.twig', sortable: false }
         Category:
@@ -66,5 +66,5 @@ easy_admin:
                     - { property: 'firstname', sortable: false }
                     - { property: 'disabled', label: 'Disabled ?' }
                     - { property: 'articles', label: 'Article count', css_class: 'count-entity-bg' }
-                    - { property: 'comments', label: 'Comments count', css_class: 'count-entity-bg' }
+                    - { property: 'comments', label: 'Comment count', css_class: 'count-entity-bg' }
                     - { property: 'roles', template: 'list/roles.html.twig' }

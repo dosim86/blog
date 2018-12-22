@@ -24,7 +24,10 @@ class ArticleController extends AbstractController
     {
         try {
             $likeManager->like($article, $this->getUser());
-            $data = $likeManager->getFullSeparatedCount($article);
+            $data = [
+                'likes' => $article->getLikeCount(),
+                'dislikes' => $article->getDislikeCount(),
+            ];
 
             return $this->json([
                 'type' => 'success',
@@ -44,7 +47,10 @@ class ArticleController extends AbstractController
     {
         try {
             $likeManager->dislike($article, $this->getUser());
-            $data = $likeManager->getFullSeparatedCount($article);
+            $data = [
+                'likes' => $article->getLikeCount(),
+                'dislikes' => $article->getDislikeCount(),
+            ];
 
             return $this->json([
                 'type' => 'success',
@@ -63,6 +69,8 @@ class ArticleController extends AbstractController
     public function bookmark(Article $article)
     {
         try {
+            $article->incBookmarkCount();
+
             $bookmark = new BookmarkArticle();
             $bookmark->setUser($this->getUser());
             $bookmark->setArticle($article);
@@ -71,13 +79,10 @@ class ArticleController extends AbstractController
             $em->persist($bookmark);
             $em->flush();
 
-            $repository = $em->getRepository(BookmarkArticle::class);
-            $bookmarkCount = $repository->getBookmarkCountForArticle($article);
-
             return $this->json([
                 'type' => 'success',
                 'message' => 'Article is added to bookmark',
-                'data' => $bookmarkCount,
+                'data' => $article->getBookmarkCount(),
             ]);
         } catch (UniqueConstraintViolationException $e) {
             return $this->json([

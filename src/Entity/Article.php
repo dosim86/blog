@@ -68,6 +68,16 @@ class Article implements LikeableInterface
      */
     private $category;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $commentCount = 0;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $bookmarkCount = 0;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -236,5 +246,29 @@ class Article implements LikeableInterface
     public function __toString()
     {
         return $this->getTitle();
+    }
+
+    public function getCommentCount(): ?int
+    {
+        return $this->commentCount;
+    }
+
+    public function incCommentCount(): self
+    {
+        $this->commentCount++;
+
+        return $this;
+    }
+
+    public function getBookmarkCount(): ?int
+    {
+        return $this->bookmarkCount;
+    }
+
+    public function incBookmarkCount(): self
+    {
+        $this->bookmarkCount++;
+
+        return $this;
     }
 }

@@ -6,7 +6,7 @@ use App\Service\Like\AbstractLike;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\LikeCommentRepository")
+ * @ORM\Entity()
  */
 class LikeComment extends AbstractLike
 {

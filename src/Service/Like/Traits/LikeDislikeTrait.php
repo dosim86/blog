@@ -9,58 +9,44 @@ trait LikeDislikeTrait
     /**
      * @ORM\Column(type="integer")
      */
-    private $likes;
+    private $likeCount = 0;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $dislikes;
+    private $dislikeCount = 0;
 
-    public function getLikes(): ?int
+    public function getLikeCount(): ?int
     {
-        return $this->likes;
+        return $this->likeCount;
     }
 
-    public function setLikes(int $likes): self
+    public function getDislikeCount(): ?int
     {
-        $this->likes = $likes;
+        return $this->dislikeCount;
+    }
 
+    public function incLikeCount()
+    {
+        $this->likeCount++;
         return $this;
     }
 
-    public function getDislikes(): ?int
+    public function decLikeCount()
     {
-        return $this->dislikes;
-    }
-
-    public function setDislikes(int $dislikes): self
-    {
-        $this->dislikes = $dislikes;
-
+        $this->likeCount--;
         return $this;
     }
 
-    public function incLike()
+    public function incDislikeCount()
     {
-        $this->likes++;
+        $this->dislikeCount++;
         return $this;
     }
 
-    public function decLike()
+    public function decDislikeCount()
     {
-        $this->likes--;
-        return $this;
-    }
-
-    public function incDislike()
-    {
-        $this->dislikes++;
-        return $this;
-    }
-
-    public function decDislike()
-    {
-        $this->dislikes--;
+        $this->dislikeCount--;
         return $this;
     }
 }

@@ -47,54 +47,6 @@ class LikeManager
 
     /**
      * @param LikeableInterface $entity
-     * @return int
-     * @throws NotFoundLikeClassException
-     */
-    public function getLikeCount(LikeableInterface $entity): int
-    {
-        if (empty($likeClass = $entity::getLikeClass())) {
-            throw new NotFoundLikeClassException();
-        }
-
-        /** @var LikeRepositoryInterface $likeRepository */
-        $likeRepository = $this->em->getRepository($likeClass);
-        return $likeRepository->getLikeCountByEntity($entity);
-    }
-
-    /**
-     * @param LikeableInterface $entity
-     * @return int
-     * @throws NotFoundLikeClassException
-     */
-    public function getDislikeCount(LikeableInterface $entity): int
-    {
-        if (empty($likeClass = $entity::getLikeClass())) {
-            throw new NotFoundLikeClassException();
-        }
-
-        /** @var LikeRepositoryInterface $likeRepository */
-        $likeRepository = $this->em->getRepository($likeClass);
-        return $likeRepository->getDislikeCountByEntity($entity);
-    }
-
-    /**
-     * @param LikeableInterface $entity
-     * @return array
-     * @throws NotFoundLikeClassException
-     */
-    public function getFullSeparatedCount(LikeableInterface $entity): array
-    {
-        if (empty($likeClass = $entity::getLikeClass())) {
-            throw new NotFoundLikeClassException();
-        }
-
-        /** @var LikeRepositoryInterface $likeRepository */
-        $likeRepository = $this->em->getRepository($likeClass);
-        return $likeRepository->getFullSeparatedCount($entity);
-    }
-
-    /**
-     * @param LikeableInterface $entity
      * @param User $user
      * @param $action
      * @throws FailLikeException
@@ -127,18 +79,18 @@ class LikeManager
                 if ($like->getValue() === $action) {
                     $this->em->remove($like);
 
-                    $action === self::LIKE ? $entity->decLike() : $entity->decDislike();
+                    $action === self::LIKE ? $entity->decLikeCount() : $entity->decDislikeCount();
                     $this->em->persist($entity);
                 } else {
                     $like->setValue($action);
                     $this->em->persist($like);
 
                     if ($action === self::LIKE) {
-                        $entity->decDislike();
-                        $entity->incLike();
+                        $entity->decDislikeCount();
+                        $entity->incLikeCount();
                     } else {
-                        $entity->decLike();
-                        $entity->incDislike();
+                        $entity->decLikeCount();
+                        $entity->incDislikeCount();
                     }
                     $this->em->persist($entity);
                 }
@@ -149,7 +101,7 @@ class LikeManager
                 $like->setValue($action);
                 $this->em->persist($like);
 
-                $action === self::LIKE ? $entity->incLike() : $entity->incDislike();
+                $action === self::LIKE ? $entity->incLikeCount() : $entity->incDislikeCount();
                 $this->em->persist($entity);
             }
             $this->em->flush();
