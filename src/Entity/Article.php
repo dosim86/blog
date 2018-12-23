@@ -16,6 +16,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Article implements LikeableInterface
 {
     const ITEMS = 10;
+    const WATCH_EXPIRES = 3600; // sec
 
     use TimestampableEntity, LikeDislikeTrait;
 
@@ -77,6 +78,11 @@ class Article implements LikeableInterface
      * @ORM\Column(type="integer")
      */
     private $bookmarkCount = 0;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $watchCount;
 
     public function __construct()
     {
@@ -268,6 +274,18 @@ class Article implements LikeableInterface
     public function incBookmarkCount(): self
     {
         $this->bookmarkCount++;
+
+        return $this;
+    }
+
+    public function getWatchCount(): ?int
+    {
+        return $this->watchCount;
+    }
+
+    public function incWatchCount(): self
+    {
+        $this->watchCount++;
 
         return $this;
     }

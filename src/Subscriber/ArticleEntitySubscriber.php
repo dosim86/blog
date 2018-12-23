@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listener;
+namespace App\Subscriber;
 
 use App\Entity\Article;
 use App\Helper\Html;
@@ -9,7 +9,7 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Psr\Container\ContainerInterface;
 
-class ArticleSubscriber implements EventSubscriber
+class ArticleEntitySubscriber implements EventSubscriber
 {
     private $container;
 

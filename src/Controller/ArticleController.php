@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Entity\Comment;
+use App\Event\ArticleEvent;
 use App\Form\Filter\ArticleFilter;
 use App\Form\ArticleType;
 use App\Form\CommentType;
@@ -13,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -124,9 +126,9 @@ class ArticleController extends AbstractController
     /**
      * @Route("/article/{slug}", name="article_show")
      */
-    public function show($slug, Request $request, ArticleRepository $articleRepository)
+    public function show($slug, Request $request, ArticleRepository $repository, EventDispatcherInterface $dispatcher)
     {
-        $article = $articleRepository->getArticleBySlug($slug);
+        $article = $repository->getArticleBySlug($slug);
         if (!$article) {
             throw $this->createNotFoundException('Article not found');
         }
@@ -135,21 +137,20 @@ class ArticleController extends AbstractController
         $commentForm->handleRequest($request);
 
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-
             /** @var Comment $comment */
             $comment = $commentForm->getData();
             $comment->setOwner($this->getUser());
-            $comment->setArticle($article);
+            $comment->setArticle($article->incCommentCount());
+
+            $em = $this->getDoctrine()->getManager();
             $em->persist($comment);
-
-            $article->incCommentCount();
-            $em->persist($article);
-
             $em->flush();
 
             return $this->redirectToRoute('article_show', ['slug' => $article->getSlug()]);
         }
+
+        $event = new ArticleEvent($request, $article);
+        $dispatcher->dispatch(ArticleEvent::WATCH, $event);
 
         return $this->render('article/show.html.twig', [
             'article' => $article,

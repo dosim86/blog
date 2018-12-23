@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Listener;
+namespace App\Subscriber;
 
 use EasyCorp\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
-class EasyAdminListener implements EventSubscriberInterface
+class EasyAdminSubscriber implements EventSubscriberInterface
 {
     private $flash;
 

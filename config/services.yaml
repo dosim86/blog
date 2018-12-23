@@ -24,6 +24,6 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    App\Listener\ArticleSubscriber:
+    App\Subscriber\ArticleEntitySubscriber:
         tags:
             - { name: doctrine.event_subscriber, connection: default }

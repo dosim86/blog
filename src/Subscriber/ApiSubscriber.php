@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listener;
+namespace App\Subscriber;
 
 use App\Exception\Api\FailApiException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
