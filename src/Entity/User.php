@@ -81,6 +81,11 @@ class User implements UserInterface
      */
     private $disabled = false;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $rank = 0;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
@@ -354,5 +359,17 @@ class User implements UserInterface
     public function getAvatarPath()
     {
         return '//i.pravatar.cc/40';
+    }
+
+    public function getRank(): ?int
+    {
+        return $this->rank;
+    }
+
+    public function setRank(int $rank): self
+    {
+        $this->rank = $rank;
+
+        return $this;
     }
 }

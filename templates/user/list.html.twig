@@ -11,7 +11,7 @@
                         </div>
                         <div class="w-75">
                             {{ user.firstname }} <a href="{{ path('user_profile', {email:user.username}) }}">@{{ user.username }}</a>
-                            <span class="rank-rect text-secondary"><i class="fas fa-star"></i> 0</span><br>
+                            <span class="rank-rect text-secondary"><i class="fas fa-star"></i> {{ user.rank }}</span><br>
                             <span class="text-info small">Last activity 1 minute ago</span>
                         </div>
                     </div>

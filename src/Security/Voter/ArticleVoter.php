@@ -37,9 +37,7 @@ class ArticleVoter extends Voter
                 if ($article->getAuthor() === $user) {
                     return true;
                 }
-                if ($this->security->isGranted('ROLE_ADMIN_ARTICLE')) {
-                    return true;
-                }
+
                 if ($this->security->isGranted('ROLE_ADMIN')) {
                     return true;
                 }

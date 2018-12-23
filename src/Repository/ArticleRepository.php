@@ -131,4 +131,20 @@ class ArticleRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+
+    /**
+     * @param User $author
+     * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTotalArticleLikeCountByAuthor(User $author): int
+    {
+        return $this->createQueryBuilder('a')
+            ->select('SUM(a.likeCount)')
+            ->andWhere('a.author = :a_author')
+            ->setParameter('a_author', $author)
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
 }

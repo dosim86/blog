@@ -8,7 +8,7 @@
             <div class="col-6">
                 <div class="bg-light p-3 mb-3 rounded">
                     {{ follower.firstname }} <a href="{{ path('user_profile', {email:follower.username}) }}">@{{ follower.username }}</a>
-                    <span class="rank-rect text-secondary"><i class="fas fa-star"></i> 0</span><br>
+                    <span class="rank-rect text-secondary"><i class="fas fa-star"></i> {{ follower.rank }}</span><br>
                     <span class="text-info small">Last activity 1 minute ago</span>
                 </div>
             </div>

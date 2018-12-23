@@ -4,11 +4,14 @@ namespace App\Controller\Api;
 
 use App\Entity\Article;
 use App\Entity\BookmarkArticle;
+use App\Event\UserEvent;
 use App\Exception\Api\FailApiException;
 use App\Exception\Like\FailLikeException;
 use App\Service\Like\LikeManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -20,14 +23,21 @@ class ArticleController extends AbstractController
      * @Route("/like/{id}", name="api_article_like")
      * @throws \Exception
      */
-    public function like(Article $article, LikeManager $likeManager)
-    {
+    public function like(
+        Article $article,
+        Request $request,
+        LikeManager $likeManager,
+        EventDispatcherInterface $dispatcher
+    ) {
         try {
             $likeManager->like($article, $this->getUser());
             $data = [
                 'likes' => $article->getLikeCount(),
                 'dislikes' => $article->getDislikeCount(),
             ];
+
+            $event = new UserEvent($request, $article->getAuthor()->getId());
+            $dispatcher->dispatch(UserEvent::RANK, $event);
 
             return $this->json([
                 'type' => 'success',
@@ -43,14 +53,21 @@ class ArticleController extends AbstractController
      * @Route("/dislike/{id}", name="api_article_dislike")
      * @throws \Exception
      */
-    public function dislike(Article $article, LikeManager $likeManager)
-    {
+    public function dislike(
+        Article $article,
+        Request $request,
+        LikeManager $likeManager,
+        EventDispatcherInterface $dispatcher
+    ) {
         try {
             $likeManager->dislike($article, $this->getUser());
             $data = [
                 'likes' => $article->getLikeCount(),
                 'dislikes' => $article->getDislikeCount(),
             ];
+
+            $event = new UserEvent($request, $article->getAuthor()->getId());
+            $dispatcher->dispatch(UserEvent::RANK, $event);
 
             return $this->json([
                 'type' => 'success',
