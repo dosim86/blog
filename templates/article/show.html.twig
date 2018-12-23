@@ -19,7 +19,9 @@
                         <ul class="icons-inline text-info small">
                             <li>{{ article.createdAt|date('H:i d.m.Y') }}</li>
                             <li>
-                                <a href="{{ path('api_article_bookmark', {id: article.id}) }}" class="text-info js-bookmark-article-btn {{ not is_granted('ROLE_USER') ? 'not-allowed' : '' }}">
+                                <a href="{{ path('api_article_bookmark', {id: article.id}) }}"
+                                   class="text-info js-bookmark-article-btn {{ not is_granted('ROLE_USER') ? 'not-allowed' : '' }}"
+                                   data-token="{{ csrf_token(article.id) }}">
                                     <i class="fas fa-bookmark"></i><span>{{ article.bookmarkCount }}</span>
                                 </a>
                             </li>
@@ -36,9 +38,13 @@
                 </p>
                 {% if is_granted('ROLE_USER') %}
                 <div class="d-flex justify-content-center">
-                    <div class="btn-group btn-group-toggle js-like">
-                        <a href="{{ path('api_article_like', {id: article.id}) }}" class="btn btn-sm btn-outline-success js-like-btn" data-type="1"><i class="fas fa-thumbs-up"></i> <span>{{ article.likeCount }}</span></a>
-                        <a href="{{ path('api_article_dislike', {id: article.id}) }}" class="btn btn-sm btn-outline-danger js-like-btn" data-type="-1"><i class="fas fa-thumbs-down"></i> <span>{{ article.dislikeCount }}</span></a>
+                    <div class="btn-group btn-group-toggle js-like" data-token="{{ csrf_token(article.id) }}">
+                        <a href="{{ path('api_article_like', {id: article.id}) }}" class="btn btn-sm btn-outline-success js-like-btn" data-type="1">
+                            <i class="fas fa-thumbs-up"></i> <span>{{ article.likeCount }}</span>
+                        </a>
+                        <a href="{{ path('api_article_dislike', {id: article.id}) }}" class="btn btn-sm btn-outline-danger js-like-btn" data-type="-1">
+                            <i class="fas fa-thumbs-down"></i> <span>{{ article.dislikeCount }}</span>
+                        </a>
                     </div>
                 </div>
                 {% endif %}
@@ -64,10 +70,11 @@
                 let $this = $(this),
                     $btnGroup = $this.closest('.js-like'),
                     $like = $btnGroup.find('[data-type="1"] span'),
-                    $dislike = $btnGroup.find('[data-type="-1"] span')
+                    $dislike = $btnGroup.find('[data-type="-1"] span'),
+                    token = $btnGroup.data('token')
                 ;
 
-                appGet($this.attr('href')).then(function(data) {
+                appGet($this.attr('href'), { token: token }).then(function(data) {
                     if (data.type === 'success') {
                         $like.html(data.data.likes);
                         $dislike.html(data.data.dislikes);
@@ -81,10 +88,11 @@
                 if ($(this).hasClass('not-allowed')) return false;
 
                 let $this = $(this),
-                    $bookmarkValue = $this.find('span')
+                    $bookmarkValue = $this.find('span'),
+                    token = $this.data('token')
                 ;
 
-                appGet($this.attr('href')).then(function(data) {
+                appGet($this.attr('href'), { token: token }).then(function(data) {
                     if (data.type === 'success') {
                         $bookmarkValue.html(data.data);
                     }

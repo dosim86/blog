@@ -3,6 +3,7 @@
 namespace App\Subscriber;
 
 use App\Exception\Api\FailApiException;
+use App\Exception\Api\InvalidTokenApiException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,10 +39,13 @@ class ApiSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
-        return $event->isMasterRequest()
-            && $request->isXmlHttpRequest()
-            && false !== strpos($request->getRequestUri(), '/api/')
-        ;
+        if (false !== strpos($request->getRequestUri(), '/api/')) {
+            if (!$event->isMasterRequest() || !$request->isXmlHttpRequest()) {
+                throw new NotFoundHttpException();
+            }
+            return true;
+        }
+        return false;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -60,12 +64,21 @@ class ApiSubscriber implements EventSubscriberInterface
         if (!$this->supports($event)) {
             return;
         }
+        $exception = $event->getException();
 
-        if ($event->getException() instanceof FailApiException) {
+        if ($exception instanceof FailApiException) {
             $response = new JsonResponse([
                 'type' => 'error',
-                'message' => 'Sorry, there is a system fault'
+                'message' => $exception->getMessage()
             ], 500);
+            $event->setResponse($response);
+        }
+
+        if ($exception instanceof InvalidTokenApiException) {
+            $response = new JsonResponse([
+                'type' => 'error',
+                'message' => $exception->getMessage()
+            ], 404);
             $event->setResponse($response);
         }
     }

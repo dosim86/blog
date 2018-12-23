@@ -42,6 +42,6 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        // TODO
+        // TODO with csrf
     }
 }

@@ -16,7 +16,11 @@
             </div>
             <div class="pl-3 w-25 text-info">
             {% if is_granted('ROLE_USER') and app.user != user %}
-                <a href="{{ path('api_user_subscribe', {email:user.email}) }}" class="float-right btn btn-sm btn-outline-info js-subscribe">Subscribe <i class="fas fa-bell"></i></a>
+                <a href="{{ path('api_user_subscribe', {email:user.email}) }}"
+                   data-token="{{ csrf_token(user.id) }}"
+                   class="float-right btn btn-sm btn-outline-info js-subscribe">
+                    Subscribe <i class="fas fa-bell"></i>
+                </a>
             {% endif %}
             </div>
         </div>
@@ -47,8 +51,10 @@
             $('.js-subscribe').on('click', function (e) {
                 e.preventDefault();
 
-                let $this = $(this);
-                $.get($this.attr('href')).then(function(data) {
+                let $this = $(this),
+                    token = $this.data('token')
+                ;
+                appGet($this.attr('href'), { token: token }).then(function(data) {
                     notify(data.type, data.message);
                 });
             });
@@ -65,8 +71,10 @@
                     confirmButtonText: 'Confirm'
                 }).then((result) => {
                     if (result.value) {
-                        let $this = $(this);
-                        $.get($this.attr('href')).then(function(data) {
+                        let $this = $(this),
+                            token = $this.data('token')
+                        ;
+                        appGet($this.attr('href'), { token: token }).then(function(data) {
                             if (data.type === 'success') {
                                 $this.closest('.unsubscribe-item').remove();
                             }

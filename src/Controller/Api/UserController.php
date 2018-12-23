@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\User;
 use App\Exception\Api\FailApiException;
+use App\Exception\Api\InvalidTokenApiException;
 use App\Repository\BookmarkArticleRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -20,11 +21,20 @@ class UserController extends AbstractController
      * @Route("/subscribe/{email}", name="api_user_subscribe")
      * @throws \Exception
      */
-    public function subscribe(User $subscribeUser, Request $request, BookmarkArticleRepository $rep, PaginatorInterface $paginator)
-    {
+    public function subscribe(
+        Request $request,
+        User $subscribeUser,
+        BookmarkArticleRepository $rep,
+        PaginatorInterface $paginator
+    ) {
         /** @var User $followerUser */
         $followerUser = $this->getUser();
         try {
+            $token = $request->get('token');
+            if (!$this->isCsrfTokenValid($subscribeUser->getId(), $token)) {
+                throw new InvalidTokenApiException();
+            }
+
             if ($followerUser === $subscribeUser) {
                 return $this->json([
                     'type' => 'error',
@@ -48,6 +58,8 @@ class UserController extends AbstractController
                 'type' => 'success',
                 'message' => 'You are subscribed to the author',
             ]);
+        } catch (InvalidTokenApiException $e) {
+            throw $e;
         } catch (\Exception $e) {
             throw new FailApiException();
         }
@@ -58,11 +70,20 @@ class UserController extends AbstractController
      * @Route("/unsubscribe/{email}", name="api_user_unsubscribe")
      * @throws \Exception
      */
-    public function unsubscribe(User $unsubscribeUser, Request $request, BookmarkArticleRepository $rep, PaginatorInterface $paginator)
-    {
+    public function unsubscribe(
+        Request $request,
+        User $unsubscribeUser,
+        BookmarkArticleRepository $rep,
+        PaginatorInterface $paginator
+    ) {
         /** @var User $followerUser */
         $followerUser = $this->getUser();
         try {
+            $token = $request->get('token');
+            if (!$this->isCsrfTokenValid($unsubscribeUser->getId(), $token)) {
+                throw new InvalidTokenApiException();
+            }
+
             if ($followerUser === $unsubscribeUser) {
                 return $this->json([
                     'type' => 'error',
@@ -86,6 +107,8 @@ class UserController extends AbstractController
                 'type' => 'success',
                 'message' => 'You are succesfully unsubscribed',
             ]);
+        } catch (InvalidTokenApiException $e) {
+            throw $e;
         } catch (\Exception $e) {
             throw new FailApiException();
         }

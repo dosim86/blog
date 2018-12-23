@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Exception\Api\FailApiException;
+use App\Exception\Api\InvalidTokenApiException;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,11 @@ class AuthorController extends AbstractController
     public function list(Request $request, UserRepository $repository)
     {
         try {
+            $token = $request->get('token');
+            if (!$this->isCsrfTokenValid('article_filter', $token)) {
+                throw new InvalidTokenApiException();
+            }
+
             $authorName = $request->get('q', '');
             $authors = $repository->getAuthorsMatchTo($authorName);
 
@@ -27,6 +33,8 @@ class AuthorController extends AbstractController
                 'type' => 'success',
                 'data' => $authors
             ]);
+        } catch (InvalidTokenApiException $e) {
+            throw $e;
         } catch (\Exception $e) {
             throw new FailApiException();
         }

@@ -6,6 +6,7 @@ use App\Entity\Article;
 use App\Entity\BookmarkArticle;
 use App\Event\UserEvent;
 use App\Exception\Api\FailApiException;
+use App\Exception\Api\InvalidTokenApiException;
 use App\Exception\Like\FailLikeException;
 use App\Service\Like\LikeManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -24,12 +25,17 @@ class ArticleController extends AbstractController
      * @throws \Exception
      */
     public function like(
-        Article $article,
         Request $request,
+        Article $article,
         LikeManager $likeManager,
         EventDispatcherInterface $dispatcher
     ) {
         try {
+            $token = $request->get('token');
+            if (!$this->isCsrfTokenValid($article->getId(), $token)) {
+                throw new InvalidTokenApiException();
+            }
+
             $likeManager->like($article, $this->getUser());
             $data = [
                 'likes' => $article->getLikeCount(),
@@ -44,7 +50,9 @@ class ArticleController extends AbstractController
                 'message' => 'Article is liked',
                 'data' => $data,
             ]);
-        } catch (FailLikeException $e) {
+        } catch (FailLikeException | InvalidTokenApiException $e) {
+            throw $e;
+        } catch (\Exception $e) {
             throw new FailApiException();
         }
     }
@@ -54,12 +62,17 @@ class ArticleController extends AbstractController
      * @throws \Exception
      */
     public function dislike(
-        Article $article,
         Request $request,
+        Article $article,
         LikeManager $likeManager,
         EventDispatcherInterface $dispatcher
     ) {
         try {
+            $token = $request->get('token');
+            if (!$this->isCsrfTokenValid($article->getId(), $token)) {
+                throw new InvalidTokenApiException();
+            }
+
             $likeManager->dislike($article, $this->getUser());
             $data = [
                 'likes' => $article->getLikeCount(),
@@ -74,7 +87,9 @@ class ArticleController extends AbstractController
                 'message' => 'Article is disliked',
                 'data' => $data,
             ]);
-        } catch (FailLikeException $e) {
+        } catch (FailLikeException | InvalidTokenApiException $e) {
+            throw $e;
+        } catch (\Exception $e) {
             throw new FailApiException();
         }
     }
@@ -83,9 +98,14 @@ class ArticleController extends AbstractController
      * @Route("/bookmark/{id}", name="api_article_bookmark")
      * @throws \Exception
      */
-    public function bookmark(Article $article)
+    public function bookmark(Request $request, Article $article)
     {
         try {
+            $token = $request->get('token');
+            if (!$this->isCsrfTokenValid($article->getId(), $token)) {
+                throw new FailApiException();
+            }
+
             $article->incBookmarkCount();
 
             $bookmark = new BookmarkArticle();

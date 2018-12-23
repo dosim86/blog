@@ -4,9 +4,11 @@ namespace App\Controller\Api;
 
 use App\Entity\Comment;
 use App\Exception\Api\FailApiException;
+use App\Exception\Api\InvalidTokenApiException;
 use App\Exception\Like\FailLikeException;
 use App\Service\Like\LikeManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -18,9 +20,14 @@ class CommentController extends AbstractController
      * @Route("/like/{id}", name="api_comment_like")
      * @throws \Exception
      */
-    public function like(Comment $comment, LikeManager $likeManager)
+    public function like(Request $request, Comment $comment, LikeManager $likeManager)
     {
         try {
+            $token = $request->get('token');
+            if (!$this->isCsrfTokenValid($comment->getId(), $token)) {
+                throw new InvalidTokenApiException();
+            }
+
             $likeManager->like($comment, $this->getUser());
             $data = [
                 'likes' => $comment->getLikeCount(),
@@ -32,7 +39,9 @@ class CommentController extends AbstractController
                 'message' => 'Comment is liked',
                 'data' => $data
             ]);
-        } catch (FailLikeException $e) {
+        } catch (FailLikeException | InvalidTokenApiException $e) {
+            throw $e;
+        } catch (\Exception $e) {
             throw new FailApiException();
         }
     }
@@ -41,9 +50,14 @@ class CommentController extends AbstractController
      * @Route("/dislike/{id}", name="api_comment_dislike")
      * @throws \Exception
      */
-    public function dislike(Comment $comment, LikeManager $likeManager)
+    public function dislike(Request $request, Comment $comment, LikeManager $likeManager)
     {
         try {
+            $token = $request->get('token');
+            if (!$this->isCsrfTokenValid($comment->getId(), $token)) {
+                throw new InvalidTokenApiException();
+            }
+
             $likeManager->dislike($comment, $this->getUser());
             $data = [
                 'likes' => $comment->getLikeCount(),
@@ -55,7 +69,9 @@ class CommentController extends AbstractController
                 'message' => 'Comment is disliked',
                 'data' => $data
             ]);
-        } catch (FailLikeException $e) {
+        } catch (FailLikeException | InvalidTokenApiException $e) {
+            throw $e;
+        } catch (\Exception $e) {
             throw new FailApiException();
         }
     }

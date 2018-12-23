@@ -38,7 +38,7 @@
                     {% if is_granted('ROLE_USER') %}
                     <div class="clearfix">
                         <div class="float-left">
-                            <div class="btn-group btn-group-sm js-like">
+                            <div class="btn-group btn-group-sm js-like" data-token="{{ csrf_token(comment.id) }}">
                                 <a href="{{ path('api_comment_like', {id: comment.id}) }}" class="btn btn-sm btn-outline-success js-like-btn" data-type="1"><i class="fas fa-thumbs-up"></i> <span>{{ comment.likeCount }}</span></a>
                                 <a href="{{ path('api_comment_dislike', {id: comment.id}) }}" class="btn btn-sm btn-outline-danger js-like-btn" data-type="-1"><i class="fas fa-thumbs-down"></i> <span>{{ comment.dislikeCount }}</span></a>
                             </div>
