@@ -2,11 +2,12 @@
 
 namespace App\Subscriber;
 
-use App\Exception\Api\FailApiException;
-use App\Exception\Api\InvalidTokenApiException;
+use App\Exception\Api\ApiException;
+use App\Exception\Api\InvalidTokenException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
@@ -42,7 +43,7 @@ class ApiSubscriber implements EventSubscriberInterface
 
     /**
      * @param GetResponseEvent $event
-     * @throws InvalidTokenApiException
+     * @throws InvalidTokenException
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -51,7 +52,7 @@ class ApiSubscriber implements EventSubscriberInterface
         }
 
         if (!$this->isCsrfTokenValid($event->getRequest())) {
-            throw new InvalidTokenApiException();
+            throw new InvalidTokenException();
         }
 
         if (!$this->security->isGranted('ROLE_USER') && !$this->isPublicApi($event->getRequest())) {
@@ -66,19 +67,19 @@ class ApiSubscriber implements EventSubscriberInterface
         }
         $exception = $event->getException();
 
-        if ($exception instanceof FailApiException) {
+        if ($exception instanceof ApiException) {
             $response = new JsonResponse([
                 'type' => 'error',
                 'message' => $exception->getMessage()
-            ], 500);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
             $event->setResponse($response);
         }
 
-        if ($exception instanceof InvalidTokenApiException) {
+        if ($exception instanceof InvalidTokenException) {
             $response = new JsonResponse([
                 'type' => 'error',
                 'message' => $exception->getMessage()
-            ], 400);
+            ], Response::HTTP_BAD_REQUEST);
             $event->setResponse($response);
         }
     }

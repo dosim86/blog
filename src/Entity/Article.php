@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use App\Service\Like\LikeableInterface;
-use App\Service\Like\Traits\LikeDislikeTrait;
+use App\Lib\Like\LikeableInterface;
+use App\Lib\Like\Traits\LikeDislikeTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

@@ -1,16 +1,19 @@
 <?php
 
-namespace App\Service\Like;
+namespace App\Service;
 
 use App\Entity\User;
 use App\Exception\AppException;
-use App\Exception\Like\FailLikeException;
+use App\Exception\Like\LikeException;
 use App\Exception\Like\NotFoundLikeClassException;
 use App\Exception\Like\UnknownLikeClassException;
 use App\Exception\Like\UnsupportActionException;
+use App\Lib\Like\LikeableInterface;
+use App\Lib\Like\LikeInterface;
+use App\Lib\Like\LikeManagerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-class LikeManager
+class LikeManager implements LikeManagerInterface
 {
     private const LIKE = 1;
     private const DISLIKE = -1;
@@ -49,7 +52,7 @@ class LikeManager
      * @param LikeableInterface $entity
      * @param User $user
      * @param $action
-     * @throws FailLikeException
+     * @throws LikeException
      * @throws NotFoundLikeClassException
      * @throws UnknownLikeClassException
      * @throws UnsupportActionException
@@ -106,7 +109,7 @@ class LikeManager
             }
             $this->em->flush();
         } catch (AppException $e) {
-            throw new FailLikeException();
+            throw new LikeException();
         }
     }
 

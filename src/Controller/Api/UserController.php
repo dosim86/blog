@@ -3,7 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\User;
-use App\Exception\Api\FailApiException;
+use App\Exception\Api\ApiException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,7 +46,7 @@ class UserController extends AbstractController
                 'message' => 'You are subscribed to the author',
             ]);
         } catch (\Exception $e) {
-            throw new FailApiException();
+            throw new ApiException();
         }
     }
 
@@ -84,7 +84,7 @@ class UserController extends AbstractController
                 'message' => 'You are succesfully unsubscribed',
             ]);
         } catch (\Exception $e) {
-            throw new FailApiException();
+            throw new ApiException();
         }
     }
 }

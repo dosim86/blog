@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api;
 
-use App\Exception\Api\FailApiException;
+use App\Exception\Api\ApiException;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +28,7 @@ class AuthorController extends AbstractController
                 'data' => $authors
             ]);
         } catch (\Exception $e) {
-            throw new FailApiException();
+            throw new ApiException();
         }
     }
 }

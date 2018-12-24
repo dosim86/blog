@@ -81,7 +81,11 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator
     {
         /** @var User $user */
         if ($user->isDisabled()) {
-            throw new CustomUserMessageAuthenticationException('Account is disable');
+            throw new CustomUserMessageAuthenticationException('Account is disabled');
+        }
+
+        if (!$user->isActivated()) {
+            throw new CustomUserMessageAuthenticationException('Account is not activated. Please check your email');
         }
 
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);

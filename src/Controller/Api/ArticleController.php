@@ -5,9 +5,9 @@ namespace App\Controller\Api;
 use App\Entity\Article;
 use App\Entity\BookmarkArticle;
 use App\Event\UserEvent;
-use App\Exception\Api\FailApiException;
-use App\Exception\Like\FailLikeException;
-use App\Service\Like\LikeManager;
+use App\Exception\Api\ApiException;
+use App\Exception\Like\LikeException;
+use App\Service\LikeManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -36,7 +36,7 @@ class ArticleController extends AbstractController
                 'dislikes' => $article->getDislikeCount(),
             ];
 
-            $event = new UserEvent($request, $article->getAuthor()->getId());
+            $event = new UserEvent($request, $article->getAuthor());
             $dispatcher->dispatch(UserEvent::RANK, $event);
 
             return $this->json([
@@ -44,10 +44,10 @@ class ArticleController extends AbstractController
                 'message' => 'Article is liked',
                 'data' => $data,
             ]);
-        } catch (FailLikeException $e) {
+        } catch (LikeException $e) {
             throw $e;
         } catch (\Exception $e) {
-            throw new FailApiException();
+            throw new ApiException();
         }
     }
 
@@ -68,7 +68,7 @@ class ArticleController extends AbstractController
                 'dislikes' => $article->getDislikeCount(),
             ];
 
-            $event = new UserEvent($request, $article->getAuthor()->getId());
+            $event = new UserEvent($request, $article->getAuthor());
             $dispatcher->dispatch(UserEvent::RANK, $event);
 
             return $this->json([
@@ -76,10 +76,10 @@ class ArticleController extends AbstractController
                 'message' => 'Article is disliked',
                 'data' => $data,
             ]);
-        } catch (FailLikeException $e) {
+        } catch (LikeException $e) {
             throw $e;
         } catch (\Exception $e) {
-            throw new FailApiException();
+            throw new ApiException();
         }
     }
 
@@ -111,7 +111,7 @@ class ArticleController extends AbstractController
                 'message' => 'You already added the article'
             ]);
         } catch (\Exception $e) {
-            throw new FailApiException();
+            throw new ApiException();
         }
     }
 }

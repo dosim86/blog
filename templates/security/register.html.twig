@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Create an Account{% endblock %}
+
+{% block body %}
+    <div class="signup-form">
+        {{ form_start(form) }}
+            <h2>Create an Account</h2>
+            <p class="hint-text">Sign up with your social media account</p>
+            <div class="social-btn text-center">
+                <a href="#" class="btn btn-primary btn-lg"><i class="fab fa-facebook"></i> Facebook</a>
+                <a href="#" class="btn btn-info btn-lg"><i class="fab fa-twitter"></i> Twitter</a>
+                <a href="#" class="btn btn-danger btn-lg"><i class="fab fa-google"></i> Google</a>
+            </div>
+            <div class="or-seperator"><b>or</b></div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-info"><i class="fas fa-envelope"></i></span>
+                </div>
+                {{ form_widget(form.email) }}
+                {{ form_errors(form.email) }}
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-info"><i class="fas fa-user"></i></span>
+                </div>
+                {{ form_widget(form.username) }}
+                {{ form_errors(form.username) }}
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-info"><i class="fas fa-key"></i></span>
+                </div>
+                {{ form_widget(form.plainPassword.first) }}
+                {{ form_errors(form.plainPassword.first) }}
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-info"><i class="fas fa-sync"></i></span>
+                </div>
+                {{ form_widget(form.plainPassword.second) }}
+                {{ form_errors(form.plainPassword.second) }}
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

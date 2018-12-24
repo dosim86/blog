@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Like\Traits;
+namespace App\Lib\Like\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 

@@ -3,9 +3,9 @@
 namespace App\Controller\Api;
 
 use App\Entity\Comment;
-use App\Exception\Api\FailApiException;
-use App\Exception\Like\FailLikeException;
-use App\Service\Like\LikeManager;
+use App\Exception\Api\ApiException;
+use App\Exception\Like\LikeException;
+use App\Service\LikeManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -32,10 +32,10 @@ class CommentController extends AbstractController
                 'message' => 'Comment is liked',
                 'data' => $data
             ]);
-        } catch (FailLikeException $e) {
+        } catch (LikeException $e) {
             throw $e;
         } catch (\Exception $e) {
-            throw new FailApiException();
+            throw new ApiException();
         }
     }
 
@@ -57,10 +57,10 @@ class CommentController extends AbstractController
                 'message' => 'Comment is disliked',
                 'data' => $data
             ]);
-        } catch (FailLikeException $e) {
+        } catch (LikeException $e) {
             throw $e;
         } catch (\Exception $e) {
-            throw new FailApiException();
+            throw new ApiException();
         }
     }
 }

@@ -2,55 +2,58 @@
 
 namespace App\Subscriber;
 
-use App\Entity\Article;
 use App\Entity\User;
 use App\Event\UserEvent;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\UserManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class UserSubscriber implements EventSubscriberInterface
 {
-    private $em;
+    private $userManager;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(UserManager $userManager)
     {
-        $this->em = $em;
+        $this->userManager = $userManager;
     }
 
     public static function getSubscribedEvents()
     {
         return [
             UserEvent::RANK => 'onUserRank',
-            KernelEvents::TERMINATE => 'onKernelTerminate',
+            UserEvent::REGISTER => 'onUserRegister',
+            KernelEvents::FINISH_REQUEST => 'onKernelFinishRequest',
         ];
     }
 
     public function onUserRank(UserEvent $event)
     {
         $attributes = $event->getRequest()->attributes;
-        $attributes->set(UserEvent::RANK, $event->getUserId());
+        $attributes->set(UserEvent::RANK, $event->getUser());
+    }
+
+    public function onUserRegister(UserEvent $event)
+    {
+        $attributes = $event->getRequest()->attributes;
+        $attributes->set(UserEvent::REGISTER, $event->getUser());
     }
 
     /**
-     * @param PostResponseEvent $event
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @param FinishRequestEvent $event
+     * @throws \Exception
      */
-    public function onKernelTerminate(PostResponseEvent $event)
+    public function onKernelFinishRequest(FinishRequestEvent $event)
     {
+        /** @var User $user */
         $attributes = $event->getRequest()->attributes;
-        if ($userId = $attributes->get(UserEvent::RANK, 0)) {
-            $userRepository = $this->em->getRepository(User::class);
-            $articleRepository = $this->em->getRepository(Article::class);
 
-            /** @var User $user */
-            if ($user = $userRepository->find($userId)) {
-                $totalArticleLikeCount = $articleRepository->getTotalArticleLikeCountByAuthor($user);
-                $user->setRank($totalArticleLikeCount);
-                $this->em->persist($user);
-                $this->em->flush();
-            }
+        if ($user = $attributes->get(UserEvent::RANK, null)) {
+            $this->userManager->rankUser($user);
+        }
+
+        if ($user = $attributes->get(UserEvent::REGISTER, null)) {
+            $this->userManager->registerUser($user);
         }
     }
 }

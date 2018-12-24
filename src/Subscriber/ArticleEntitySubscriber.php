@@ -3,7 +3,7 @@
 namespace App\Subscriber;
 
 use App\Entity\Article;
-use App\Helper\Html;
+use App\Lib\Helper;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
@@ -29,7 +29,7 @@ class ArticleEntitySubscriber implements EventSubscriber
     {
         $article = $args->getObject();
         if ($article instanceof Article) {
-            $article->setContent(Html::sanitizeJs($article->getContent()));
+            $article->setContent(Helper::sanitizeJs($article->getContent()));
         }
     }
 }

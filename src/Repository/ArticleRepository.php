@@ -137,7 +137,7 @@ class ArticleRepository extends ServiceEntityRepository
      * @return int
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getTotalArticleLikeCountByAuthor(User $author): int
+    public function getTotalLikeCount(User $author): int
     {
         return $this->createQueryBuilder('a')
             ->select('SUM(a.likeCount)')

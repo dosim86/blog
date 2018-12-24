@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Like;
+namespace App\Lib\Like;
 
 use Doctrine\ORM\Mapping as ORM;
 

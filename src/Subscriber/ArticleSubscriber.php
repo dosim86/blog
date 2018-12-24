@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class ArticleSubscriber implements EventSubscriberInterface
@@ -27,7 +27,7 @@ class ArticleSubscriber implements EventSubscriberInterface
         return [
             ArticleEvent::WATCH => 'onArticleWatch',
             KernelEvents::RESPONSE => 'onKernelReponse',
-            KernelEvents::TERMINATE => 'onKernelTerminate',
+            KernelEvents::FINISH_REQUEST => 'onKernelFinishRequest',
         ];
     }
 
@@ -55,7 +55,7 @@ class ArticleSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function onKernelTerminate(PostResponseEvent $event)
+    public function onKernelFinishRequest(FinishRequestEvent $event)
     {
         $attributes = $event->getRequest()->attributes;
         if ($articleId = $attributes->get(self::ARTICLE_WATCH_INC, 0)) {

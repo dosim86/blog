@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Service\Like\AbstractLike;
+use App\Lib\Like\AbstractLike;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

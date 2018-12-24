@@ -5,10 +5,14 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity("email", message="This email is already used")
+ * @UniqueEntity("username", message="This username is already used")
  */
 class User implements UserInterface
 {
@@ -23,6 +27,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank
+     * @Assert\Email
      */
     private $email;
 
@@ -79,7 +85,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $disabled = false;
+    private $isDisabled = false;
 
     /**
      * @ORM\Column(type="integer")
@@ -88,8 +94,26 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=100, unique=true)
+     * @Assert\NotBlank
+     * @Assert\Type(type="alnum", message="The value can only contain English characters and digits")
      */
     private $username;
+
+    /**
+     * @Assert\NotBlank
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActivated = false;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $activateHash;
 
     public function __construct()
     {
@@ -122,7 +146,7 @@ class User implements UserInterface
      *
      * @see UserInterface
      */
-    public function getUsername(): string
+    public function getUsername(): ?string
     {
         return $this->username;
     }
@@ -351,12 +375,12 @@ class User implements UserInterface
 
     public function isDisabled(): ?bool
     {
-        return $this->disabled;
+        return $this->isDisabled;
     }
 
-    public function setDisabled(bool $disabled): self
+    public function setDisabled(bool $isDisabled): self
     {
-        $this->disabled = $disabled;
+        $this->isDisabled = $isDisabled;
 
         return $this;
     }
@@ -381,6 +405,40 @@ class User implements UserInterface
     public function setUsername(string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
+    }
+
+    public function isActivated(): bool
+    {
+        return $this->isActivated;
+    }
+
+    public function setIsActivated(bool $isActivated): self
+    {
+        $this->isActivated = $isActivated;
+
+        return $this;
+    }
+
+    public function getActivateHash(): ?string
+    {
+        return $this->activateHash;
+    }
+
+    public function setActivateHash(string $activateHash): self
+    {
+        $this->activateHash = $activateHash;
 
         return $this;
     }

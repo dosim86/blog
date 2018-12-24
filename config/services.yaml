@@ -5,6 +5,8 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    app.domain_name: '%env(DOMAIN_NAME)%'
+    app.email_register: '%env(EMAIL_DEFAULT)%'
 
 services:
     # default configuration for services in *this* file
@@ -16,7 +18,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,Helper}'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,Lib}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
