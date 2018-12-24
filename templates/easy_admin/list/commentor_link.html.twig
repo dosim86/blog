@@ -1,3 +1,3 @@
 {#{% set colors = field_options.label_colors|default(['primary']) %}#}
 
-<a href="{{ path('user_profile', { email: item.owner.email }) }}" target="_blank">{{ item.owner.firstname }}</a>
+<a href="{{ path('user_profile', {username: item.owner.username}) }}" target="_blank">{{ item.owner.firstname }}</a>

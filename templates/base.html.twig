@@ -34,7 +34,7 @@
                                     {% if is_granted('ROLE_ADMIN') %}
                                     <a class="dropdown-item" href="{{ path('easyadmin') }}">Admin</a>
                                     {% endif %}
-                                    <a class="dropdown-item" href="{{ path('user_profile', {email:app.user.username}) }}">Profile</a>
+                                    <a class="dropdown-item" href="{{ path('user_profile', {username:app.user.username}) }}">Profile</a>
                                     <span class="dropdown-divider"></span>
                                     <a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a>
                                 </div>

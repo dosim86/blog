@@ -4,12 +4,8 @@ namespace App\Controller\Api;
 
 use App\Entity\User;
 use App\Exception\Api\FailApiException;
-use App\Exception\Api\InvalidTokenApiException;
-use App\Repository\BookmarkArticleRepository;
-use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -18,14 +14,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/subscribe/{email}", name="api_user_subscribe")
+     * @Route("/subscribe/{username}", name="api_user_subscribe")
      * @throws \Exception
      */
-    public function subscribe(
-        User $subscribeUser,
-        BookmarkArticleRepository $rep,
-        PaginatorInterface $paginator
-    ) {
+    public function subscribe(User $subscribeUser)
+    {
         /** @var User $followerUser */
         $followerUser = $this->getUser();
         try {
@@ -59,14 +52,11 @@ class UserController extends AbstractController
 
     /**
      * @IsGranted("UNSUBSCRIBE", subject="unsubscribeUser")
-     * @Route("/unsubscribe/{email}", name="api_user_unsubscribe")
+     * @Route("/unsubscribe/{username}", name="api_user_unsubscribe")
      * @throws \Exception
      */
-    public function unsubscribe(
-        User $unsubscribeUser,
-        BookmarkArticleRepository $rep,
-        PaginatorInterface $paginator
-    ) {
+    public function unsubscribe(User $unsubscribeUser)
+    {
         /** @var User $followerUser */
         $followerUser = $this->getUser();
         try {

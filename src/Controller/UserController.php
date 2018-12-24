@@ -36,7 +36,7 @@ class UserController extends AbstractController
     /**
      * @IsGranted("ROLE_USER")
      * @IsGranted("EDIT", subject="user")
-     * @Route("/{email}/edit", name="user_edit")
+     * @Route("/{username}/edit", name="user_edit")
      */
     public function edit(User $user, Request $request)
     {
@@ -58,7 +58,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{email}", name="user_profile")
+     * @Route("/{username}", name="user_profile")
      */
     public function show(User $user)
     {
@@ -68,7 +68,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{email}/articles", name="user_articles")
+     * @Route("/{username}/articles", name="user_articles")
      */
     public function articles(User $user, Request $request, ArticleRepository $rep, PaginatorInterface $paginator)
     {
@@ -83,7 +83,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{email}/comments", name="user_comments")
+     * @Route("/{username}/comments", name="user_comments")
      */
     public function comments(User $user, Request $request, CommentRepository $rep, PaginatorInterface $paginator)
     {
@@ -98,7 +98,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{email}/bookmarks", name="user_bookmarks")
+     * @Route("/{username}/bookmarks", name="user_bookmarks")
      */
     public function bookmarks(User $user, Request $request, BookmarkArticleRepository $rep, PaginatorInterface $paginator)
     {
@@ -113,7 +113,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{email}/subscribs", name="user_subscribs")
+     * @Route("/{username}/subscribs", name="user_subscribs")
      */
     public function subscribs(User $user)
     {
@@ -124,7 +124,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{email}/followers", name="user_followers")
+     * @Route("/{username}/followers", name="user_followers")
      */
     public function followers(User $user)
     {

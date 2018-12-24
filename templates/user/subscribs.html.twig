@@ -9,12 +9,12 @@
             <div class="bg-light p-3 mb-3 rounded">
                 <div class="clearfix">
                     <span class="float-left">
-                        {{ subscribe.firstname }} <a href="{{ path('user_profile', {email:subscribe.username}) }}">@{{ subscribe.username }}</a>
+                        {{ subscribe.firstname }} <a href="{{ path('user_profile', {username:subscribe.username}) }}">@{{ subscribe.username }}</a>
                         <span class="rank-rect text-secondary"><i class="fas fa-star"></i> {{ subscribe.rank }}</span>
                     </span>
                     <div class="float-right">
                     {% if is_granted('UNSUBSCRIBE', subscribe) %}
-                        <a href="{{ path('api_user_unsubscribe', {email:subscribe.email}) }}"
+                        <a href="{{ path('api_user_unsubscribe', {username:subscribe.username}) }}"
                            data-token="{{ csrf_token('_api') }}"
                            class="btn btn-sm btn-outline-secondary js-unsubscribe">
                             Unsubscribe <i class="fas fa-bell"></i>

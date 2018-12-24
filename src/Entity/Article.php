@@ -82,7 +82,7 @@ class Article implements LikeableInterface
     /**
      * @ORM\Column(type="integer")
      */
-    private $watchCount;
+    private $watchCount = 0;
 
     public function __construct()
     {

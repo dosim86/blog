@@ -3,7 +3,6 @@
 namespace App\Controller\Api;
 
 use App\Exception\Api\FailApiException;
-use App\Exception\Api\InvalidTokenApiException;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

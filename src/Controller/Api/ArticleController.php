@@ -6,7 +6,6 @@ use App\Entity\Article;
 use App\Entity\BookmarkArticle;
 use App\Event\UserEvent;
 use App\Exception\Api\FailApiException;
-use App\Exception\Api\InvalidTokenApiException;
 use App\Exception\Like\FailLikeException;
 use App\Service\Like\LikeManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;

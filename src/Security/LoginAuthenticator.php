@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,15 +24,19 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator
 {
     use TargetPathTrait;
 
-    private $entityManager;
     private $router;
+    private $userRepository;
     private $csrfTokenManager;
     private $passwordEncoder;
 
-    public function __construct(EntityManagerInterface $entityManager, RouterInterface $router, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder)
-    {
-        $this->entityManager = $entityManager;
+    public function __construct(
+        RouterInterface $router,
+        UserRepository $userRepository,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        UserPasswordEncoderInterface $passwordEncoder
+    ) {
         $this->router = $router;
+        $this->userRepository = $userRepository;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->passwordEncoder = $passwordEncoder;
     }
@@ -45,13 +50,13 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator
     public function getCredentials(Request $request)
     {
         $credentials = [
-            'email' => $request->request->get('email'),
+            'username' => $request->request->get('username'),
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
         $request->getSession()->set(
             Security::LAST_USERNAME,
-            $credentials['email']
+            $credentials['username']
         );
 
         return $credentials;
@@ -64,10 +69,9 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator
             throw new InvalidCsrfTokenException();
         }
 
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
-
-        if (!$user) {
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+        $user = $this->userRepository->findOneBy(['username' => $credentials['username']]);
+        if (empty($user)) {
+            throw new CustomUserMessageAuthenticationException('Username could not be found');
         }
 
         return $user;
@@ -77,7 +81,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator
     {
         /** @var User $user */
         if ($user->isDisabled()) {
-            throw new CustomUserMessageAuthenticationException('Account is disable.');
+            throw new CustomUserMessageAuthenticationException('Account is disable');
         }
 
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);

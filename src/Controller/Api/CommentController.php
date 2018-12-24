@@ -4,11 +4,9 @@ namespace App\Controller\Api;
 
 use App\Entity\Comment;
 use App\Exception\Api\FailApiException;
-use App\Exception\Api\InvalidTokenApiException;
 use App\Exception\Like\FailLikeException;
 use App\Service\Like\LikeManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**

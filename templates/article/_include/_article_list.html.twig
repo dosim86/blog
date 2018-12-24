@@ -18,7 +18,7 @@
                 </div>
                 <div class="float-right">
                     <ul class="icons-inline text-info small">
-                        <li>{{ article.author.firstname }} <a href="{{ path('user_profile', {email:article.author.username}) }}">@{{ article.author.username }}</a></li>
+                        <li>{{ article.author.firstname }} <a href="{{ path('user_profile', {username:article.author.username}) }}">@{{ article.author.username }}</a></li>
                         <li>{{ article.createdAt|date('d.m.Y') }}</li>
                         <li><i class="fas fa-bookmark"></i><span>{{ article.bookmarkCount }}</span></li>
                         <li><i class="fas fa-eye"></i><span>{{ article.watchCount }}</span></li>

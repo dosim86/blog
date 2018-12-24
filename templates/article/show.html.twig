@@ -10,7 +10,7 @@
                 <div class="clearfix py-2">
                     <div class="float-left">
                         <img class="img-fluid rounded-circle" src="{{ article.author.avatarPath }}">
-                        <a href="{{ path('user_profile', {email:article.author.email}) }}">{{ article.author.firstname }}</a>
+                        <a href="{{ path('user_profile', {username:article.author.username}) }}">{{ article.author.firstname }}</a>
                     </div>
                     <div class="float-right">
                         {% if is_granted('EDIT', article) %}

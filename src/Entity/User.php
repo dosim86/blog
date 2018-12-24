@@ -86,6 +86,11 @@ class User implements UserInterface
      */
     private $rank = 0;
 
+    /**
+     * @ORM\Column(type="string", length=100, unique=true)
+     */
+    private $username;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
@@ -119,7 +124,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return $this->username;
     }
 
     /**
@@ -369,6 +374,13 @@ class User implements UserInterface
     public function setRank(int $rank): self
     {
         $this->rank = $rank;
+
+        return $this;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
 
         return $this;
     }
