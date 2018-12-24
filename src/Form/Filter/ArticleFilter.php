@@ -118,7 +118,7 @@ class ArticleFilter extends AbstractType
         $resolver->setDefaults([
             'data_class' => null,
             'required' => false,
-            'csrf_token_id' => 'article_filter',
+            'csrf_token_id' => '_api',
         ]);
     }
 }

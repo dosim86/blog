@@ -21,7 +21,7 @@
                             <li>
                                 <a href="{{ path('api_article_bookmark', {id: article.id}) }}"
                                    class="text-info js-bookmark-article-btn {{ not is_granted('ROLE_USER') ? 'not-allowed' : '' }}"
-                                   data-token="{{ csrf_token(article.id) }}">
+                                   data-token="{{ csrf_token('_api') }}">
                                     <i class="fas fa-bookmark"></i><span>{{ article.bookmarkCount }}</span>
                                 </a>
                             </li>
@@ -38,7 +38,7 @@
                 </p>
                 {% if is_granted('ROLE_USER') %}
                 <div class="d-flex justify-content-center">
-                    <div class="btn-group btn-group-toggle js-like" data-token="{{ csrf_token(article.id) }}">
+                    <div class="btn-group btn-group-toggle js-like" data-token="{{ csrf_token('_api') }}">
                         <a href="{{ path('api_article_like', {id: article.id}) }}" class="btn btn-sm btn-outline-success js-like-btn" data-type="1">
                             <i class="fas fa-thumbs-up"></i> <span>{{ article.likeCount }}</span>
                         </a>

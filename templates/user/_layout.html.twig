@@ -17,7 +17,7 @@
             <div class="pl-3 w-25 text-info">
             {% if is_granted('ROLE_USER') and app.user != user %}
                 <a href="{{ path('api_user_subscribe', {email:user.email}) }}"
-                   data-token="{{ csrf_token(user.id) }}"
+                   data-token="{{ csrf_token('_api') }}"
                    class="float-right btn btn-sm btn-outline-info js-subscribe">
                     Subscribe <i class="fas fa-bell"></i>
                 </a>

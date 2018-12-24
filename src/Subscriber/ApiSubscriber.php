@@ -13,18 +13,23 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class ApiSubscriber implements EventSubscriberInterface
 {
-    private $security;
-
     private $publicApi = [
         '/api/author/list'
     ];
 
-    public function __construct(Security $security)
+    private $security;
+
+    private $csrfTokenManager;
+
+    public function __construct(Security $security, CsrfTokenManagerInterface $csrfTokenManager)
     {
         $this->security = $security;
+        $this->csrfTokenManager = $csrfTokenManager;
     }
 
     public static function getSubscribedEvents()
@@ -35,23 +40,18 @@ class ApiSubscriber implements EventSubscriberInterface
         ];
     }
 
-    private function supports(KernelEvent $event)
-    {
-        $request = $event->getRequest();
-
-        if (false !== strpos($request->getRequestUri(), '/api/')) {
-            if (!$event->isMasterRequest() || !$request->isXmlHttpRequest()) {
-                throw new NotFoundHttpException();
-            }
-            return true;
-        }
-        return false;
-    }
-
+    /**
+     * @param GetResponseEvent $event
+     * @throws InvalidTokenApiException
+     */
     public function onKernelRequest(GetResponseEvent $event)
     {
         if (!$this->supports($event)) {
             return;
+        }
+
+        if (!$this->isCsrfTokenValid($event->getRequest())) {
+            throw new InvalidTokenApiException();
         }
 
         if (!$this->security->isGranted('ROLE_USER') && !$this->isPublicApi($event->getRequest())) {
@@ -78,9 +78,30 @@ class ApiSubscriber implements EventSubscriberInterface
             $response = new JsonResponse([
                 'type' => 'error',
                 'message' => $exception->getMessage()
-            ], 404);
+            ], 400);
             $event->setResponse($response);
         }
+    }
+
+    private function supports(KernelEvent $event)
+    {
+        $request = $event->getRequest();
+
+        if (false !== strpos($request->getRequestUri(), '/api/')) {
+            if (!$event->isMasterRequest() || !$request->isXmlHttpRequest()) {
+                throw new NotFoundHttpException();
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    private function isCsrfTokenValid(Request $request)
+    {
+        return $this->csrfTokenManager->isTokenValid(
+            new CsrfToken('_api', $request->get('token'))
+        );
     }
 
     private function isPublicApi(Request $request)

@@ -15,7 +15,7 @@
                     <div class="float-right">
                     {% if is_granted('UNSUBSCRIBE', subscribe) %}
                         <a href="{{ path('api_user_unsubscribe', {email:subscribe.email}) }}"
-                           data-token="{{ csrf_token(subscribe.id) }}"
+                           data-token="{{ csrf_token('_api') }}"
                            class="btn btn-sm btn-outline-secondary js-unsubscribe">
                             Unsubscribe <i class="fas fa-bell"></i>
                         </a>

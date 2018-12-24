@@ -31,11 +31,6 @@ class ArticleController extends AbstractController
         EventDispatcherInterface $dispatcher
     ) {
         try {
-            $token = $request->get('token');
-            if (!$this->isCsrfTokenValid($article->getId(), $token)) {
-                throw new InvalidTokenApiException();
-            }
-
             $likeManager->like($article, $this->getUser());
             $data = [
                 'likes' => $article->getLikeCount(),
@@ -50,7 +45,7 @@ class ArticleController extends AbstractController
                 'message' => 'Article is liked',
                 'data' => $data,
             ]);
-        } catch (FailLikeException | InvalidTokenApiException $e) {
+        } catch (FailLikeException $e) {
             throw $e;
         } catch (\Exception $e) {
             throw new FailApiException();
@@ -68,11 +63,6 @@ class ArticleController extends AbstractController
         EventDispatcherInterface $dispatcher
     ) {
         try {
-            $token = $request->get('token');
-            if (!$this->isCsrfTokenValid($article->getId(), $token)) {
-                throw new InvalidTokenApiException();
-            }
-
             $likeManager->dislike($article, $this->getUser());
             $data = [
                 'likes' => $article->getLikeCount(),
@@ -87,7 +77,7 @@ class ArticleController extends AbstractController
                 'message' => 'Article is disliked',
                 'data' => $data,
             ]);
-        } catch (FailLikeException | InvalidTokenApiException $e) {
+        } catch (FailLikeException $e) {
             throw $e;
         } catch (\Exception $e) {
             throw new FailApiException();
@@ -98,14 +88,9 @@ class ArticleController extends AbstractController
      * @Route("/bookmark/{id}", name="api_article_bookmark")
      * @throws \Exception
      */
-    public function bookmark(Request $request, Article $article)
+    public function bookmark(Article $article)
     {
         try {
-            $token = $request->get('token');
-            if (!$this->isCsrfTokenValid($article->getId(), $token)) {
-                throw new FailApiException();
-            }
-
             $article->incBookmarkCount();
 
             $bookmark = new BookmarkArticle();
