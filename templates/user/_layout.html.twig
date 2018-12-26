@@ -12,7 +12,7 @@
             <div class="w-75">
                 {{ user.firstname }} <a href="{{ path('user_profile', {username:user.username}) }}">@{{ user.username }}</a>
                 <span class="rank-rect text-secondary"><i class="fas fa-star"></i> {{ user.rank }}</span><br>
-                <span class="text-info small">Last activity 1 minute ago</span>
+                <span class="text-info small">{{ user.lastActivityAt|ago }}</span>
             </div>
             <div class="pl-3 w-25 text-info">
             {% if is_granted('ROLE_USER') and app.user != user %}

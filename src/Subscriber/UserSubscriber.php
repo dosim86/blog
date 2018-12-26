@@ -24,6 +24,7 @@ class UserSubscriber implements EventSubscriberInterface
             UserEvent::RANK => 'onUserRank',
             UserEvent::REGISTER => 'onUserRegister',
             UserEvent::RESET_PASSWORD => 'onUserResetPassword',
+            UserEvent::ACTIVE => 'onUserActive',
             KernelEvents::FINISH_REQUEST => 'onKernelFinishRequest',
         ];
     }
@@ -46,6 +47,12 @@ class UserSubscriber implements EventSubscriberInterface
         $attributes->set(UserEvent::RESET_PASSWORD, $event->getUser());
     }
 
+    public function onUserActive(UserEvent $event)
+    {
+        $attributes = $event->getRequest()->attributes;
+        $attributes->set(UserEvent::ACTIVE, $event->getUser());
+    }
+
     /**
      * @param FinishRequestEvent $event
      * @throws \Exception
@@ -65,6 +72,10 @@ class UserSubscriber implements EventSubscriberInterface
 
         if ($user = $attributes->get(UserEvent::RESET_PASSWORD, null)) {
             $this->userManager->resetUserPassword($user);
+        }
+
+        if ($user = $attributes->get(UserEvent::ACTIVE, null)) {
+            $this->userManager->refreshUserLastActivity($user);
         }
     }
 }

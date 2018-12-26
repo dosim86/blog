@@ -5,8 +5,10 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+
     app.domain_name: '%env(DOMAIN_NAME)%'
     app.email_register: '%env(EMAIL_DEFAULT)%'
+    app.user_active_interval: 5000 # msec
 
 services:
     # default configuration for services in *this* file

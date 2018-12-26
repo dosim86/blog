@@ -115,6 +115,11 @@ class User implements UserInterface
      */
     private $activateHash;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $lastActivityAt;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
@@ -439,6 +444,18 @@ class User implements UserInterface
     public function setActivateHash(string $activateHash): self
     {
         $this->activateHash = $activateHash;
+
+        return $this;
+    }
+
+    public function getLastActivityAt(): ?\DateTimeInterface
+    {
+        return $this->lastActivityAt;
+    }
+
+    public function refreshLastActivity(): self
+    {
+        $this->lastActivityAt = new \DateTime();
 
         return $this;
     }

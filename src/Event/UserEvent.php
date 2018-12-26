@@ -11,6 +11,7 @@ class UserEvent extends Event
     const RANK = 'app.user.rank';
     const REGISTER = 'app.user.register';
     const RESET_PASSWORD = 'app.user.reset_password';
+    const ACTIVE = 'app.user.active';
 
     private $request;
 

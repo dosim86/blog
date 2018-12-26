@@ -1,0 +1,4 @@
+<script>
+    window.userActiveInterval={{ is_granted('ROLE_USER') ? user_active_interval : 0 }};
+    window.userActivityToken='{{ csrf_token('_api') }}';
+</script>

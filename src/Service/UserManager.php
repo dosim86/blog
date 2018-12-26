@@ -114,6 +114,17 @@ class UserManager
         $em->flush();
     }
 
+    /**
+     * @param User $user
+     */
+    public function refreshUserLastActivity(User $user)
+    {
+        $user->refreshLastActivity();
+        $em = $this->getEntityManager();
+        $em->persist($user);
+        $em->flush();
+    }
+
     private function getEncodedPassword(User $user)
     {
         return $this->getPasswordEncoder()->encodePassword($user, $user->getPlainPassword());

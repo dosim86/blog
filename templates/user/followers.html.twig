@@ -9,7 +9,7 @@
                 <div class="bg-light p-3 mb-3 rounded">
                     {{ follower.firstname }} <a href="{{ path('user_profile', {username:follower.username}) }}">@{{ follower.username }}</a>
                     <span class="rank-rect text-secondary"><i class="fas fa-star"></i> {{ follower.rank }}</span><br>
-                    <span class="text-info small">Last activity 1 minute ago</span>
+                    <span class="text-info small">{{ follower.lastActivityAt|ago }}</span>
                 </div>
             </div>
         {% else %}

@@ -3,9 +3,12 @@
 namespace App\Controller\Api;
 
 use App\Entity\User;
+use App\Event\UserEvent;
 use App\Exception\Api\ApiException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -86,5 +89,18 @@ class UserController extends AbstractController
         } catch (\Exception $e) {
             throw new ApiException();
         }
+    }
+
+    /**
+     * @Route("/active", name="api_user_active", options={"expose"=true})
+     */
+    public function active(Request $request, EventDispatcherInterface $dispatcher)
+    {
+        $event = new UserEvent($request, $this->getUser());
+        $dispatcher->dispatch(UserEvent::ACTIVE, $event);
+
+        return $this->json([
+            'type' => 'success',
+        ]);
     }
 }
