@@ -22,11 +22,11 @@ trait ManagerTrait
             ->getParameter($name);
     }
 
-    public function generateUrl($route, $parameters)
+    public function generateUrl($route, $parameters = [])
     {
         return $this->container
             ->get('router')
-            ->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
+            ->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
     }
 
     public function getPasswordEncoder()

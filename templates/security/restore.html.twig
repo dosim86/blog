@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Restore an Account{% endblock %}
+
+{% block body %}
+    <div class="signin-form">
+        {{ form_start(form) }}
+            <h2>Please input your email</h2>
+            <p class="hint-text">A new password will be sent to your email </p>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-info"><i class="fas fa-envelope"></i></span>
+                </div>
+                {{ form_widget(form.email) }}
+                {{ form_errors(form.email) }}
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

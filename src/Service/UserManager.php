@@ -40,30 +40,17 @@ class UserManager
         $user->setActivateHash(Helper::randomHash32());
         $user->setFirstname($user->getUsername());
 
-        try {
-            $domain = $this->getParameter('app.domain_name');
-            $from = $this->getParameter('app.email_register');
-            $message = $this->renderView('security/message/register_mail.html.twig', [
-                'domain' => $domain,
-                'link' => $this->generateUrl('app_activate', [
-                    'activateHash' => $user->getActivateHash()
-                ]),
-            ]);
+        $subject = 'Registration on '.$this->getParameter('app.domain_name');
+        $message = $this->renderView('security/message/register_mail.html.twig', [
+            'domain' => $this->getParameter('app.domain_name'),
+            'link' => $this->generateUrl('app_activate', [
+                'activateHash' => $user->getActivateHash()
+            ]),
+        ]);
+        $this->sendEmail($user->getEmail(), $subject, $message);
 
-            if (!$this->mailer->send([
-                'subject' => 'Register in '.$domain,
-                'from' => $from,
-                'to' => $user->getEmail(),
-                'text' => $message
-            ])) {
-                throw new UserMailingException();
-            }
-
-            $em->persist($user);
-            $em->flush();
-        } catch (\Exception $e) {
-            throw new UserMailingException();
-        }
+        $em->persist($user);
+        $em->flush();
     }
 
     /**
@@ -91,6 +78,27 @@ class UserManager
 
     /**
      * @param User $user
+     * @throws \Exception
+     */
+    public function resetUserPassword(User $user)
+    {
+        $user->setPlainPassword(substr(md5(random_bytes(32)), 0, 10));
+        $user->setPassword($this->getEncodedPassword($user));
+
+        $subject = 'A new password on '.$this->getParameter('app.domain_name');
+        $message = $this->renderView('security/message/reset_password.html.twig', [
+            'plain_password' => $user->getPlainPassword(),
+            'link' => $this->generateUrl('app_login'),
+        ]);
+        $this->sendEmail($user->getEmail(), $subject, $message);
+
+        $em = $this->getEntityManager();
+        $em->persist($user);
+        $em->flush();
+    }
+
+    /**
+     * @param User $user
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function rankUser(User $user)
@@ -109,5 +117,25 @@ class UserManager
     private function getEncodedPassword(User $user)
     {
         return $this->getPasswordEncoder()->encodePassword($user, $user->getPlainPassword());
+    }
+
+    /**
+     * @param $to
+     * @param $subject
+     * @param $text
+     * @throws \Exception
+     */
+    private function sendEmail($to, $subject, $text)
+    {
+        $from = $this->getParameter('app.email_register');
+
+        if (!$this->mailer->send([
+            'subject' => $subject,
+            'from' => $from,
+            'to' => $to,
+            'text' => $text
+        ])) {
+            throw new UserMailingException();
+        }
     }
 }
