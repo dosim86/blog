@@ -55,11 +55,10 @@
 
         {% block javascripts %}
             {{ include('_include/_client_global_states.html.twig') }}
-            {{ include('_include/_flashes.html.twig') }}
-
             <script src="{{ asset('build/runtime.js') }}"></script>
             <script src="{{ asset('build/vendor.js') }}"></script>
             <script src="{{ asset('build/js/app.js') }}"></script>
+            {{ include('_include/_flashes.html.twig') }}
         {% endblock %}
     </body>
 </html>

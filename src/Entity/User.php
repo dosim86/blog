@@ -60,6 +60,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(min=10, groups={"profile"})
      */
     private $aboutMe;
 
@@ -127,6 +128,7 @@ class User implements UserInterface
         $this->bookmarkArticles = new ArrayCollection();
         $this->followers = new ArrayCollection();
         $this->subscribs = new ArrayCollection();
+        $this->lastActivityAt = new \DateTime();
     }
 
     public function getId(): ?int

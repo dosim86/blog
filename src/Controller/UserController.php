@@ -48,7 +48,7 @@ class UserController extends AbstractController
 
             $this->addFlash('success', 'Information about you is updated');
 
-            return $this->redirectToRoute('user_profile', ['email' => $user->getUsername()]);
+            return $this->redirectToRoute('user_profile', ['username' => $user->getUsername()]);
         }
 
         return $this->render('user/edit.html.twig', [

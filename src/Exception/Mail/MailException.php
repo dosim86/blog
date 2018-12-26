@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exception\Inform\Mail;
+namespace App\Exception\Mail;
 
 use App\Exception\AppException;
 

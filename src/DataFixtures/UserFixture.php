@@ -29,6 +29,8 @@ class UserFixture extends BaseFixture
             $user->setEmail(sprintf('user%s@email.com', $index));
             $user->setFirstname($this->faker->firstName);
             $user->setPassword($this->encoder->encodePassword($user, '123'));
+            $user->setActivateHash('fake_hash');
+            $user->setIsActivated(true);
             return $user;
         });
 
@@ -39,6 +41,8 @@ class UserFixture extends BaseFixture
             $user->setEmail(sprintf('admin%s@email.com', $index));
             $user->setFirstname($this->faker->firstName);
             $user->setPassword($this->encoder->encodePassword($user, '123'));
+            $user->setActivateHash('fake_hash');
+            $user->setIsActivated(true);
             return $user;
         });
 
