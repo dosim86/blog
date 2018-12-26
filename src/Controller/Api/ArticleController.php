@@ -6,9 +6,9 @@ use App\Entity\Article;
 use App\Entity\BookmarkArticle;
 use App\Event\UserEvent;
 use App\Exception\Api\ApiException;
-use App\Exception\Like\LikeException;
 use App\Service\LikeManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +27,7 @@ class ArticleController extends AbstractController
         Request $request,
         Article $article,
         LikeManager $likeManager,
+        LoggerInterface $appLogger,
         EventDispatcherInterface $dispatcher
     ) {
         try {
@@ -44,9 +45,8 @@ class ArticleController extends AbstractController
                 'message' => 'Article is liked',
                 'data' => $data,
             ]);
-        } catch (LikeException $e) {
-            throw $e;
         } catch (\Exception $e) {
+            $appLogger->error($e->getMessage());
             throw new ApiException();
         }
     }
@@ -59,6 +59,7 @@ class ArticleController extends AbstractController
         Request $request,
         Article $article,
         LikeManager $likeManager,
+        LoggerInterface $appLogger,
         EventDispatcherInterface $dispatcher
     ) {
         try {
@@ -76,9 +77,8 @@ class ArticleController extends AbstractController
                 'message' => 'Article is disliked',
                 'data' => $data,
             ]);
-        } catch (LikeException $e) {
-            throw $e;
         } catch (\Exception $e) {
+            $appLogger->error($e->getMessage());
             throw new ApiException();
         }
     }
@@ -87,7 +87,7 @@ class ArticleController extends AbstractController
      * @Route("/bookmark/{id}", name="api_article_bookmark")
      * @throws \Exception
      */
-    public function bookmark(Article $article)
+    public function bookmark(Article $article, LoggerInterface $appLogger)
     {
         try {
             $article->incBookmarkCount();
@@ -111,6 +111,7 @@ class ArticleController extends AbstractController
                 'message' => 'You already added the article'
             ]);
         } catch (\Exception $e) {
+            $appLogger->error($e->getMessage());
             throw new ApiException();
         }
     }

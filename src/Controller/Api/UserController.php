@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Entity\User;
 use App\Event\UserEvent;
 use App\Exception\Api\ApiException;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -20,7 +21,7 @@ class UserController extends AbstractController
      * @Route("/subscribe/{username}", name="api_user_subscribe")
      * @throws \Exception
      */
-    public function subscribe(User $subscribeUser)
+    public function subscribe(User $subscribeUser, LoggerInterface $appLogger)
     {
         /** @var User $followerUser */
         $followerUser = $this->getUser();
@@ -49,6 +50,7 @@ class UserController extends AbstractController
                 'message' => 'You are subscribed to the author',
             ]);
         } catch (\Exception $e) {
+            $appLogger->error($e->getMessage());
             throw new ApiException();
         }
     }
@@ -58,7 +60,7 @@ class UserController extends AbstractController
      * @Route("/unsubscribe/{username}", name="api_user_unsubscribe")
      * @throws \Exception
      */
-    public function unsubscribe(User $unsubscribeUser)
+    public function unsubscribe(User $unsubscribeUser, LoggerInterface $appLogger)
     {
         /** @var User $followerUser */
         $followerUser = $this->getUser();
@@ -87,6 +89,7 @@ class UserController extends AbstractController
                 'message' => 'You are succesfully unsubscribed',
             ]);
         } catch (\Exception $e) {
+            $appLogger->error($e->getMessage());
             throw new ApiException();
         }
     }

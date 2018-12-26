@@ -1,0 +1,8 @@
+monolog:
+    channels: ['custom']
+    handlers:
+        custom_logging:
+            type: stream
+            path: '%kernel.logs_dir%/app.log'
+            level: error
+            channels: ['custom']

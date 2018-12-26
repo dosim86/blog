@@ -4,6 +4,8 @@ namespace App\Subscriber;
 
 use App\Exception\Api\ApiException;
 use App\Exception\Api\InvalidTokenException;
+use App\Exception\AppException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,10 +29,16 @@ class ApiSubscriber implements EventSubscriberInterface
 
     private $csrfTokenManager;
 
-    public function __construct(Security $security, CsrfTokenManagerInterface $csrfTokenManager)
-    {
+    private $appLogger;
+
+    public function __construct(
+        Security $security,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        LoggerInterface $appLogger
+    ) {
         $this->security = $security;
         $this->csrfTokenManager = $csrfTokenManager;
+        $this->appLogger = $appLogger;
     }
 
     public static function getSubscribedEvents()
@@ -81,6 +89,10 @@ class ApiSubscriber implements EventSubscriberInterface
                 'message' => $exception->getMessage()
             ], Response::HTTP_BAD_REQUEST);
             $event->setResponse($response);
+        }
+
+        if ($event->getException() instanceof AppException) {
+            $this->appLogger->error($event->getException()->getMessage());
         }
     }
 
