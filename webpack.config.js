@@ -19,6 +19,10 @@ Encore
      */
     .addEntry('js/app', './assets/js/app.js')
     .addStyleEntry('css/app', './assets/css/app.scss')
+
+    .addEntry('js/avatar_crop', './assets/js/avatar_crop.js')
+    .addStyleEntry('css/avatar_crop', './assets/css/avatar_crop.scss')
+
     .addStyleEntry('css/custom_admin', './assets/css/custom_admin.scss')
 
     // will require an extra script tag for runtime.js

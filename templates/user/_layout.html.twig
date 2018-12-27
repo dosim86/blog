@@ -7,7 +7,7 @@
     <div class="card p-3">
         <div class="d-flex">
             <div class="pr-3">
-                <img class="img-fluid rounded-circle" style="width: 50px" src="{{ user.avatarPath }}">
+                <img class="img-fluid rounded-circle user-avatar" src="{{ image_path ~ user.avatar }}">
             </div>
             <div class="w-75">
                 {{ user.firstname }} <a href="{{ path('user_profile', {username:user.username}) }}">@{{ user.username }}</a>

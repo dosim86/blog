@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -120,6 +121,11 @@ class User implements UserInterface
      * @ORM\Column(type="datetime")
      */
     private $lastActivityAt;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $avatar = 'default.png';
 
     public function __construct()
     {
@@ -392,11 +398,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getAvatarPath()
-    {
-        return '//i.pravatar.cc/40';
-    }
-
     public function getRank(): ?int
     {
         return $this->rank;
@@ -458,6 +459,18 @@ class User implements UserInterface
     public function refreshLastActivity(): self
     {
         $this->lastActivityAt = new \DateTime();
+
+        return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(string $avatar): self
+    {
+        $this->avatar = $avatar;
 
         return $this;
     }

@@ -1,5 +1,7 @@
 /.idea/
 /workdir/
+/public/uploads/*
+!/public/uploads/default.png
 
 ###> symfony/framework-bundle ###
 /.env

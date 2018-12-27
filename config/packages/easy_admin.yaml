@@ -34,6 +34,7 @@ easy_admin:
                 actions: ['-edit']
                 fields:
                     - { property: 'createdAt' }
+                    - { property: 'owner.avatar', type: 'image', base_path: '/uploads/' }
                     - { property: 'owner', label: 'Commentor', template: 'list/commentor_link.html.twig', sortable: false }
                     - { property: 'text', sortable: false }
                     - { property: 'likeCount' }
@@ -62,6 +63,7 @@ easy_admin:
                 actions: ['-edit']
                 fields:
                     - { property: 'id' }
+                    - { property: 'avatar', type: 'image', base_path: '/uploads/' }
                     - { property: 'email', sortable: false, type: email }
                     - { property: 'firstname', sortable: false }
                     - { property: 'disabled', label: 'Disabled ?' }

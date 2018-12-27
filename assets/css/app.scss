@@ -18,6 +18,10 @@ a {
   }
 }
 
+.user-avatar {
+  height: 50px;
+}
+
 @import 'helper';
 @import 'components';
 @import 'login';

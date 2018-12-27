@@ -1,9 +1,35 @@
 {% extends 'user/_layout.html.twig' %}
 
-{% form_theme form 'bootstrap_4_layout.html.twig' %}
+{% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('build/css/avatar_crop.css') }}">
+{% endblock %}
 
 {% block title %}User edit profile{% endblock %}
 
 {% block user_content %}
-    {{ form(form) }}
+    {{ form_start(form) }}
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2">Avatar</label>
+            <div class="col-sm-10">
+                <div style="max-height: 400px">
+                    {% if form.vars.data.avatar %}
+                        <img src="{{ image_path ~ form.vars.data.avatar }}" id="avatar" style="height:150px">
+                    {% else %}
+                        <img id="avatar">
+                    {% endif %}
+                </div>
+                {{ form_widget(form.uploadedFile) }}
+                {{ form_errors(form.uploadedFile) }}
+            </div>
+        </div>
+        {{ form_row(form.aboutMe) }}
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('build/js/avatar_crop.js') }}"></script>
 {% endblock %}

@@ -16,7 +16,7 @@
         {% for comment in comments %}
             <div class="d-flex">
                 <div class="pr-3 d-none d-sm-block">
-                    <img class="img-fluid rounded-circle" style="width: 50px" src="{{ comment.owner.avatarPath }}">
+                    <img class="img-fluid rounded-circle user-avatar" src="{{ image_path ~ comment.owner.avatar }}">
                 </div>
                 <div class="w-100">
                     <div class="clearfix">
