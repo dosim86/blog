@@ -40,9 +40,8 @@ class UserManager
         $user->setActivateHash(Helper::randomHash32());
         $user->setFirstname($user->getUsername());
 
-        $subject = 'Registration on '.$this->getParameter('app.domain_name');
+        $subject = 'Activate registration link';
         $message = $this->renderView('security/message/register_mail.html.twig', [
-            'domain' => $this->getParameter('app.domain_name'),
             'link' => $this->generateUrl('app_activate', [
                 'activateHash' => $user->getActivateHash()
             ]),
@@ -85,7 +84,7 @@ class UserManager
         $user->setPlainPassword(substr(md5(random_bytes(32)), 0, 10));
         $user->setPassword($this->getEncodedPassword($user));
 
-        $subject = 'A new password on '.$this->getParameter('app.domain_name');
+        $subject = 'Sending a new password';
         $message = $this->renderView('security/message/reset_password.html.twig', [
             'plain_password' => $user->getPlainPassword(),
             'link' => $this->generateUrl('app_login'),

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>{% block title %}Welcome to Blog!{% endblock %}</title>
+        <title>{% block title %}Welcome to Blogger!{% endblock %}</title>
 
         <link rel="stylesheet" href="{{ asset('build/vendor.css') }}">
         <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
@@ -12,7 +12,7 @@
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
             <div class="container">
-                <a class="navbar-brand font-weight-bold" href="{{ path('homepage') }}">Blog</a>
+                <a class="navbar-brand font-weight-bold" href="{{ path('homepage') }}">Blogger</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -32,7 +32,7 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                     {% if is_granted('ROLE_ADMIN') %}
-                                    <a class="dropdown-item" href="{{ path('easyadmin') }}">Admin</a>
+                                        <a class="dropdown-item" href="{{ path('easyadmin') }}">Admin</a>
                                     {% endif %}
                                     <a class="dropdown-item" href="{{ path('user_profile', {username:app.user.username}) }}">Profile</a>
                                     <span class="dropdown-divider"></span>
@@ -51,7 +51,27 @@
                 </div>
             </div>
         </nav>
-        {% block body %}{% endblock %}
+
+        <main>
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer class="bg-dark text-white mt-4">
+            <div class="container py-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h5>Blogger</h5></div>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6"><span class="small text-info"><br>Share your articles here</span></div>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3 text-right small align-self-end text-success">© 2019 Blogger, Inc.</div>
+                </div>
+            </div>
+        </footer>
 
         {% block javascripts %}
             {{ include('_include/_client_global_states.html.twig') }}

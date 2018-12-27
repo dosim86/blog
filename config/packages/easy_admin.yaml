@@ -1,6 +1,6 @@
 easy_admin:
     disabled_actions: ['delete']
-    site_name: '<span class="text-black">Blog <em>Admin</em></span>'
+    site_name: '<span class="text-black">Blogger <em>Admin</em></span>'
     design:
         menu:
             - { label: 'Home', route: 'homepage', icon: 'home', target: '_blank' }
