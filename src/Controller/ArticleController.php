@@ -3,11 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Article;
-use App\Entity\Comment;
 use App\Event\ArticleEvent;
 use App\Form\Filter\ArticleFilter;
 use App\Form\ArticleType;
-use App\Form\CommentType;
 use App\Repository\ArticleRepository;
 use App\Repository\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -126,35 +124,22 @@ class ArticleController extends AbstractController
     /**
      * @Route("/article/{slug}", name="article_show")
      */
-    public function show($slug, Request $request, ArticleRepository $repository, EventDispatcherInterface $dispatcher)
+    public function show(Request $request, ArticleRepository $repository, EventDispatcherInterface $dispatcher)
     {
-        $article = $repository->getArticleBySlug($slug);
-        if (!$article) {
+        if (empty($article = $repository->getArticleBySlug($request->get('slug')))) {
             throw $this->createNotFoundException('Article not found');
-        }
-
-        $commentForm = $this->createForm(CommentType::class, new Comment());
-        $commentForm->handleRequest($request);
-
-        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
-            /** @var Comment $comment */
-            $comment = $commentForm->getData();
-            $comment->setOwner($this->getUser());
-            $comment->setArticle($article->incCommentCount());
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($comment);
-            $em->flush();
-
-            return $this->redirectToRoute('article_show', ['slug' => $article->getSlug()]);
         }
 
         $event = new ArticleEvent($request, $article);
         $dispatcher->dispatch(ArticleEvent::WATCH, $event);
 
+        $response = $this->forward(CommentController::class.'::add', [
+            'article' => $article
+        ]);
+
         return $this->render('article/show.html.twig', [
             'article' => $article,
-            'commentForm' => $commentForm->createView()
+            'htmlAddComment' => $response->getContent()
         ]);
     }
 }

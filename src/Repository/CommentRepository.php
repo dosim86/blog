@@ -25,6 +25,8 @@ class CommentRepository extends ServiceEntityRepository
     public function getUserComments(User $user)
     {
         return $this->createQueryBuilder('c')
+            ->addSelect('a')
+            ->leftJoin('c.article', 'a')
             ->andWhere('c.owner = :c_owner')
             ->setParameter('c_owner', $user)
             ;

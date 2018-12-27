@@ -26,7 +26,11 @@ class BookmarkArticleRepository extends ServiceEntityRepository
     {
         return $this->_em->createQueryBuilder()
             ->select('a')
+            ->addSelect('au')
+            ->addSelect('t')
             ->from(Article::class, 'a')
+            ->leftJoin('a.tags', 't')
+            ->leftJoin('a.author', 'au')
             ->join(BookmarkArticle::class, 'ba', Join::WITH, 'a = ba.article')
             ->andWhere('ba.user = :ba_user')
             ->setParameter('ba_user', $user)

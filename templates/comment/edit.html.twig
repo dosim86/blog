@@ -1,0 +1,12 @@
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{{ form_start(form) }}
+<div class="d-flex">
+    <div class="w-100">
+        {{ form_widget(form) }}
+    </div>
+    <div class="pl-2">
+        <button type="submit" class="btn btn-outline-success float-right d-block"><i class="fas fa-plus-circle"></i> Send</button>
+    </div>
+</div>
+{{ form_end(form) }}

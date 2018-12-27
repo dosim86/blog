@@ -102,7 +102,9 @@ class ArticleRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('a')
             ->addSelect('c')
+            ->addSelect('t')
             ->leftJoin('a.comments', 'c')
+            ->leftJoin('a.tags', 't')
             ->orderBy('a.createdAt', 'DESC');
 
         if ($user) {
@@ -123,8 +125,10 @@ class ArticleRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->addSelect('c')
             ->addSelect('o')
+            ->addSelect('t')
             ->leftJoin('a.comments', 'c')
             ->leftJoin('c.owner', 'o')
+            ->leftJoin('a.tags', 't')
             ->andWhere('a.slug = :slug')
             ->setParameter('slug', $slug)
             ->getQuery()
