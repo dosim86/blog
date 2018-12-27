@@ -24,12 +24,6 @@ ul.icons-inline {
     display: flex;
     padding: 0;
 
-    > a {
-        &:hover {
-            text-decoration: none;
-        }
-    }
-
     .tab__item {
         position: relative;
         display: flex;

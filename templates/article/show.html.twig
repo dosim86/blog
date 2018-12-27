@@ -5,7 +5,7 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-8 card p-4">
+            <div class="col-md-8 col-sm-12 card p-4">
                 <h1><span class="font-weight-bold">{{ article.title }}</span></h1>
                 <div class="clearfix py-2">
                     <div class="float-left">
@@ -52,7 +52,7 @@
                     {% include 'comment/index.html.twig' with { comments: article.comments } %}
                 </div>
             </div>
-            <div class="col-4 card p-4">
+            <div class="col-md-4 d-none d-md-block card p-4">
                 {% include '_include/_sidebar.html.twig' %}
             </div>
         </div>

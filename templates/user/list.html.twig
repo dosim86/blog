@@ -3,7 +3,7 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-8 card p-4">
+            <div class="col-md-8 col-sm-12 card p-4">
                 {% for user in pagination %}
                     <div class="d-flex">
                         <div class="pr-3">
@@ -24,7 +24,7 @@
                     'rounded': true
                 }) }}
             </div>
-            <div class="col-4 card p-4">
+            <div class="col-md-4 d-none d-md-block card p-4">
                 {% include '_include/_sidebar.html.twig' %}
             </div>
         </div>

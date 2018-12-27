@@ -5,10 +5,10 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-8 card p-4">
+            <div class="col-md-8 col-sm-12 card p-4">
                 {{ include('article/_include/_article_list.html.twig') }}
             </div>
-            <div class="col-4 card p-4">
+            <div class="col-md-4 d-none d-md-block card p-4">
                 <button class="btn btn-light" data-toggle="collapse" data-target="#collapseFilter">
                     <span class="text-info">Search articles</span>
                 </button>

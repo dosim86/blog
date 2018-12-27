@@ -1,0 +1,22 @@
+$xs: 0;
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+
+@media(min-width: $xs) {
+  @import 'xs/xs';
+}
+@media(min-width: $sm) {
+  @import 'sm/sm';
+}
+@media(min-width: $md) {
+  @import 'md/md';
+}
+@media(min-width: $lg) {
+  @import 'lg';
+}
+@media(min-width: $xl) {
+  @import 'xl';
+}
+
