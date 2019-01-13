@@ -9,6 +9,7 @@ easy_admin:
             - { label: 'Configuration' }
             - { entity: 'Category', icon: 'columns' }
             - { entity: 'Tag', icon: 'tags' }
+            - { entity: 'Seo', icon: 'line-chart' }
         brand_color: '#dee2e9'
         assets:
             css:
@@ -70,3 +71,5 @@ easy_admin:
                     - { property: 'articles', label: 'Article count', css_class: 'count-entity-bg' }
                     - { property: 'comments', label: 'Comment count', css_class: 'count-entity-bg' }
                     - { property: 'roles', template: 'list/roles.html.twig' }
+        Seo:
+            class: App\Entity\Seo
