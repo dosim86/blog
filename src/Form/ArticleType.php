@@ -16,17 +16,23 @@ class ArticleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title')
+            ->add('title', null, [
+                'label' => 'F_TITLE',
+            ])
             ->add('category', EntityType::class, [
+                'label' => 'F_CATEGORY',
                 'class' => Category::class,
                 'placeholder' => '(no category)',
             ])
             ->add('content', CKEditorType::class, [
+                'label' => 'F_CONTENT',
                 'config' => [
                     //...
                 ],
             ])
-            ->add('Save', SubmitType::class)
+            ->add('Save', SubmitType::class, [
+                'label' => 'F_SAVE',
+            ])
         ;
     }
 
@@ -34,6 +40,7 @@ class ArticleType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Article::class,
+            'translation_domain' => 'form'
         ]);
     }
 }

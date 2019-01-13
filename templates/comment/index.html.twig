@@ -1,14 +1,14 @@
 <div class="comments">
     <div class="comments__header pb-3">
         <div class="clearfix">
-            <h4 class="float-left text-dark">Comments</h4>
-            <h6 class="float-right text-muted">{{ comments|length }} comments</h6>
+            <h4 class="float-left text-dark">{{ 'L_COMMENTS'|transL }}</h4>
+            <h6 class="float-right text-muted">{{ comments|length }} {{ 'L_COMMENTS'|transL|lower }}</h6>
         </div>
         {% if is_granted('ROLE_USER') %}
             {{ htmlAddComment is defined ? htmlAddComment|raw : '' }}
         {% else %}
             <p class="bg-light rounded p-4 text-center text-info">
-                Please <a href="{{ path('app_login') }}">sign in</a> or <a href="{{ path('app_register') }}">register</a> for commenting
+                {{ 'L_PLEASE_SIGNIN_OR_REGISTER_FOR_COMMENTING'|transL({ '%login%': path('app_login'), '%register%': path('app_register') })|raw }}
             </p>
         {% endif %}
     </div>
@@ -16,7 +16,7 @@
         {% for comment in comments %}
             <div class="d-flex">
                 <div class="pr-3 d-none d-sm-block">
-                    <img class="img-fluid rounded-circle user-avatar" src="{{ image_path ~ comment.owner.avatar }}">
+                    <img class="img-fluid rounded-circle user-avatar" src="{{ image_path ~ comment.owner.avatar }}" />
                 </div>
                 <div class="w-100">
                     <div class="clearfix">

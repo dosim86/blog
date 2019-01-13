@@ -16,6 +16,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ArticleController extends AbstractController
 {
@@ -75,7 +76,7 @@ class ArticleController extends AbstractController
      * @IsGranted("ROLE_USER")
      * @Route("/article/add", name="article_add")
      */
-    public function add(Request $request)
+    public function add(Request $request, TranslatorInterface $translator)
     {
         $article = new Article();
         $article->setAuthor($this->getUser());
@@ -87,14 +88,14 @@ class ArticleController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
             $em->flush();
-            $this->addFlash('success', 'Article is created');
+            $this->addFlash('success', 'M_ARTICLE_CREATED');
 
             return $this->redirectToRoute('article_show', ['slug' => $article->getSlug()]);
         }
 
         return $this->render('article/edit.html.twig', [
             'form' => $form->createView(),
-            'title' => 'Create new article'
+            'title' => $translator->trans('L_CREATE_NEW_ARTICLE', [], 'label')
         ]);
     }
 
@@ -103,21 +104,21 @@ class ArticleController extends AbstractController
      * @IsGranted("EDIT", subject="article")
      * @Route("/article/edit/{id}", name="article_edit")
      */
-    public function edit(Article $article, Request $request)
+    public function edit(Article $article, Request $request, TranslatorInterface $translator)
     {
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success', 'Article is updated');
+            $this->addFlash('success', 'M_ARTICLE_UPDATED');
 
             return $this->redirectToRoute('article_show', ['slug' => $article->getSlug()]);
         }
 
         return $this->render('article/edit.html.twig', [
             'form' => $form->createView(),
-            'title' => 'Update: ' . $article->getTitle()
+            'title' => $translator->trans('L_UPDATE', [], 'label') . ': '. $article->getTitle()
         ]);
     }
 
@@ -127,7 +128,7 @@ class ArticleController extends AbstractController
     public function show(Request $request, ArticleRepository $repository, EventDispatcherInterface $dispatcher)
     {
         if (empty($article = $repository->getArticleBySlug($request->get('slug')))) {
-            throw $this->createNotFoundException('Article not found');
+            throw $this->createNotFoundException();
         }
 
         $event = new ArticleEvent($request, $article);

@@ -30,17 +30,17 @@ class ArticleFilter extends AbstractType
     const PERIOD_ALLTIME = 4;
 
     private static $queryFor = [
-        'Search in title' => self::QUERYFOR_TITLE,
-        'Search in content' => self::QUERYFOR_CONTENT,
-        'Search in both' => self::QUERYFOR_BOTH,
+        'F_SEARCH_IN_TITLE' => self::QUERYFOR_TITLE,
+        'F_SEARCH_IN_CONTENT' => self::QUERYFOR_CONTENT,
+        'F_SEARCH_IN_BOTH' => self::QUERYFOR_BOTH,
     ];
 
     private static $period = [
-        'All time' => self::PERIOD_ALLTIME,
-        'Today' => self::PERIOD_TODAY,
-        'Last week' => self::PERIOD_LASTWEEK,
-        'Last month' => self::PERIOD_LASTMONTH,
-        'Last year' => self::PERIOD_LASTYEAR,
+        'F_ALL_TIME' => self::PERIOD_ALLTIME,
+        'F_TODAY' => self::PERIOD_TODAY,
+        'F_LAST_WEEK' => self::PERIOD_LASTWEEK,
+        'F_LAST_MONTH' => self::PERIOD_LASTMONTH,
+        'F_LAST_YEAR' => self::PERIOD_LASTYEAR,
     ];
 
     private $urlGenerator;
@@ -56,7 +56,7 @@ class ArticleFilter extends AbstractType
             ->setAction($this->urlGenerator->generate('article_list'))
             ->add('query', null, [
                 'label' => false,
-                'attr' => ['placeholder' => 'Search for...']
+                'attr' => ['placeholder' => 'F_SEARCH_FOR']
             ])
             ->add('queryfor', ChoiceType::class, [
                 'label' => false,
@@ -77,7 +77,7 @@ class ArticleFilter extends AbstractType
                 'label' => false,
                 'class' => Category::class,
                 'choice_label' => 'name',
-                'placeholder' => 'Choose a category...',
+                'placeholder' => 'F_CHOOSE_CATEGORY',
                 'attr' => ['class' => 'select2'],
             ])
             ->add('search', SubmitType::class, [
@@ -103,7 +103,7 @@ class ArticleFilter extends AbstractType
             'class' => User::class,
             'choice_value' => 'email',
             'choice_label' => 'firstname',
-            'placeholder' => 'Choose authors...',
+            'placeholder' => 'F_CHOOSE_AUTHORS',
             'query_builder' => function (UserRepository $repository) use ($email) {
                 return $repository->createQueryBuilder('u')
                     ->andWhere('u.email = :u_email')
@@ -119,6 +119,7 @@ class ArticleFilter extends AbstractType
             'data_class' => null,
             'required' => false,
             'csrf_token_id' => '_api',
+            'translation_domain' => 'form',
         ]);
     }
 }

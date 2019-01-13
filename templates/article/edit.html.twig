@@ -7,9 +7,9 @@
 {% block body %}
     <div class="container card p-3">
         {% if form.vars.data.slug %}
-            <a href="{{ path('article_show', {slug:form.vars.data.slug}) }}" class="btn btn-light">Back</a>
+            <a href="{{ path('article_show', {slug:form.vars.data.slug}) }}" class="btn btn-light">{{ 'L_BACK'|transL }}</a>
         {% else %}
-            <a href="{{ path('article_list') }}" class="btn btn-light">Back</a>
+            <a href="{{ path('article_list') }}" class="btn btn-light">{{ 'L_BACK'|transL }}</a>
         {% endif %}
         <hr>
         {{ form(form) }}

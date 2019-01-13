@@ -1,13 +1,13 @@
 {% if app.session.flashbag.has('success') or app.session.flashbag.has('error') %}
     <script>
         {% for flash in app.session.flashbag.get('success') %}
-            notify('success', '{{ flash }}');
+            notify('success', '{{ flash|trans({}, 'message') }}');
         {% endfor %}
         {% for flash in app.session.flashbag.get('error') %}
-            notify('error', '{{ flash }}');
+            notify('error', '{{ flash|trans({}, 'message') }}');
         {% endfor %}
         {% for flash in app.session.flashbag.get('info') %}
-            notify('info', '{{ flash }}');
+            notify('info', '{{ flash|trans({}, 'message') }}');
         {% endfor %}
     </script>
 {% endif %}

@@ -1,0 +1,10 @@
+L_UPDATE: Update
+L_BACK: Back
+L_EDIT: Edit
+L_SEND: Send
+
+L_CREATE_NEW_ARTICLE: Create new article
+L_SEARCH_ARTICLES: Search articles
+L_READ_MORE: Read more
+L_COMMENTS: Comments
+L_PLEASE_SIGNIN_OR_REGISTER_FOR_COMMENTING: Please <a href="%login%">sign in</a> or <a href="%register%">register</a> for commenting

@@ -10,16 +10,16 @@
                 <div class="clearfix py-2">
                     <div class="float-left">
                         <img class="img-fluid rounded-circle user-avatar" src="{{ image_path ~ article.author.avatar }}">
-                        <a href="{{ path('user_profile', {username:article.author.username}) }}">{{ article.author.firstname }}</a>
+                        <a href="{{ path('user_profile', { username:article.author.username }) }}">{{ article.author.firstname }}</a>
                     </div>
                     <div class="float-right">
                         {% if is_granted('EDIT', article) %}
-                            <a href="{{ path('article_edit', {id:article.id}) }}" class="btn btn-sm btn-outline-success"><i class="fas fa-pencil-alt"></i> Edit</a>
+                            <a href="{{ path('article_edit', { id:article.id }) }}" class="btn btn-sm btn-outline-success"><i class="fas fa-pencil-alt"></i> {{ 'L_EDIT'|transL }}</a>
                         {% endif %}
                         <ul class="icons-inline text-info small">
                             <li>{{ article.createdAt|date('H:i d.m.Y') }}</li>
                             <li>
-                                <a href="{{ path('api_article_bookmark', {id: article.id}) }}"
+                                <a href="{{ path('api_article_bookmark', { id: article.id }) }}"
                                    class="text-info js-bookmark-article-btn {{ not is_granted('ROLE_USER') ? 'not-allowed' : '' }}"
                                    data-token="{{ csrf_token('_api') }}">
                                     <i class="fas fa-bookmark"></i><span>{{ article.bookmarkCount }}</span>
@@ -33,16 +33,16 @@
                 <p>{{ article.content|raw }}</p>
                 <p class="text-info small">
                     {% for tag in article.tags %}
-                        <a href="{{ path('article_by_tag', {name: tag.name}) }}" class="border px-1 rounded text-info">{{ tag.name }}</a>
+                        <a href="{{ path('article_by_tag', { name: tag.name }) }}" class="border px-1 rounded text-info">{{ tag.name }}</a>
                     {% endfor %}
                 </p>
                 {% if is_granted('ROLE_USER') %}
                 <div class="d-flex justify-content-center">
                     <div class="btn-group btn-group-toggle js-like" data-token="{{ csrf_token('_api') }}">
-                        <a href="{{ path('api_article_like', {id: article.id}) }}" class="btn btn-sm btn-outline-success js-like-btn" data-type="1">
+                        <a href="{{ path('api_article_like', { id: article.id }) }}" class="btn btn-sm btn-outline-success js-like-btn" data-type="1">
                             <i class="fas fa-thumbs-up"></i> <span>{{ article.likeCount }}</span>
                         </a>
-                        <a href="{{ path('api_article_dislike', {id: article.id}) }}" class="btn btn-sm btn-outline-danger js-like-btn" data-type="-1">
+                        <a href="{{ path('api_article_dislike', { id: article.id }) }}" class="btn btn-sm btn-outline-danger js-like-btn" data-type="-1">
                             <i class="fas fa-thumbs-down"></i> <span>{{ article.dislikeCount }}</span>
                         </a>
                     </div>
