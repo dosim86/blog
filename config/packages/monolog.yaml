@@ -2,7 +2,8 @@ monolog:
     channels: ['custom']
     handlers:
         custom_logging:
-            type: stream
+            type: rotating_file
             path: '%kernel.logs_dir%/app.log'
             level: error
+            max_files: 10
             channels: ['custom']
