@@ -21,6 +21,7 @@
     "build": "encore production --progress"
   },
   "dependencies": {
+    "bootstrap-filestyle": "^1.2.1",
     "cropperjs": "^1.4.3",
     "fontawesome": "^4.7.2",
     "select2": "4.0.1",

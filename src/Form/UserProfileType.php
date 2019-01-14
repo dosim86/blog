@@ -25,9 +25,11 @@ class UserProfileType extends AbstractType
                 'mapped' => false,
                 'multiple' => false,
                 'attr' => [
+                    'class' => 'filestyle d-none',
                     'style' => 'opacity:1',
                     'onchange' => 'previewLoadedFile()'
                 ],
+                'label_attr' => ['class' => 'border'],
                 'constraints' => [
                     new Image([
                         'mimeTypes' => ['image/jpg', 'image/jpeg', 'image/png'],
@@ -43,8 +45,11 @@ class UserProfileType extends AbstractType
             ->add('aboutMe', TextareaType::class, [
                 'mapped' => true,
                 'required' => true,
+                'attr' => ['class' => 'form-control']
             ])
-            ->add('Save', SubmitType::class)
+            ->add('save', SubmitType::class, [
+                'attr' => ['class' => 'btn btn-success']
+            ])
         ;
     }
 
