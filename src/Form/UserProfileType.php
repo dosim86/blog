@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Image;
 
 class UserProfileType extends AbstractType
 {
@@ -29,11 +29,16 @@ class UserProfileType extends AbstractType
                     'onchange' => 'previewLoadedFile()'
                 ],
                 'constraints' => [
-                    new File([
+                    new Image([
                         'mimeTypes' => ['image/jpg', 'image/jpeg', 'image/png'],
+                        'detectCorrupted' => true,
+                        'groups' => ['profile'],
                         'maxSize' => '1M',
-                    ]),
-                ]
+                        'mimeTypesMessage' => 'V_NOT_VALID_IMAGE',
+                        'corruptedMessage' => 'V_CORRUPTED_IMAGE',
+                    ])
+                ],
+                'translation_domain' => 'validator'
             ])
             ->add('aboutMe', TextareaType::class, [
                 'mapped' => true,
@@ -48,7 +53,7 @@ class UserProfileType extends AbstractType
         $resolver->setDefaults([
             'required' => false,
             'data_class' => User::class,
-            'validation_groups' => ['profile']
+            'validation_groups' => ['profile'],
         ]);
     }
 }

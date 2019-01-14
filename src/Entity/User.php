@@ -6,14 +6,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity("email", message="This email is already used")
- * @UniqueEntity("username", message="This username is already used")
+ * @UniqueEntity("email", message="V_EMAIL_ALREADY_USED")
+ * @UniqueEntity("username", message="V_USERNAME_ALREADY_USED")
  */
 class User implements UserInterface
 {

@@ -10,10 +10,8 @@ use App\Repository\CommentRepository;
 use App\Repository\UserRepository;
 use App\Service\FileUploader;
 use Knp\Component\Pager\PaginatorInterface;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -49,10 +47,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($file = $form->get('uploadedFile')->getData()) {
                 if ($cropCoords = $form->get('crop_coords')->getData()) {
-                    $options = [
-                        'image' => true,
-                        'crop_coords' => $cropCoords,
-                    ];
+                    $options = ['image' => true, 'crop_coords' => $cropCoords];
                 }
                 $user->setAvatar($uploader->upload($file, $options ?? []));
             }
