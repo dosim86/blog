@@ -5,5 +5,5 @@ twig:
     globals:
         user_active_interval: '%app.user_active_interval%'
         image_path: '/uploads/'
-#    form_themes:
-#        - 'bootstrap_4_layout.html.twig'
+    form_themes:
+        - 'form/fields.html.twig'

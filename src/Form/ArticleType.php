@@ -30,8 +30,10 @@ class ArticleType extends AbstractType
                     //...
                 ],
             ])
-            ->add('Save', SubmitType::class, [
+            ->add('save', SubmitType::class, [
                 'label' => 'F_SAVE',
+                'attr' => ['class' => 'btn btn-success'],
+                'icon_before' => 'save',
             ])
         ;
     }

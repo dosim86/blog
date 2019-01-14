@@ -40,7 +40,6 @@ class UserProfileType extends AbstractType
                         'corruptedMessage' => 'V_CORRUPTED_IMAGE',
                     ])
                 ],
-                'translation_domain' => 'validator'
             ])
             ->add('aboutMe', TextareaType::class, [
                 'mapped' => true,
@@ -48,7 +47,8 @@ class UserProfileType extends AbstractType
                 'attr' => ['class' => 'form-control']
             ])
             ->add('save', SubmitType::class, [
-                'attr' => ['class' => 'btn btn-success']
+                'attr' => ['class' => 'btn btn-success'],
+                'icon_before' => 'save',
             ])
         ;
     }

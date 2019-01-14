@@ -16,14 +16,20 @@ class RestorePassFilter extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'attr' => ['placeholder' => 'Email', 'autofocus' => true],
+                'label' => false,
+                'attr' => [
+                    'autofocus' => true,
+                    'placeholder' => 'Email',
+                    'class' => 'form-control'
+                ],
                 'constraints' => [
                     new NotBlank(),
                     new Email(),
-                ]
+                ],
+                'icon_before' => 'envelope',
             ])
             ->add('restore', SubmitType::class, [
-                'attr' => ['class' => 'btn-success btn-block']
+                'attr' => ['class' => 'btn btn-success btn-block']
             ])
         ;
     }

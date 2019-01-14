@@ -18,19 +18,31 @@ class RegisterType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'attr' => ['placeholder' => 'Email']
+                'label' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Email'
+                ],
+                'icon_before' => 'envelope',
             ])
             ->add('username', TextType::class, [
-                'attr' => ['placeholder' => 'Username']
+                'label' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Username'
+                ],
+                'icon_before' => 'user',
             ])
-            ->add('plainPassword', RepeatedType::class, array(
+            ->add('plainPassword', RepeatedType::class, [
+                'label' => false,
                 'type' => PasswordType::class,
-                'first_options' => ['attr' => ['placeholder' => 'Password']],
-                'second_options' => ['attr' => ['placeholder' => 'Repeat Password']],
-            ))
+                'first_options' => ['attr' => ['placeholder' => 'Password', 'class' => 'form-control']],
+                'second_options' => ['attr' => ['placeholder' => 'Repeat Password', 'class' => 'form-control']],
+                'attr' => ['class' => 'form-control'],
+            ])
             ->add('register', SubmitType::class, [
                 'label'=> 'Sign Up',
-                'attr' => ['class' => 'btn-success btn-block']
+                'attr' => ['class' => 'btn btn-success btn-block'],
             ])
         ;
     }

@@ -1,18 +1,43 @@
-{%- block iconbtn_widget -%}
-    {%- set type = type|default('submit') -%}
+{%- block form_widget_simple -%}
+    {%- set type = type|default('text') -%}
+    {%- if type == 'range' or type == 'color' -%}
+        {# Attribute "required" is not supported #}
+        {%- set required = false -%}
+    {%- endif -%}
 
+    {%- if icon_before is defined and icon_before is not null -%}
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text text-info"><i class="fas fa-{{ icon_before }}"></i></span>
+            </div>
+            <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+        </div>
+    {%- else -%}
+        <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    {%- endif -%}
+{%- endblock form_widget_simple -%}
+
+{%- block button_widget -%}
     {%- if label is empty -%}
         {%- if label_format is not empty -%}
             {% set label = label_format|replace({
                 '%name%': name,
                 '%id%': id,
             }) %}
+        {%- elseif label is same as(false) -%}
+            {% set translation_domain = false %}
         {%- else -%}
             {% set label = name|humanize %}
         {%- endif -%}
     {%- endif -%}
+
     <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
-        <i class="fas fa-envelope"></i>
-        {{ label|trans({}, translation_domain) }}
+        {% if icon_before is defined and icon_before is not null %}
+            <i class="fas fa-{{ icon_before }}"></i>
+        {% endif %}
+        {{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}
+        {% if icon_after is defined and icon_after is not null %}
+            <i class="fas fa-{{ icon_after }}"></i>
+        {% endif %}
     </button>
-{%- endblock iconbtn_widget -%}
+{%- endblock button_widget -%}
