@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Exception\Api;
-
-use App\Exception\AppException;
+namespace App\Exception;
 
 class InvalidTokenException extends AppException
 {

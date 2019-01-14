@@ -18,6 +18,7 @@ class ArticleType extends AbstractType
         $builder
             ->add('title', null, [
                 'label' => 'F_TITLE',
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('category', EntityType::class, [
                 'label' => 'F_CATEGORY',
@@ -26,9 +27,6 @@ class ArticleType extends AbstractType
             ])
             ->add('content', CKEditorType::class, [
                 'label' => 'F_CONTENT',
-                'config' => [
-                    //...
-                ],
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'F_SAVE',
@@ -42,7 +40,7 @@ class ArticleType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Article::class,
-            'translation_domain' => 'form'
+            'translation_domain' => 'forms'
         ]);
     }
 }

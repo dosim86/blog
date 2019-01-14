@@ -1,4 +1,4 @@
-import Routing from './routing.js';
+import Routing from '../routing.js';
 
 $('#article_filter_tags').select2({
     theme: 'bootstrap',

@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CommentController extends AbstractController
 {
     /**
-     * @Route("/like/{id}", name="api_comment_like")
+     * @Route("/like/{id<\d+>}", name="api_comment_like")
      * @throws \Exception
      */
     public function like(Comment $comment, LikeManager $likeManager, LoggerInterface $appLogger)
@@ -39,7 +39,7 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/dislike/{id}", name="api_comment_dislike")
+     * @Route("/dislike/{id<\d+>}", name="api_comment_dislike")
      * @throws \Exception
      */
     public function dislike(Comment $comment, LikeManager $likeManager, LoggerInterface $appLogger)

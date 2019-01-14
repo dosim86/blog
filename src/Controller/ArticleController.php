@@ -50,7 +50,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/article/tag/{name}", name="article_by_tag")
+     * @Route("/article/tag/{name<[a-zA-Z0-9- ]+>}", name="article_by_tag")
      */
     public function articleByTag(
         $name,
@@ -95,14 +95,14 @@ class ArticleController extends AbstractController
 
         return $this->render('article/edit.html.twig', [
             'form' => $form->createView(),
-            'title' => $translator->trans('L_CREATE_NEW_ARTICLE', [], 'label')
+            'title' => $translator->trans('L_CREATE_NEW_ARTICLE', [], 'labels')
         ]);
     }
 
     /**
      * @IsGranted("ROLE_USER")
      * @IsGranted("EDIT", subject="article")
-     * @Route("/article/edit/{id}", name="article_edit")
+     * @Route("/article/edit/{id<\d+>}", name="article_edit")
      */
     public function edit(Article $article, Request $request, TranslatorInterface $translator)
     {
@@ -118,12 +118,13 @@ class ArticleController extends AbstractController
 
         return $this->render('article/edit.html.twig', [
             'form' => $form->createView(),
-            'title' => $translator->trans('L_UPDATE', [], 'label') . ': '. $article->getTitle()
+            'title' => $translator->trans('L_UPDATE', [], 'labels') . ': '. $article->getTitle()
         ]);
     }
 
     /**
-     * @Route("/article/{slug}", name="article_show")
+     * @Route("/article/{slug<[a-zA-Z0-9-]+>}", name="article_show")
+     * @throws \Exception
      */
     public function show(Request $request, ArticleRepository $repository, EventDispatcherInterface $dispatcher)
     {

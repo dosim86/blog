@@ -17,13 +17,16 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.scss) if you JavaScript imports CSS.
      */
-    .addEntry('js/app', './assets/js/app.js')
-    .addStyleEntry('css/app', './assets/css/app.scss')
+    .addEntry('js/main', './assets/js/main.js')
+    .addStyleEntry('css/main', './assets/css/main.scss')
 
-    .addEntry('js/avatar_crop', './assets/js/avatar_crop.js')
-    .addStyleEntry('css/avatar_crop', './assets/css/avatar_crop.scss')
+    .addEntry('js/user_avatar', './assets/js/user/avatar.js')
+    .addStyleEntry('css/user_avatar', './assets/css/user/avatar.scss')
 
     .addStyleEntry('css/custom_admin', './assets/css/custom_admin.scss')
+
+    .addEntry('js/article_show', './assets/js/article/show.js')
+    .addEntry('js/user_subscribe', './assets/js/user/subscribe.js')
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app

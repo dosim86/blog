@@ -25,11 +25,11 @@ class TranslatorExtension extends AbstractExtension
 
     public function transLabel($id, $params = [])
     {
-        return $this->translator->trans($id, $params, 'label');
+        return $this->translator->trans($id, $params, 'labels');
     }
 
     public function transMessage($id, $params = [])
     {
-        return $this->translator->trans($id, $params, 'message');
+        return $this->translator->trans($id, $params, 'messages');
     }
 }

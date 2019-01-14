@@ -37,7 +37,7 @@ class UserController extends AbstractController
     /**
      * @IsGranted("ROLE_USER")
      * @IsGranted("EDIT", subject="user")
-     * @Route("/{username}/edit", name="user_edit")
+     * @Route("/{username<[[:alnum:]]+>}/edit", name="user_edit")
      */
     public function edit(User $user, Request $request, FileUploader $uploader)
     {
@@ -64,7 +64,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{username}", name="user_profile")
+     * @Route("/{username<[[:alnum:]]+>}", name="user_profile")
      */
     public function show(User $user)
     {
@@ -74,7 +74,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{username}/articles", name="user_articles")
+     * @Route("/{username<[[:alnum:]]+>}/articles", name="user_articles")
      */
     public function articles(User $user, Request $request, ArticleRepository $rep, PaginatorInterface $paginator)
     {
@@ -89,7 +89,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{username}/comments", name="user_comments")
+     * @Route("/{username<[[:alnum:]]+>}/comments", name="user_comments")
      */
     public function comments(User $user, Request $request, CommentRepository $rep, PaginatorInterface $paginator)
     {
@@ -104,7 +104,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{username}/bookmarks", name="user_bookmarks")
+     * @Route("/{username<[[:alnum:]]+>}/bookmarks", name="user_bookmarks")
      */
     public function bookmarks(User $user, Request $request, BookmarkArticleRepository $rep, PaginatorInterface $paginator)
     {
@@ -119,7 +119,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{username}/subscribs", name="user_subscribs")
+     * @Route("/{username<[[:alnum:]]+>}/subscribs", name="user_subscribs")
      */
     public function subscribs(User $user)
     {
@@ -130,7 +130,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{username}/followers", name="user_followers")
+     * @Route("/{username<[[:alnum:]]+>}/followers", name="user_followers")
      */
     public function followers(User $user)
     {

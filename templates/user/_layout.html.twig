@@ -17,7 +17,6 @@
             <div class="pl-3 w-25 text-info">
             {% if is_granted('ROLE_USER') and app.user != user %}
                 <a href="{{ path('api_user_subscribe', {username:user.username}) }}"
-                   data-token="{{ csrf_token('_api') }}"
                    class="float-right btn btn-sm btn-outline-info js-subscribe">
                     Subscribe <i class="fas fa-bell"></i>
                 </a>
@@ -46,47 +45,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script>
-        $(document).ready(function () {
-            $('.js-subscribe').on('click', function (e) {
-                e.preventDefault();
-
-                let $this = $(this),
-                    token = $this.data('token')
-                ;
-                appGet($this.attr('href'), { token: token }).then(function(data) {
-                    notify(data.type, data.message);
-                });
-            });
-            $('.js-unsubscribe').on('click', function (e) {
-                e.preventDefault();
-
-                Swal({
-                    title: 'Are you sure?',
-                    // text: "You won't be able to revert this!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Confirm'
-                }).then((result) => {
-                    if (result.value) {
-                        let $this = $(this),
-                            token = $this.data('token')
-                        ;
-                        appGet($this.attr('href'), { token: token }).then(function(data) {
-                            if (data.type === 'success') {
-                                $this.closest('.unsubscribe-item').remove();
-                            }
-                            Swal(
-                                'Notification!',
-                                data.message,
-                                data.type
-                            );
-                        });
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="{{ asset('build/js/user_subscribe.js') }}"></script>
 {% endblock %}

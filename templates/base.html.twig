@@ -5,6 +5,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="csrf_token" content="{{ csrf_token('_api') }}">
 
         {% if seo_title() %}
             {{ seo_title() }}
@@ -15,7 +16,7 @@
         {{ seo_description() }}
 
         <link rel="stylesheet" href="{{ asset('build/vendor.css') }}">
-        <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
+        <link rel="stylesheet" href="{{ asset('build/css/main.css') }}">
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
@@ -86,7 +87,7 @@
             {{ include('_include/_client_global_states.html.twig') }}
             <script src="{{ asset('build/runtime.js') }}"></script>
             <script src="{{ asset('build/vendor.js') }}"></script>
-            <script src="{{ asset('build/js/app.js') }}"></script>
+            <script src="{{ asset('build/js/main.js') }}"></script>
             {{ include('_include/_flashes.html.twig') }}
         {% endblock %}
     </body>

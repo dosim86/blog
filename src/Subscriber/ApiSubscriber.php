@@ -2,16 +2,10 @@
 
 namespace App\Subscriber;
 
-use App\Exception\Api\ApiException;
-use App\Exception\Api\InvalidTokenException;
-use App\Exception\AppException;
-use Psr\Log\LoggerInterface;
+use App\Exception\InvalidTokenException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -29,23 +23,18 @@ class ApiSubscriber implements EventSubscriberInterface
 
     private $csrfTokenManager;
 
-    private $appLogger;
-
     public function __construct(
         Security $security,
-        CsrfTokenManagerInterface $csrfTokenManager,
-        LoggerInterface $appLogger
+        CsrfTokenManagerInterface $csrfTokenManager
     ) {
         $this->security = $security;
         $this->csrfTokenManager = $csrfTokenManager;
-        $this->appLogger = $appLogger;
     }
 
     public static function getSubscribedEvents()
     {
         return [
             KernelEvents::REQUEST => 'onKernelRequest',
-            KernelEvents::EXCEPTION => 'onKernelException'
         ];
     }
 
@@ -65,34 +54,6 @@ class ApiSubscriber implements EventSubscriberInterface
 
         if (!$this->security->isGranted('ROLE_USER') && !$this->isPublicApi($event->getRequest())) {
             throw new NotFoundHttpException();
-        }
-    }
-
-    public function onKernelException(GetResponseForExceptionEvent $event)
-    {
-        if (!$this->supports($event)) {
-            return;
-        }
-        $exception = $event->getException();
-
-        if ($exception instanceof ApiException) {
-            $response = new JsonResponse([
-                'type' => 'error',
-                'message' => $exception->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-            $event->setResponse($response);
-        }
-
-        if ($exception instanceof InvalidTokenException) {
-            $response = new JsonResponse([
-                'type' => 'error',
-                'message' => $exception->getMessage()
-            ], Response::HTTP_BAD_REQUEST);
-            $event->setResponse($response);
-        }
-
-        if ($event->getException() instanceof AppException) {
-            $this->appLogger->error($event->getException()->getMessage());
         }
     }
 

@@ -119,7 +119,7 @@ class ArticleFilter extends AbstractType
             'data_class' => null,
             'required' => false,
             'csrf_token_id' => '_api',
-            'translation_domain' => 'form',
+            'translation_domain' => 'forms',
         ]);
     }
 }

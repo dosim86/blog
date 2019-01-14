@@ -4,8 +4,6 @@ namespace App\Controller\Api;
 
 use App\Entity\User;
 use App\Event\UserEvent;
-use App\Exception\Api\ApiException;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -18,80 +16,71 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/subscribe/{username}", name="api_user_subscribe")
-     * @throws \Exception
+     * @Route("/subscribe/{username<[[:alnum:]]+>}", name="api_user_subscribe")
      */
-    public function subscribe(User $subscribeUser, LoggerInterface $appLogger)
+    public function subscribe(User $subscribeUser)
     {
         /** @var User $followerUser */
         $followerUser = $this->getUser();
-        try {
-            if ($followerUser === $subscribeUser) {
-                return $this->json([
-                    'type' => 'error',
-                    'message' => 'You cannot subscribe for yourself'
-                ]);
-            }
 
-            if ($subscribeUser->getFollowers()->contains($followerUser)) {
-                return $this->json([
-                    'type' => 'info',
-                    'message' => 'You were already subscribed to the author'
-                ]);
-            }
-
-            $subscribeUser->addFollower($followerUser);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($subscribeUser);
-            $em->flush();
-
+        if ($followerUser === $subscribeUser) {
             return $this->json([
-                'type' => 'success',
-                'message' => 'You are subscribed to the author',
+                'type' => 'error',
+                'message' => 'You cannot subscribe for yourself'
             ]);
-        } catch (\Exception $e) {
-            $appLogger->error($e->getMessage());
-            throw new ApiException();
         }
+
+        if ($subscribeUser->getFollowers()->contains($followerUser)) {
+            return $this->json([
+                'type' => 'info',
+                'message' => 'You were already subscribed to the author'
+            ]);
+        }
+
+        $subscribeUser->addFollower($followerUser);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($subscribeUser);
+        $em->flush();
+
+        return $this->json([
+            'type' => 'success',
+            'message' => 'You are subscribed to the author',
+        ]);
     }
 
     /**
      * @IsGranted("UNSUBSCRIBE", subject="unsubscribeUser")
-     * @Route("/unsubscribe/{username}", name="api_user_unsubscribe")
-     * @throws \Exception
+     * @Route("/unsubscribe/{username<[[:alnum:]]+>}", name="api_user_unsubscribe")
      */
-    public function unsubscribe(User $unsubscribeUser, LoggerInterface $appLogger)
+    public function unsubscribe(User $unsubscribeUser)
     {
         /** @var User $followerUser */
         $followerUser = $this->getUser();
-        try {
-            if ($followerUser === $unsubscribeUser) {
-                return $this->json([
-                    'type' => 'error',
-                    'message' => 'You cannot unsubscribe from yourself'
-                ]);
-            }
 
-            if (!$unsubscribeUser->getFollowers()->contains($followerUser)) {
-                return $this->json([
-                    'type' => 'info',
-                    'message' => 'You are not subscribed to the author'
-                ]);
-            }
-
-            $unsubscribeUser->removeFollower($followerUser);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($unsubscribeUser);
-            $em->flush();
-
+        if ($followerUser === $unsubscribeUser) {
             return $this->json([
-                'type' => 'success',
-                'message' => 'You are succesfully unsubscribed',
+                'type' => 'error',
+                'message' => 'You cannot unsubscribe from yourself'
             ]);
-        } catch (\Exception $e) {
-            $appLogger->error($e->getMessage());
-            throw new ApiException();
         }
+
+        if (!$unsubscribeUser->getFollowers()->contains($followerUser)) {
+            return $this->json([
+                'type' => 'info',
+                'message' => 'You are not subscribed to the author'
+            ]);
+        }
+
+        $unsubscribeUser->removeFollower($followerUser);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($unsubscribeUser);
+        $em->flush();
+
+        return $this->json([
+            'type' => 'success',
+            'message' => 'You are succesfully unsubscribed',
+//            'nodisplay' => true
+        ]);
     }
 
     /**
@@ -102,8 +91,6 @@ class UserController extends AbstractController
         $event = new UserEvent($request, $this->getUser());
         $dispatcher->dispatch(UserEvent::ACTIVE, $event);
 
-        return $this->json([
-            'type' => 'success',
-        ]);
+        return $this->json([]);
     }
 }
