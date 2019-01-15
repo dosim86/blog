@@ -124,9 +124,11 @@ class ArticleRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('a')
             ->addSelect('c')
+            ->addSelect('ch')
             ->addSelect('o')
             ->addSelect('t')
             ->leftJoin('a.comments', 'c')
+            ->leftJoin('c.children', 'ch')
             ->leftJoin('c.owner', 'o')
             ->leftJoin('a.tags', 't')
             ->andWhere('a.slug = :slug')
