@@ -9,15 +9,14 @@
             <div class="bg-light p-3 mb-3 rounded">
                 <div class="clearfix">
                     <span class="float-left">
-                        {{ subscribe.firstname }} <a href="{{ path('user_profile', {username:subscribe.username}) }}">@{{ subscribe.username }}</a>
+                        {{ subscribe.firstname }} <a href="{{ path('user_profile', { username: subscribe.username }) }}">@{{ subscribe.username }}</a>
                         <span class="rank-rect text-secondary"><i class="fas fa-star"></i> {{ subscribe.rank }}</span>
                     </span>
                     <div class="float-right">
-                    {% if is_granted('UNSUBSCRIBE', subscribe) %}
-                        <a href="{{ path('api_user_unsubscribe', {username:subscribe.username}) }}"
-                           class="btn btn-sm btn-outline-secondary js-unsubscribe">
+                    {% if is_granted('PERM_UNSUBSCRIBE', subscribe) %}
+                        <button class="btn btn-sm btn-outline-secondary js-unsubscribe" data-username="{{ subscribe.username }}">
                             Unsubscribe <i class="fas fa-bell"></i>
-                        </a>
+                        </button>
                     {% endif %}
                     </div>
                 </div>

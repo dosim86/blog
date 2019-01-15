@@ -36,7 +36,7 @@
                     <ul class="navbar-nav">
                         {% if is_granted('ROLE_USER') %}
                             <li class="nav-item dropdown mr-auto" style="margin-right: 75px;">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" rel="nofollow" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <img class="nav-profile-img rounded-circle user-avatar" style="height: 30px" src="{{ image_path ~ app.user.avatar }}">
                                     {{ app.user.firstname }}
                                 </a>
@@ -44,7 +44,7 @@
                                     {% if is_granted('ROLE_ADMIN') %}
                                         <a class="dropdown-item" href="{{ path('easyadmin') }}">Admin</a>
                                     {% endif %}
-                                    <a class="dropdown-item" href="{{ path('user_profile', { username:app.user.username }) }}">Profile</a>
+                                    <a class="dropdown-item" href="{{ path('user_profile', { username: app.user.username }) }}">Profile</a>
                                     <span class="dropdown-divider"></span>
                                     <a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a>
                                 </div>

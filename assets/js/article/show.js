@@ -27,7 +27,7 @@ $(document).ready(function () {
             $bookmarkValue = $this.find('span')
         ;
 
-        app.request($this.attr('href')).then(function(data) {
+        app.request(Routing.generate('api_article_bookmark', { id: $this.data('id') })).then(function(data) {
             if (data.type === 'success') {
                 $bookmarkValue.html(data.data);
             }
@@ -35,7 +35,6 @@ $(document).ready(function () {
     });
 
     $('.js-comment-reply-btn').on('click', function (e) {
-        e.preventDefault();
         if ($(this).hasClass('not-allowed')) return false;
 
         let $this = $(this),

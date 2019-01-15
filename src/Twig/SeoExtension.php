@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Repository\SeoRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -15,7 +16,8 @@ class SeoExtension extends AbstractExtension
 
     public function __construct(RequestStack $requestStack, SeoRepository $repository)
     {
-        if ($request = $requestStack->getCurrentRequest()) {
+        $request = $requestStack->getCurrentRequest();
+        if ($this->support($request)) {
             $seo = $repository->findOneBy([
                 'isDisabled' => false,
                 'path' => $request->getPathInfo()
@@ -51,5 +53,10 @@ class SeoExtension extends AbstractExtension
     public function description()
     {
         return $this->description ? '<meta name="description" content="' . $this->description . '">' : '';
+    }
+
+    private function support(Request $request)
+    {
+        return $request && false === strpos($request->getRequestUri(), '/api/');
     }
 }

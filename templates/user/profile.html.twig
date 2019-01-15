@@ -5,7 +5,7 @@
 {% block user_content %}
     <h6 class="font-weight-bold">
         About me
-        {% if is_granted('EDIT', user) %}
+        {% if is_granted('PERM_EDIT', user) %}
             <a href="{{ path('user_edit', {username:user.username}) }}" class="btn btn-sm btn-outline-success"><i class="fas fa-pencil-alt"></i> Edit</a>
         {% endif %}
     </h6>

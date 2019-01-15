@@ -10,16 +10,15 @@
                 <img class="img-fluid rounded-circle user-avatar" src="{{ image_path ~ user.avatar }}">
             </div>
             <div class="w-75">
-                {{ user.firstname }} <a href="{{ path('user_profile', {username:user.username}) }}">@{{ user.username }}</a>
+                {{ user.firstname }} <a href="{{ path('user_profile', { username: user.username }) }}">@{{ user.username }}</a>
                 <span class="rank-rect text-secondary"><i class="fas fa-star"></i> {{ user.rank }}</span><br>
                 <span class="text-info small">{{ user.lastActivityAt|ago }}</span>
             </div>
             <div class="pl-3 w-25 text-info">
             {% if is_granted('ROLE_USER') and app.user != user %}
-                <a href="{{ path('api_user_subscribe', {username:user.username}) }}"
-                   class="float-right btn btn-sm btn-outline-info js-subscribe">
+                <button class="float-right btn btn-sm btn-outline-info js-subscribe" data-username="{{ user.username }}">
                     Subscribe <i class="fas fa-bell"></i>
-                </a>
+                </button>
             {% endif %}
             </div>
         </div>
@@ -33,7 +32,7 @@
         ] %}
         <div class="tabs mb-4">
         {% for item in menu %}
-            <a href="{{ path(item.route, {username:user.username}) }}"
+            <a href="{{ path(item.route, { username: user.username }) }}"
                class="tab__item {{ item.route == app.request.attributes.get('_route') ? 'active' : '' }}"
             >{{ item.title }}</a>
         {% endfor %}

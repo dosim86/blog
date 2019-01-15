@@ -16,7 +16,7 @@ class CommentType extends AbstractType
         $builder
             ->add('text', TextareaType::class, [
                 'label' => false,
-                'help' => 'Не более 100 символов'
+                'help' => 'No more 100 characters'
             ])
             ->add('article', HiddenType::class)
         ;

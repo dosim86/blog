@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/subscribe/{username<[[:alnum:]]+>}", name="api_user_subscribe")
+     * @Route("/subscribe/{username<[[:alnum:]]+>}", name="api_user_subscribe", options={"expose"=true})
      */
     public function subscribe(User $subscribeUser)
     {
@@ -50,7 +50,7 @@ class UserController extends AbstractController
 
     /**
      * @IsGranted("UNSUBSCRIBE", subject="unsubscribeUser")
-     * @Route("/unsubscribe/{username<[[:alnum:]]+>}", name="api_user_unsubscribe")
+     * @Route("/unsubscribe/{username<[[:alnum:]]+>}", name="api_user_unsubscribe", options={"expose"=true})
      */
     public function unsubscribe(User $unsubscribeUser)
     {

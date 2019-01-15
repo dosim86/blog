@@ -1,14 +1,12 @@
-$(document).ready(function () {
-    $('.js-subscribe').on('click', function (e) {
-        e.preventDefault();
+import Routing from '../routing.js';
 
+$(document).ready(function () {
+    $('.js-subscribe').on('click', function () {
         let $this = $(this);
-        app.request($this.attr('href'));
+        app.request(Routing.generate('api_user_subscribe', { username: $this.data('username') }));
     });
 
-    $('.js-unsubscribe').on('click', function (e) {
-        e.preventDefault();
-
+    $('.js-unsubscribe').on('click', function () {
         Swal({
             title: 'Are you sure?',
             // text: "You won't be able to revert this!",
@@ -20,7 +18,7 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.value) {
                 let $this = $(this);
-                app.request($this.attr('href')).then(function(data) {
+                app.request(Routing.generate('api_user_unsubscribe', { username: $this.data('username') })).then(function(data) {
                     if (data.type === 'success') {
                         $this.closest('.unsubscribe-item').remove();
                     }

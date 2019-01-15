@@ -7,7 +7,6 @@ use App\Entity\BookmarkArticle;
 use App\Event\UserEvent;
 use App\Service\LikeManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use http\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,7 +70,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/bookmark/{id<\d+>}", name="api_article_bookmark")
+     * @Route("/bookmark/{id<\d+>}", name="api_article_bookmark", options={"expose"=true})
      */
     public function bookmark(Article $article)
     {
