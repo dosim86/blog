@@ -67,7 +67,7 @@ easy_admin:
                     - { property: 'avatar', type: 'image', base_path: '/uploads/' }
                     - { property: 'email', sortable: false, type: email }
                     - { property: 'firstname', sortable: false }
-                    - { property: 'disabled', label: 'Disabled ?' }
+                    - { property: 'disabled', type: 'toggle', label: 'Disabled ?' }
                     - { property: 'articles', label: 'Article count', css_class: 'count-entity-bg' }
                     - { property: 'comments', label: 'Comment count', css_class: 'count-entity-bg' }
                     - { property: 'roles', template: 'list/roles.html.twig' }

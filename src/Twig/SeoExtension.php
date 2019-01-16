@@ -14,16 +14,14 @@ class SeoExtension extends AbstractExtension
     private $keywords;
     private $description;
 
+    /**
+     * @throws \Exception
+     */
     public function __construct(RequestStack $requestStack, SeoRepository $repository)
     {
         $request = $requestStack->getCurrentRequest();
         if ($this->support($request)) {
-            $seo = $repository->findOneBy([
-                'isDisabled' => false,
-                'path' => $request->getPathInfo()
-            ]);
-
-            if ($seo) {
+            if ($seo = $repository->getMetaData($request->getPathInfo())) {
                 $this->title = $seo->getTitle() ?: null;
                 $this->keywords = $seo->getKeywords() ?: null;
                 $this->description = $seo->getDescription() ?: null;

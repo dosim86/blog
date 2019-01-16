@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Seo;
+use App\Service\CacheService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -14,37 +15,28 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class SeoRepository extends ServiceEntityRepository
 {
+    const SEO_PAGE = 'seo_page_';
+
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Seo::class);
     }
 
-    // /**
-    //  * @return Seo[] Returns an array of Seo objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param $path
+     * @return Seo|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getMetaData($path): ?Seo
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('s.isDisabled = false')
+            ->andWhere('s.path = :s_path')
+            ->setParameter('s_path', $path)
             ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Seo
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
+            ->useResultCache(true)
+            ->setResultCacheId(CacheService::key(self::SEO_PAGE . $path))
             ->getOneOrNullResult()
         ;
     }
-    */
 }

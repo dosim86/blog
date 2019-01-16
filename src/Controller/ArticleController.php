@@ -32,7 +32,7 @@ class ArticleController extends AbstractController
 
         if ($filter->isSubmitted()) {
             if ($filter->get('reset')->isClicked()) {
-                $filter = $this->createForm(ArticleFilter::class, null);
+                $filter = $this->createForm(ArticleFilter::class);
             } else {
                 $collapse = 'show';
             }

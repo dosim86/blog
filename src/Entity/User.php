@@ -13,8 +13,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity("email", message="V_EMAIL_ALREADY_USED")
- * @UniqueEntity("username", message="V_USERNAME_ALREADY_USED")
+ * @UniqueEntity("email", message="V_EMAIL_ALREADY_USED", groups={"register"})
+ * @UniqueEntity("username", message="V_USERNAME_ALREADY_USED", groups={"register"})
  * @UniqueEntity("apiKey", message="V_APIKEY_ALREADY_USED", groups={"profile"})
  */
 class User implements UserInterface
@@ -30,8 +30,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\NotBlank
-     * @Assert\Email
+     * @Assert\NotBlank(groups={"register"})
+     * @Assert\Email(groups={"register"})
      * @Groups({"public"})
      */
     private $email;
@@ -101,14 +101,14 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=100, unique=true)
-     * @Assert\NotBlank
-     * @Assert\Type(type="alnum", message="The value can only contain English characters and digits")
+     * @Assert\NotBlank(groups={"register"})
+     * @Assert\Type(type="alnum", message="The value can only contain English characters and digits", groups={"register"})
      * @Groups({"public", "frontend"})
      */
     private $username;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotBlank(groups={"register"})
      * @Assert\Length(max=4096)
      */
     private $plainPassword;

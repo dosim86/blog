@@ -7,7 +7,7 @@ parameters:
     locale: en
 
     app.email_register: '%env(EMAIL_DEFAULT)%'
-    app.user_active_interval: 5000 # msec
+    app.user_active_interval: 10000 # msec
     app.upload_dir: '%kernel.project_dir%/public/uploads'
 
 services:
@@ -34,3 +34,14 @@ services:
     App\Subscriber\ArticleEntitySubscriber:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
+
+    doctrine.result_cache_provider:
+        class: Symfony\Component\Cache\DoctrineProvider
+        public: false
+        arguments:
+        - '@doctrine.result_cache_pool'
+    doctrine.system_cache_provider:
+        class: Symfony\Component\Cache\DoctrineProvider
+        public: false
+        arguments:
+        - '@doctrine.system_cache_pool'

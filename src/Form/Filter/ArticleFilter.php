@@ -5,7 +5,7 @@ namespace App\Form\Filter;
 use App\Entity\Category;
 use App\Entity\Tag;
 use App\Entity\User;
-use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -45,9 +45,12 @@ class ArticleFilter extends AbstractType
 
     private $urlGenerator;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    private $manager;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator, EntityManagerInterface $manager)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->manager = $manager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -72,6 +75,7 @@ class ArticleFilter extends AbstractType
                 'multiple' => true,
                 'label' => false,
                 'placeholder' => 'Choose tags...',
+                'choices' => $this->getTags(),
             ])
             ->add('category', EntityType::class, [
                 'label' => false,
@@ -79,6 +83,7 @@ class ArticleFilter extends AbstractType
                 'choice_label' => 'name',
                 'placeholder' => 'F_CHOOSE_CATEGORY',
                 'attr' => ['class' => 'select2'],
+                'choices' => $this->getCategories(),
             ])
             ->add('search', SubmitType::class, [
                 'attr' => ['class' => 'btn-outline-success btn-block']
@@ -104,13 +109,23 @@ class ArticleFilter extends AbstractType
             'choice_value' => 'email',
             'choice_label' => 'firstname',
             'placeholder' => 'F_CHOOSE_AUTHORS',
-            'query_builder' => function (UserRepository $repository) use ($email) {
-                return $repository->createQueryBuilder('u')
-                    ->andWhere('u.email = :u_email')
-                    ->setParameter('u_email', $email)
-                    ->setMaxResults(1);
-            }
+            'choices' => $this->getAuthorsByEmail($email),
         ]);
+    }
+
+    private function getCategories()
+    {
+        return $this->manager->getRepository(Category::class)->getAll();
+    }
+
+    private function getTags()
+    {
+        return $this->manager->getRepository(Tag::class)->getAll();
+    }
+
+    private function getAuthorsByEmail($email)
+    {
+        return $this->manager->getRepository(User::class)->getAuthorsByEmail($email);
     }
 
     public function configureOptions(OptionsResolver $resolver)

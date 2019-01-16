@@ -22,7 +22,7 @@ class UserRepository extends ServiceEntityRepository
     public function getAuthorsMatchTo($authorName)
     {
         return $this->createQueryBuilder('u')
-            ->select('u.username AS id, u.firstname AS text')
+            ->select('u.email AS id, u.firstname AS text')
             ->andWhere('u.firstname LIKE :u_firstname')
             ->andWhere('u.isDisabled = false AND u.isActivated = true')
             ->setParameter('u_firstname', $authorName.'%')
@@ -43,5 +43,19 @@ class UserRepository extends ServiceEntityRepository
         }
 
         return $qb;
+    }
+
+    public function getAuthorsByEmail($email)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.isDisabled = false')
+            ->andWhere('u.isActivated = true')
+            ->andWhere('u.email = :u_email')
+            ->setParameter('u_email', $email)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->useResultCache(true)
+            ->getResult()
+        ;
     }
 }

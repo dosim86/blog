@@ -2,6 +2,9 @@
 
 namespace App\Subscriber;
 
+use App\Entity\Seo;
+use App\Repository\SeoRepository;
+use App\Service\CacheService;
 use EasyCorp\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -11,9 +14,12 @@ class EasyAdminSubscriber implements EventSubscriberInterface
 {
     private $flash;
 
-    public function __construct(FlashBagInterface $flash)
+    private $cache;
+
+    public function __construct(FlashBagInterface $flash, CacheService $cache)
     {
         $this->flash = $flash;
+        $this->cache = $cache;
     }
 
     public static function getSubscribedEvents()
@@ -32,11 +38,25 @@ class EasyAdminSubscriber implements EventSubscriberInterface
 
     public function onEntityPostUpdate(GenericEvent $event)
     {
+        $entity = $event->getSubject();
+
+        /** @var Seo $entity */
+        if ($entity instanceof Seo) {
+            $this->cache->delDoctrineResult(SeoRepository::SEO_PAGE . $entity->getPath());
+        }
+
         $this->flash->add('success', $this->getEntityName($event).' is updated');
     }
 
     public function onEntityPostDelete(GenericEvent $event)
     {
+        $entity = $event->getSubject();
+
+        /** @var Seo $entity */
+        if ($entity instanceof Seo) {
+            $this->cache->delDoctrineResult(SeoRepository::SEO_PAGE . $entity->getPath());
+        }
+
         $this->flash->add('success', $this->getEntityName($event).' is deleted');
     }
 
