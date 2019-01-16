@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class SubscribeVoter extends Voter
 {
-    const UNSUBSCRIBE = 'UNSUBSCRIBE';
+    const PERM_UNSUBSCRIBE = 'PERM_UNSUBSCRIBE';
 
     private $security;
 
@@ -21,7 +21,7 @@ class SubscribeVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, [self::UNSUBSCRIBE])
+        return in_array($attribute, [self::PERM_UNSUBSCRIBE])
             && $subject instanceof User;
     }
 
@@ -34,7 +34,7 @@ class SubscribeVoter extends Voter
         }
 
         switch ($attribute) {
-            case self::UNSUBSCRIBE:
+            case self::PERM_UNSUBSCRIBE:
                 if ($user->getSubscribs()->contains($unsubscribeUser)) {
                     return true;
                 }

@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserVoter extends Voter
 {
-    const EDIT = 'EDIT';
+    const PERM_EDIT = 'PERM_EDIT';
 
     /**
      * @var Security
@@ -24,7 +24,7 @@ class UserVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, [self::EDIT])
+        return in_array($attribute, [self::PERM_EDIT])
             && $subject instanceof User;
     }
 
@@ -36,7 +36,7 @@ class UserVoter extends Voter
         }
 
         switch ($attribute) {
-            case self::EDIT:
+            case self::PERM_EDIT:
                 if ($user === $currentUser) {
                     return true;
                 }

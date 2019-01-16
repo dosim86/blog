@@ -42,9 +42,11 @@ class UserProfileType extends AbstractType
                 ],
             ])
             ->add('aboutMe', TextareaType::class, [
-                'mapped' => true,
-                'required' => true,
                 'attr' => ['class' => 'form-control']
+            ])
+            ->add('apiKey', null, [
+                'required' => true,
+                'attr' => ['class' => 'form-control', 'readonly' => true]
             ])
             ->add('save', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-success'],

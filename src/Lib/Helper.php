@@ -17,4 +17,13 @@ class Helper
     {
         return md5(random_bytes(32));
     }
+
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    public static function generateToken()
+    {
+        return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+    }
 }

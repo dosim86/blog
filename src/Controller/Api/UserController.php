@@ -4,17 +4,31 @@ namespace App\Controller\Api;
 
 use App\Entity\User;
 use App\Event\UserEvent;
+use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/api/user")
  */
 class UserController extends AbstractController
 {
+    /**
+     * @Route("/list", name="api_user_list")
+     * @throws \Exception
+     */
+    public function list(UserRepository $repository, SerializerInterface $serializer)
+    {
+        $data = $repository->findAll();
+        return $this->json(
+            $serializer->serialize($data, 'json', ['groups' => 'public'])
+        );
+    }
+
     /**
      * @Route("/subscribe/{username<[[:alnum:]]+>}", name="api_user_subscribe", options={"expose"=true})
      */
@@ -49,7 +63,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @IsGranted("UNSUBSCRIBE", subject="unsubscribeUser")
+     * @IsGranted("PERM_UNSUBSCRIBE", subject="unsubscribeUser")
      * @Route("/unsubscribe/{username<[[:alnum:]]+>}", name="api_user_unsubscribe", options={"expose"=true})
      */
     public function unsubscribe(User $unsubscribeUser)

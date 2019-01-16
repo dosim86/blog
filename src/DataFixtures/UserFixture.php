@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use App\Lib\Helper;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -29,8 +30,9 @@ class UserFixture extends BaseFixture
             $user->setEmail(sprintf('user%s@email.com', $index));
             $user->setFirstname($this->faker->firstName);
             $user->setPassword($this->encoder->encodePassword($user, '123'));
-            $user->setActivateHash('fake_hash');
+            $user->setActivateHash(Helper::generateToken());
             $user->setIsActivated(true);
+            $user->setApiKey(Helper::generateToken());
             return $user;
         });
 
@@ -41,8 +43,9 @@ class UserFixture extends BaseFixture
             $user->setEmail(sprintf('admin%s@email.com', $index));
             $user->setFirstname($this->faker->firstName);
             $user->setPassword($this->encoder->encodePassword($user, '123'));
-            $user->setActivateHash('fake_hash');
+            $user->setActivateHash(Helper::generateToken());
             $user->setIsActivated(true);
+            $user->setApiKey(Helper::generateToken());
             return $user;
         });
 

@@ -55,7 +55,7 @@ class SeoExtension extends AbstractExtension
         return $this->description ? '<meta name="description" content="' . $this->description . '">' : '';
     }
 
-    private function support(Request $request)
+    private function support(?Request $request)
     {
         return $request && false === strpos($request->getRequestUri(), '/api/');
     }

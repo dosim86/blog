@@ -1,6 +1,6 @@
 <script>
     window.userActiveInterval={{ is_granted('ROLE_USER') ? user_active_interval : 0 }};
-    window.user={
-        username: '{{ app.user ? app.user.username : '' }}'
-    }
+    {% if app.user %}
+        window.user = JSON.parse('{{ app.user|json }}');
+    {% endif %}
 </script>

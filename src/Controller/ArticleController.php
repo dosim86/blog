@@ -101,7 +101,7 @@ class ArticleController extends AbstractController
 
     /**
      * @IsGranted("ROLE_USER")
-     * @IsGranted("EDIT", subject="article")
+     * @IsGranted("PERM_EDIT", subject="article")
      * @Route("/article/edit/{id<\d+>}", name="article_edit")
      */
     public function edit(Article $article, Request $request, TranslatorInterface $translator)

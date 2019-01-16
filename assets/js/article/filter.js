@@ -13,7 +13,6 @@ $('#article_filter_author').select2({
         data: function (params) {
             return {
                 q: params.term,
-                token: $('#article_filter__token').val()
             };
         },
         processResults: function (resp) {

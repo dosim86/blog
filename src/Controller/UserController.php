@@ -36,7 +36,7 @@ class UserController extends AbstractController
 
     /**
      * @IsGranted("ROLE_USER")
-     * @IsGranted("EDIT", subject="user")
+     * @IsGranted("PERM_EDIT", subject="user")
      * @Route("/{username<[[:alnum:]]+>}/edit", name="user_edit")
      */
     public function edit(User $user, Request $request, FileUploader $uploader)

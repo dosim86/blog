@@ -16,28 +16,25 @@ let notify = (function(type, message){
 global.$ = global.jQuery = $;
 global.Swal = Swal;
 global.app = {
-    csrfToken: (function(){
-        return $('meta[name=csrf_token]').attr('content');
-    }()),
-
-    request: function(url, data = {}, type = 'get'){
-        data.token = this.csrfToken;
-
-        let preSuccess = function(resp) {
-            if (!resp.nodisplay) {
-                notify(resp.type, resp.message);
-            }
-            return resp;
-        };
-
-        let fail = function(resp) {
-            let data = $.parseJSON(resp.responseText);
-            notify(data.type, data.message);
-        };
-
-        return type.toLowerCase() === 'post'
-            ? $.post(url, data).then(preSuccess).fail(fail)
-            : $.get(url, data).then(preSuccess).fail(fail)
+    request: function(url, data = {}, method = 'get'){
+        return $.ajax({
+                url: url,
+                data: data,
+                method: method.toLowerCase(),
+                headers: {
+                    'X-AUTH-TOKEN': user.apiKey
+                }
+            })
+            .then(function(resp) {
+                if (!resp.nodisplay) {
+                    notify(resp.type, resp.message);
+                }
+                return resp;
+            })
+            .fail(function(resp) {
+                let data = $.parseJSON(resp.responseText);
+                notify(data.type, data.message);
+            })
         ;
     },
 };

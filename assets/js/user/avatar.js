@@ -1,4 +1,5 @@
 import Cropper from 'cropperjs/dist/cropper';
+import Routing from '../routing.js';
 
 let previewImage = document.getElementById('avatar');
 let coords = document.getElementById('user_profile_crop_coords');
@@ -41,3 +42,10 @@ window.previewLoadedFile = function () {
         reader.readAsDataURL(file);
     }
 };
+
+$('.js-generate-api-key-btn').on('click', function (e) {
+    e.preventDefault();
+    app.request(Routing.generate('api_util_token')).then(function (data) {
+        $('#user_profile_apiKey').val(data);
+    });
+});

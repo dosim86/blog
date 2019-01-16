@@ -1,5 +1,6 @@
 V_EMAIL_ALREADY_USED: This email is already used
 V_USERNAME_ALREADY_USED: This username is already used
+V_APIKEY_ALREADY_USED: This api key is already used
 
 V_NOT_VALID_IMAGE: This file is not a valid image
 V_CORRUPTED_IMAGE: The image file is corrupted

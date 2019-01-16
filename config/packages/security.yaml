@@ -6,17 +6,30 @@ security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
+        db_provider:
             entity:
                 class: App\Entity\User
                 property: username
+        apikey_provider:
+            entity:
+                class: App\Entity\User
+                property: apiKey
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        api:
+            pattern: ^/api/
+            anonymous: true
+            stateless: true
+            guard:
+                provider: apikey_provider
+                authenticators:
+                    - App\Security\TokenAuthenticator
         main:
             anonymous: true
             guard:
+                provider: db_provider
                 authenticators:
                     - App\Security\LoginAuthenticator
             logout:

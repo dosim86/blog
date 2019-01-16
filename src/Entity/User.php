@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use App\Lib\Helper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -13,6 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity("email", message="V_EMAIL_ALREADY_USED")
  * @UniqueEntity("username", message="V_USERNAME_ALREADY_USED")
+ * @UniqueEntity("apiKey", message="V_APIKEY_ALREADY_USED", groups={"profile"})
  */
 class User implements UserInterface
 {
@@ -29,6 +32,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank
      * @Assert\Email
+     * @Groups({"public"})
      */
     private $email;
 
@@ -45,6 +49,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"public"})
      */
     private $firstname;
 
@@ -90,6 +95,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"public"})
      */
     private $rank = 0;
 
@@ -97,6 +103,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=100, unique=true)
      * @Assert\NotBlank
      * @Assert\Type(type="alnum", message="The value can only contain English characters and digits")
+     * @Groups({"public", "frontend"})
      */
     private $username;
 
@@ -118,14 +125,26 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"public"})
      */
     private $lastActivityAt;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"public"})
      */
     private $avatar = 'default.png';
 
+    /**
+     * @ORM\Column(type="string", nullable=false, unique=true)
+     * @Assert\NotBlank(groups={"profile"})
+     * @Groups({"public", "frontend"})
+     */
+    private $apiKey;
+
+    /**
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->articles = new ArrayCollection();
@@ -134,6 +153,7 @@ class User implements UserInterface
         $this->followers = new ArrayCollection();
         $this->subscribs = new ArrayCollection();
         $this->lastActivityAt = new \DateTime();
+        $this->apiKey = Helper::generateToken();
     }
 
     public function getId(): ?int
@@ -470,6 +490,18 @@ class User implements UserInterface
     public function setAvatar(string $avatar): self
     {
         $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getApiKey(): ?string
+    {
+        return $this->apiKey;
+    }
+
+    public function setApiKey(string $apiKey): self
+    {
+        $this->apiKey = $apiKey;
 
         return $this;
     }
