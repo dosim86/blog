@@ -19,10 +19,7 @@
                 {% else %}
                     <h6 class="col-md-12 pb-4">No authors found</h6>
                 {% endfor %}
-                {{ knp_pagination_render(pagination, null, {}, {
-                    'position': 'centered',
-                    'rounded': true
-                }) }}
+                {% include '_include/_pagination.html.twig' %}
             </div>
             <div class="col-md-4 d-none d-md-block card p-4">
                 {% include '_include/_sidebar.html.twig' %}

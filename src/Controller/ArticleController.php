@@ -24,8 +24,11 @@ class ArticleController extends AbstractController
      * @Route("/", name="homepage")
      * @Route("/article", name="article_list")
      */
-    public function search(Request $request, ArticleRepository $articleRepository, PaginatorInterface $paginator)
-    {
+    public function search(
+        Request $request,
+        ArticleRepository $articleRepository,
+        PaginatorInterface $paginator
+    ) {
         /** @var Form $filter */
         $filter = $this->createForm(ArticleFilter::class);
         $filter->handleRequest($request);
@@ -38,9 +41,11 @@ class ArticleController extends AbstractController
             }
         }
 
-        $page = $request->query->getInt('page', 1);
-        $qb = $articleRepository->searchArticles($filter->getData());
-        $pagination = $paginator->paginate($qb, $page, Article::ITEMS);
+        $pagination = $paginator->paginate(
+            $articleRepository->searchArticles($filter->getData()),
+            $request->get('page', 1),
+            Article::ITEMS
+        );
 
         return $this->render('article/search.html.twig', [
             'pagination' => $pagination,
@@ -59,13 +64,16 @@ class ArticleController extends AbstractController
         ArticleRepository $articleRepository,
         PaginatorInterface $paginator
     ) {
-        $page = $request->query->getInt('page', 1);
-        $qb = $articleRepository->searchArticles([
-            'tags' => new ArrayCollection($tagRepository->findBy(['name' => $name]))
-        ]);
-        $pagination = $paginator->paginate($qb, $page, Article::ITEMS);
-
         $filter = $this->createForm(ArticleFilter::class);
+
+        $pagination = $paginator->paginate(
+            $articleRepository->searchArticles([
+                'tags' => new ArrayCollection($tagRepository->findBy(['name' => $name]))
+            ]),
+            $request->get('page', 1),
+            Article::ITEMS
+        );
+
         return $this->render('article/search.html.twig', [
             'pagination' => $pagination,
             'filter' => $filter->createView(),
@@ -104,8 +112,11 @@ class ArticleController extends AbstractController
      * @IsGranted("PERM_EDIT", subject="article")
      * @Route("/article/edit/{id<\d+>}", name="article_edit")
      */
-    public function edit(Article $article, Request $request, TranslatorInterface $translator)
-    {
+    public function edit(
+        Article $article,
+        Request $request,
+        TranslatorInterface $translator
+    ) {
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
@@ -126,8 +137,11 @@ class ArticleController extends AbstractController
      * @Route("/article/{slug<[a-zA-Z0-9-]+>}", name="article_show")
      * @throws \Exception
      */
-    public function show(Request $request, ArticleRepository $repository, EventDispatcherInterface $dispatcher)
-    {
+    public function show(
+        Request $request,
+        ArticleRepository $repository,
+        EventDispatcherInterface $dispatcher
+    ) {
         if (empty($article = $repository->getArticleBySlug($request->get('slug')))) {
             throw $this->createNotFoundException();
         }

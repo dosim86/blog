@@ -32,7 +32,4 @@
         <h6 class="col-md-12 pb-4">{{ 'M_NO_ARTICLES_FOUND'|transM }}</h6>
     {% endfor %}
 </div>
-{{ knp_pagination_render(pagination, null, {}, {
-    'position': 'centered',
-    'rounded': true
-}) }}
+{% include '_include/_pagination.html.twig' %}

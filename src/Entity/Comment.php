@@ -16,6 +16,8 @@ class Comment implements LikeableInterface
 {
     use LikeDislikeTrait;
 
+    const ITEMS = 10;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

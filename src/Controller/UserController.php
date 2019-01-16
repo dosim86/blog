@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Article;
+use App\Entity\Comment;
 use App\Entity\User;
 use App\Form\UserProfileType;
 use App\Repository\ArticleRepository;
@@ -23,11 +25,16 @@ class UserController extends AbstractController
     /**
      * @Route("/", name="user_list")
      */
-    public function list(Request $request, UserRepository $userRepository, PaginatorInterface $paginator)
-    {
-        $page = $request->query->getInt('page', 1);
-        $qb = $userRepository->getAuthors();
-        $pagination = $paginator->paginate($qb, $page, User::AUTHOR_ITEM);
+    public function list(
+        Request $request,
+        UserRepository $userRepository,
+        PaginatorInterface $paginator
+    ) {
+        $pagination = $paginator->paginate(
+            $userRepository->getAuthors(),
+            $request->get('page', 1),
+            User::AUTHOR_ITEM
+        );
 
         return $this->render('user/list.html.twig', [
             'pagination' => $pagination,
@@ -76,11 +83,17 @@ class UserController extends AbstractController
     /**
      * @Route("/{username<[[:alnum:]]+>}/articles", name="user_articles")
      */
-    public function articles(User $user, Request $request, ArticleRepository $rep, PaginatorInterface $paginator)
-    {
-        $page = $request->query->getInt('page', 1);
-        $qb = $rep->getUserArticles($user);
-        $pagination = $paginator->paginate($qb, $page, 10);
+    public function articles(
+        User $user,
+        Request $request,
+        ArticleRepository $rep,
+        PaginatorInterface $paginator
+    ) {
+        $pagination = $paginator->paginate(
+            $rep->getUserArticles($user),
+            $request->get('page', 1),
+            Article::ITEMS
+        );
 
         return $this->render('user/articles.html.twig', [
             'user' => $user,
@@ -91,11 +104,17 @@ class UserController extends AbstractController
     /**
      * @Route("/{username<[[:alnum:]]+>}/comments", name="user_comments")
      */
-    public function comments(User $user, Request $request, CommentRepository $rep, PaginatorInterface $paginator)
-    {
-        $page = $request->query->getInt('page', 1);
-        $qb = $rep->getUserComments($user);
-        $pagination = $paginator->paginate($qb, $page, 10);
+    public function comments(
+        User $user,
+        Request $request,
+        CommentRepository $rep,
+        PaginatorInterface $paginator
+    ) {
+        $pagination = $paginator->paginate(
+            $rep->getUserComments($user),
+            $request->get('page', 1),
+            Comment::ITEMS
+        );
 
         return $this->render('user/comments.html.twig', [
             'user' => $user,
@@ -106,11 +125,17 @@ class UserController extends AbstractController
     /**
      * @Route("/{username<[[:alnum:]]+>}/bookmarks", name="user_bookmarks")
      */
-    public function bookmarks(User $user, Request $request, BookmarkArticleRepository $rep, PaginatorInterface $paginator)
-    {
-        $page = $request->query->getInt('page', 1);
-        $qb = $rep->getArticlesFromBookmarkByUser($user);
-        $pagination = $paginator->paginate($qb, $page, 10);
+    public function bookmarks(
+        User $user,
+        Request $request,
+        BookmarkArticleRepository $rep,
+        PaginatorInterface $paginator
+    ) {
+        $pagination = $paginator->paginate(
+            $rep->getArticlesFromBookmarkByUser($user),
+            $request->get('page', 1),
+            Article::ITEMS
+        );
 
         return $this->render('user/bookmarks.html.twig', [
             'user' => $user,
