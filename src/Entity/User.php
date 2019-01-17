@@ -124,7 +124,8 @@ class User implements UserInterface
     private $activateHash;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=false)
+     * @ORM\Version
      * @Groups({"public"})
      */
     private $lastActivityAt;

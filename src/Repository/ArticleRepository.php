@@ -48,7 +48,6 @@ class ArticleRepository extends ServiceEntityRepository
 
         switch ($filter['period'] ?? null) {
             case ArticleFilter::PERIOD_TODAY:
-                dd('1');
                 $qb->andWhere('a.createdAt >= :a_createdAt')
                     ->setParameter('a_createdAt', new \DateTime());
                 break;
