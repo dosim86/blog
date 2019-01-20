@@ -2,80 +2,71 @@
 
 namespace App\Subscriber;
 
-use App\Entity\User;
 use App\Event\UserEvent;
-use App\Service\UserManager;
+use App\Service\QueueService;
+use App\Worker\UserWorker;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 class UserSubscriber implements EventSubscriberInterface
 {
-    private $userManager;
+    private $queueService;
 
-    public function __construct(UserManager $userManager)
+    private $appLogger;
+
+    public function __construct(QueueService $queueService, LoggerInterface $appLogger)
     {
-        $this->userManager = $userManager;
+        $this->queueService = $queueService;
+        $this->appLogger = $appLogger;
     }
 
     public static function getSubscribedEvents()
     {
         return [
             UserEvent::RANK => 'onUserRank',
+            UserEvent::ACTIVE => 'onUserActive',
             UserEvent::REGISTER => 'onUserRegister',
             UserEvent::RESET_PASSWORD => 'onUserResetPassword',
-            UserEvent::ACTIVE => 'onUserActive',
-            KernelEvents::FINISH_REQUEST => 'onKernelFinishRequest',
         ];
     }
 
+    /**
+     * @throws \Exception
+     */
     public function onUserRank(UserEvent $event)
     {
-        $attributes = $event->getRequest()->attributes;
-        $attributes->set(UserEvent::RANK, $event->getUser());
-    }
-
-    public function onUserRegister(UserEvent $event)
-    {
-        $attributes = $event->getRequest()->attributes;
-        $attributes->set(UserEvent::REGISTER, $event->getUser());
-    }
-
-    public function onUserResetPassword(UserEvent $event)
-    {
-        $attributes = $event->getRequest()->attributes;
-        $attributes->set(UserEvent::RESET_PASSWORD, $event->getUser());
-    }
-
-    public function onUserActive(UserEvent $event)
-    {
-        $attributes = $event->getRequest()->attributes;
-        $attributes->set(UserEvent::ACTIVE, $event->getUser());
+        $this->queueService->addTask(UserWorker::RANK, [
+            'userId' => $event->getUser()->getId()
+        ]);
     }
 
     /**
-     * @param FinishRequestEvent $event
      * @throws \Exception
      */
-    public function onKernelFinishRequest(FinishRequestEvent $event)
+    public function onUserActive(UserEvent $event)
     {
-        /** @var User $user */
-        $attributes = $event->getRequest()->attributes;
+        $this->queueService->addTask(UserWorker::ACTIVE, [
+            'userId' => $event->getUser()->getId()
+        ]);
+    }
 
-        if ($user = $attributes->get(UserEvent::RANK, null)) {
-            $this->userManager->rankUser($user);
-        }
+    /**
+     * @throws \Exception
+     */
+    public function onUserRegister(UserEvent $event)
+    {
+        $this->queueService->addTask(UserWorker::REGISTER, [
+            'user' => $event->getUser(),
+        ]);
+    }
 
-        if ($user = $attributes->get(UserEvent::REGISTER, null)) {
-            $this->userManager->registerUser($user);
-        }
-
-        if ($user = $attributes->get(UserEvent::RESET_PASSWORD, null)) {
-            $this->userManager->resetUserPassword($user);
-        }
-
-        if ($user = $attributes->get(UserEvent::ACTIVE, null)) {
-            $this->userManager->refreshUserLastActivity($user);
-        }
+    /**
+     * @throws \Exception
+     */
+    public function onUserResetPassword(UserEvent $event)
+    {
+        $this->queueService->addTask(UserWorker::RESET_PASSWORD, [
+            'userId' => $event->getUser()->getId()
+        ]);
     }
 }

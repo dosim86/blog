@@ -4,8 +4,8 @@ namespace App\Service;
 
 use App\Entity\Article;
 use App\Entity\User;
+use App\Exception\Mail\MailException;
 use App\Exception\User\RegistrationException;
-use App\Exception\User\UserMailingException;
 use App\Lib\Helper;
 use App\Lib\Traits\ManagerTrait;
 use App\Repository\ArticleRepository;
@@ -39,17 +39,10 @@ class UserManager
         $user->setPassword($this->getEncodedPassword($user));
         $user->setActivateHash(Helper::randomHash32());
         $user->setFirstname($user->getUsername());
-
-        $subject = 'Activate registration link';
-        $message = $this->renderView('security/message/register_mail.html.twig', [
-            'link' => $this->generateUrl('app_activate', [
-                'activateHash' => $user->getActivateHash()
-            ]),
-        ]);
-        $this->sendEmail($user->getEmail(), $subject, $message);
-
         $em->persist($user);
         $em->flush();
+
+        $this->sendActivationEmail($user);
     }
 
     /**
@@ -81,19 +74,14 @@ class UserManager
      */
     public function resetUserPassword(User $user)
     {
+        $em = $this->getEntityManager();
+
         $user->setPlainPassword(substr(md5(random_bytes(32)), 0, 10));
         $user->setPassword($this->getEncodedPassword($user));
-
-        $subject = 'Sending a new password';
-        $message = $this->renderView('security/message/reset_password.html.twig', [
-            'plain_password' => $user->getPlainPassword(),
-            'link' => $this->generateUrl('app_login'),
-        ]);
-        $this->sendEmail($user->getEmail(), $subject, $message);
-
-        $em = $this->getEntityManager();
         $em->persist($user);
         $em->flush();
+
+        $this->sendNewPasswordEmail($user);
     }
 
     /**
@@ -145,7 +133,37 @@ class UserManager
             'to' => $to,
             'text' => $text
         ])) {
-            throw new UserMailingException();
+            throw new MailException();
         }
+    }
+
+    /**
+     * @param User $user
+     * @throws \Exception
+     */
+    private function sendActivationEmail(User $user)
+    {
+        $subject = 'Activate registration link';
+        $message = $this->renderView('security/message/register_mail.html.twig', [
+            'host' => $this->getParameter('domain'),
+            'link' => $this->generateUrl('app_activate', [
+                'activateHash' => $user->getActivateHash()
+            ]),
+        ]);
+        $this->sendEmail($user->getEmail(), $subject, $message);
+    }
+
+    /**
+     * @param User $user
+     * @throws \Exception
+     */
+    private function sendNewPasswordEmail(User $user)
+    {
+        $subject = 'Sending a new password';
+        $message = $this->renderView('security/message/reset_password.html.twig', [
+            'plain_password' => $user->getPlainPassword(),
+            'link' => $this->generateUrl('app_login'),
+        ]);
+        $this->sendEmail($user->getEmail(), $subject, $message);
     }
 }

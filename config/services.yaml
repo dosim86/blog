@@ -9,6 +9,9 @@ parameters:
     app.email_register: '%env(EMAIL_DEFAULT)%'
     app.user_active_interval: 10000 # msec
     app.upload_dir: '%kernel.project_dir%/public/uploads'
+    app.gearman.config: '%env(GEARMAN_CONNECTION)%'
+
+    domain: 'blog.loc'
 
 services:
     # default configuration for services in *this* file
@@ -34,6 +37,10 @@ services:
     App\Subscriber\ArticleEntitySubscriber:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
+
+    App\Worker\:
+        public: true
+        resource: '../src/Worker'
 
     doctrine.result_cache_provider:
         class: Symfony\Component\Cache\DoctrineProvider

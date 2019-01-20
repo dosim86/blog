@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Exception\Inform\Mail\MailException;
+use App\Exception\Mail\MailException;
 
 class MailerService
 {

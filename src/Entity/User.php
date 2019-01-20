@@ -125,7 +125,6 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="datetime", nullable=false)
-     * @ORM\Version
      * @Groups({"public"})
      */
     private $lastActivityAt;

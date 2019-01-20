@@ -4,6 +4,6 @@ monolog:
         custom_logging:
             type: rotating_file
             path: '%kernel.logs_dir%/app.log'
-            level: error
+            level: debug
             max_files: 10
             channels: ['custom']
