@@ -5,10 +5,12 @@ namespace App\Repository;
 use App\Entity\Article;
 use App\Entity\User;
 use App\Form\Filter\ArticleFilter;
+use App\Repository\Elastic\ArticleElasticRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Form\Form;
 
 /**
  * @method Article|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,35 +20,32 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class ArticleRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    private $articleElastic;
+
+    public function __construct(RegistryInterface $registry, ArticleElasticRepository $articleElastic)
     {
+        $this->articleElastic = $articleElastic;
+
         parent::__construct($registry, Article::class);
     }
 
-    private function buildQueryByFilter(QueryBuilder $qb, $filter)
+    private function buildQueryByFilter(QueryBuilder $qb, Form $filter)
     {
-        if (empty($filter)) {
+        if ($filter->isEmpty()) {
             return $qb;
         }
 
-        if ($query = $filter['query'] ?? null) {
-            switch ($filter['queryfor']) {
-                case ArticleFilter::QUERYFOR_TITLE:
-                    $qb->andWhere('a.title LIKE :a_query')
-                        ->setParameter('a_query', '%'.$query.'%');
-                    break;
-                case ArticleFilter::QUERYFOR_CONTENT:
-                    $qb->andWhere('a.content LIKE :a_query')
-                        ->setParameter('a_query', '%'.$query.'%');
-                    break;
-                case ArticleFilter::QUERYFOR_BOTH:
-                    $qb->andWhere('a.title LIKE :a_query OR a.content LIKE :a_query')
-                        ->setParameter('a_query', '%'.$query.'%');
-                    break;
-            }
+        if ($filter['query']->getData()) {
+            $articleIds = $this->articleElastic->getIds([
+                'query' => $filter['query']->getData(),
+                'queryfor' => $filter['queryfor']->getData(),
+            ]);
+
+            $qb->andWhere('a.id in (:a_ids)')
+                ->setParameter('a_ids', $articleIds);
         }
 
-        switch ($filter['period'] ?? null) {
+        switch ($filter['period']->getData()) {
             case ArticleFilter::PERIOD_TODAY:
                 $qb->andWhere('a.createdAt >= :a_createdAt')
                     ->setParameter('a_createdAt', new \DateTime());
@@ -65,26 +64,26 @@ class ArticleRepository extends ServiceEntityRepository
                 break;
         }
 
-        if ($author = $filter['author'] ?? null) {
+        if ($author = $filter['author']->getData()) {
             $qb->andWhere('a.author = :a_author')
                 ->setParameter('a_author', $author);
         }
 
         /** @var ArrayCollection $tags */
-        if (($tags = $filter['tags'] ?? null) && !$tags->isEmpty()) {
+        if (($tags = $filter['tags']->getData()) && !$tags->isEmpty()) {
             $qb->andWhere('t IN (:a_tags)')
                 ->setParameter('a_tags', $tags);
         }
 
-        if ($category = $filter['category'] ?? null) {
-            $qb->andWhere('a.category IN (:a_category)')
+        if ($category = $filter['category']->getData()) {
+            $qb->andWhere('a.category = :a_category')
                 ->setParameter('a_category', $category);
         }
 
         return $qb;
     }
 
-    public function searchArticles($filter)
+    public function createSearchQuery(Form $filter): QueryBuilder
     {
         $qb = $this->createQueryBuilder('a')
             ->addSelect('t')

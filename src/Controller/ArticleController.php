@@ -4,16 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Event\ArticleEvent;
-use App\Form\Filter\ArticleFilter;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use App\Repository\TagRepository;
+use App\Service\ArticleManager;
 use Doctrine\Common\Collections\ArrayCollection;
-use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -24,32 +22,14 @@ class ArticleController extends AbstractController
      * @Route("/", name="homepage")
      * @Route("/article", name="article_list")
      */
-    public function search(
-        Request $request,
-        ArticleRepository $articleRepository,
-        PaginatorInterface $paginator
-    ) {
-        /** @var Form $filter */
-        $filter = $this->createForm(ArticleFilter::class);
-        $filter->handleRequest($request);
-
-        if ($filter->isSubmitted()) {
-            if ($filter->get('reset')->isClicked()) {
-                $filter = $this->createForm(ArticleFilter::class);
-            } else {
-                $collapse = 'show';
-            }
-        }
-
-        $pagination = $paginator->paginate(
-            $articleRepository->searchArticles($filter->getData()),
-            $request->get('page', 1),
-            Article::ITEMS
-        );
+    public function search(Request $request, ArticleManager $articleManager)
+    {
+        $page = $request->get('page', 1);
+        $filter = $articleManager->getHandledFilter($request);
 
         return $this->render('article/search.html.twig', [
-            'pagination' => $pagination,
             'filter' => $filter->createView(),
+            'pagination' => $articleManager->search($filter, $page),
             'collapse' => $collapse ?? ''
         ]);
     }
@@ -61,22 +41,18 @@ class ArticleController extends AbstractController
         $name,
         Request $request,
         TagRepository $tagRepository,
-        ArticleRepository $articleRepository,
-        PaginatorInterface $paginator
+        ArticleManager $articleManager
     ) {
-        $filter = $this->createForm(ArticleFilter::class);
+        $page = $request->get('page', 1);
+        $filter = $articleManager->getHandledFilter($request);
 
-        $pagination = $paginator->paginate(
-            $articleRepository->searchArticles([
-                'tags' => new ArrayCollection($tagRepository->findBy(['name' => $name]))
-            ]),
-            $request->get('page', 1),
-            Article::ITEMS
+        $filter->get('tags')->setData(
+            new ArrayCollection($tagRepository->findBy(['name' => $name]))
         );
 
         return $this->render('article/search.html.twig', [
-            'pagination' => $pagination,
             'filter' => $filter->createView(),
+            'pagination' => $articleManager->search($filter, $page),
         ]);
     }
 
@@ -84,8 +60,11 @@ class ArticleController extends AbstractController
      * @IsGranted("ROLE_USER")
      * @Route("/article/add", name="article_add")
      */
-    public function add(Request $request, TranslatorInterface $translator)
-    {
+    public function add(
+        Request $request,
+        ArticleManager $articleManager,
+        TranslatorInterface $translator
+    ) {
         $article = new Article();
         $article->setAuthor($this->getUser());
 
@@ -96,6 +75,7 @@ class ArticleController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
             $em->flush();
+            $articleManager->refreshElastic($article);
             $this->addFlash('success', 'M_ARTICLE_CREATED');
 
             return $this->redirectToRoute('article_show', ['slug' => $article->getSlug()]);
@@ -115,6 +95,7 @@ class ArticleController extends AbstractController
     public function edit(
         Article $article,
         Request $request,
+        ArticleManager $articleManager,
         TranslatorInterface $translator
     ) {
         $form = $this->createForm(ArticleType::class, $article);
@@ -122,6 +103,7 @@ class ArticleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            $articleManager->refreshElastic($article);
             $this->addFlash('success', 'M_ARTICLE_UPDATED');
 
             return $this->redirectToRoute('article_show', ['slug' => $article->getSlug()]);

@@ -12,7 +12,8 @@
                 <button class="btn btn-light btn-block" data-toggle="collapse" data-target="#collapseFilter">
                     <span class="text-info">{{ 'L_SEARCH_ARTICLES'|transL }}</span>
                 </button>
-                <div class="collapse my-2 {{ collapse is defined ? collapse : '' }}" id="collapseFilter">
+                {% set req = app.request.get('article_filter') %}
+                <div class="collapse my-2 {{ req['search'] is defined ? 'show' : '' }}" id="collapseFilter">
                     {{ form_start(filter) }}
                         {{ form_row(filter.query) }}
                         {{ form_row(filter.queryfor) }}

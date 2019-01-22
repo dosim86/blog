@@ -98,6 +98,9 @@
     "egulias/email-validator": {
         "version": "2.1.7"
     },
+    "elasticsearch/elasticsearch": {
+        "version": "v6.1.0"
+    },
     "friendsofsymfony/ckeditor-bundle": {
         "version": "2.0",
         "recipe": {
@@ -105,6 +108,15 @@
             "branch": "master",
             "version": "2.0",
             "ref": "8eb1cd0962ded6a6d6e1e5a9b6d3e888f9f94ff6"
+        }
+    },
+    "friendsofsymfony/elastica-bundle": {
+        "version": "5.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "5.0",
+            "ref": "3f73f240ee0c3719e89f1c994ce66904e2ef84f6"
         }
     },
     "friendsofsymfony/jsrouting-bundle": {
@@ -121,6 +133,12 @@
     },
     "gedmo/doctrine-extensions": {
         "version": "v2.4.36"
+    },
+    "guzzlehttp/ringphp": {
+        "version": "1.1.1"
+    },
+    "guzzlehttp/streams": {
+        "version": "3.0.0"
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
@@ -160,6 +178,12 @@
     },
     "psr/simple-cache": {
         "version": "1.0.1"
+    },
+    "react/promise": {
+        "version": "v2.7.1"
+    },
+    "ruflin/elastica": {
+        "version": "6.1.0"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",
