@@ -64,8 +64,10 @@ class WorkerCommand extends Command
             $workerService->addFunction($id, function (GearmanJob $job) use ($id, $workerObject, $method) {
                 try {
                     $data = unserialize($job->workload());
-                    call_user_func_array([$workerObject, $method], [$data, $job]);
+                    $status = call_user_func_array([$workerObject, $method], [$data, $job]);
+                    (false === $status) ? $job->sendFail() : $job->sendComplete($status);
                 } catch (\Exception $e) {
+                    $job->sendFail();
                     $this->logger->error("[worker:{$id}] " . $e->getMessage());
                 }
             });

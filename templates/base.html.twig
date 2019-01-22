@@ -5,6 +5,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="canonical" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}">
 
         {% if seo_title() %}
             {{ seo_title() }}

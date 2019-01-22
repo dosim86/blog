@@ -8,19 +8,19 @@ abstract class AbstractLike implements LikeInterface
 {
     /**
      * @var int
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="smallint")
      */
     protected $value;
 
     /**
      * @ORM\Id()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"unsigned"=true})
      */
     protected $userId;
 
     /**
      * @ORM\Id()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"unsigned"=true})
      */
     protected $targetId;
 

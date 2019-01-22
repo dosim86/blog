@@ -12,6 +12,10 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="IDX_slug", columns={"slug"}),
+ *     @ORM\Index(name="IDX_created_at", columns={"created_at"}),
+ * })
  */
 class Article implements LikeableInterface
 {
@@ -70,17 +74,17 @@ class Article implements LikeableInterface
     private $category;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"unsigned"=true})
      */
     private $commentCount = 0;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"unsigned"=true})
      */
     private $bookmarkCount = 0;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"unsigned"=true})
      */
     private $watchCount = 0;
 

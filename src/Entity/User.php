@@ -29,7 +29,7 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=50, unique=true)
      * @Assert\NotBlank(groups={"register"})
      * @Assert\Email(groups={"register"})
      * @Groups({"public"})
@@ -43,12 +43,12 @@ class User implements UserInterface
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=255)
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=50)
      * @Groups({"public"})
      */
     private $firstname;
@@ -100,7 +100,7 @@ class User implements UserInterface
     private $rank = 0;
 
     /**
-     * @ORM\Column(type="string", length=100, unique=true)
+     * @ORM\Column(type="string", length=50, unique=true)
      * @Assert\NotBlank(groups={"register"})
      * @Assert\Type(type="alnum", message="The value can only contain English characters and digits", groups={"register"})
      * @Groups({"public", "frontend"})
@@ -136,7 +136,7 @@ class User implements UserInterface
     private $avatar = 'default.png';
 
     /**
-     * @ORM\Column(type="string", nullable=false, unique=true)
+     * @ORM\Column(type="string", length=255, nullable=false, unique=true)
      * @Assert\NotBlank(groups={"profile"})
      * @Groups({"public", "frontend"})
      */

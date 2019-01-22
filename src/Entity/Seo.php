@@ -12,7 +12,7 @@ class Seo
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"unsigned"=true})
      */
     private $id;
 
@@ -39,7 +39,7 @@ class Seo
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isDisabled;
+    private $isDisabled = false;
 
     public function getId(): ?int
     {
