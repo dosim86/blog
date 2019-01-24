@@ -63,16 +63,17 @@ class CommentController extends AbstractController
             ]);
         }
 
-        $article = $parentComment->getArticle();
-
         $comment = new Comment();
         $comment->setText($text);
         $comment->setOwner($this->getUser());
-        $comment->setArticle($article->incCommentCount());
         $comment->setParent($parentComment);
+
+        $article = $parentComment->getArticle();
+        $article->addComment($comment);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($comment);
+        $em->persist($article);
         $em->flush();
 
         return $this->json([

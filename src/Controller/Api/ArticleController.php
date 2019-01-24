@@ -75,14 +75,14 @@ class ArticleController extends AbstractController
     public function bookmark(Article $article)
     {
         try {
-            $article->incBookmarkCount();
-
             $bookmark = new BookmarkArticle();
             $bookmark->setUser($this->getUser());
             $bookmark->setArticle($article);
+            $article->addBookmarkArticle($bookmark);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($bookmark);
+            $em->persist($article);
             $em->flush();
 
             return $this->json([

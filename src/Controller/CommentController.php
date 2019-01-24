@@ -25,12 +25,12 @@ class CommentController extends AbstractController
                 /** @var Comment $comment */
                 $comment = $form->getData();
                 $comment->setOwner($this->getUser());
-                $comment->setArticle($article->incCommentCount());
+                $article->addComment($comment);
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($comment);
+                $em->persist($article);
                 $em->flush();
-                $em->refresh($article);
 
                 $this->addFlash('success', 'Comment is added');
                 $form = $this->createForm(CommentType::class);

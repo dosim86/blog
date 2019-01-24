@@ -24,7 +24,7 @@ class CommentFixture extends BaseFixture implements DependentFixtureInterface
             $comment->setText($this->faker->words(10, true));
             $comment->setCreatedAt($this->faker->dateTimeBetween('-30 days'));
             $comment->setOwner($user);
-            $comment->setArticle($article->incCommentCount());
+            $article->addComment($comment);
             return $comment;
         });
 

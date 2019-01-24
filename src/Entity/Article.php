@@ -90,9 +90,9 @@ class Article implements LikeableInterface
 
     public function __construct()
     {
+        $this->tags = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->bookmarkArticles = new ArrayCollection();
-        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -161,6 +161,7 @@ class Article implements LikeableInterface
         if (!$this->comments->contains($comment)) {
             $this->comments[] = $comment;
             $comment->setArticle($this);
+            $this->commentCount++;
         }
 
         return $this;
@@ -173,6 +174,7 @@ class Article implements LikeableInterface
             // set the owning side to null (unless already changed)
             if ($comment->getArticle() === $this) {
                 $comment->setArticle(null);
+                $this->commentCount--;
             }
         }
 
@@ -197,6 +199,7 @@ class Article implements LikeableInterface
         if (!$this->bookmarkArticles->contains($bookmarkArticle)) {
             $this->bookmarkArticles[] = $bookmarkArticle;
             $bookmarkArticle->setArticle($this);
+            $this->bookmarkCount++;
         }
 
         return $this;
@@ -209,6 +212,7 @@ class Article implements LikeableInterface
             // set the owning side to null (unless already changed)
             if ($bookmarkArticle->getArticle() === $this) {
                 $bookmarkArticle->setArticle(null);
+                $this->bookmarkCount--;
             }
         }
 
@@ -263,23 +267,9 @@ class Article implements LikeableInterface
         return $this->commentCount;
     }
 
-    public function incCommentCount(): self
-    {
-        $this->commentCount++;
-
-        return $this;
-    }
-
     public function getBookmarkCount(): ?int
     {
         return $this->bookmarkCount;
-    }
-
-    public function incBookmarkCount(): self
-    {
-        $this->bookmarkCount++;
-
-        return $this;
     }
 
     public function getWatchCount(): ?int
