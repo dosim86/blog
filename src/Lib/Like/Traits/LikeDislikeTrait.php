@@ -34,7 +34,7 @@ trait LikeDislikeTrait
 
     public function decLikeCount()
     {
-        $this->likeCount--;
+        !$this->likeCount ?: $this->likeCount--;
         return $this;
     }
 
@@ -46,7 +46,7 @@ trait LikeDislikeTrait
 
     public function decDislikeCount()
     {
-        $this->dislikeCount--;
+        !$this->dislikeCount ?: $this->dislikeCount--;
         return $this;
     }
 }
