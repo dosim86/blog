@@ -22,7 +22,7 @@ class CommentTest extends TestCase
         $this->assertInstanceOf(LikeableInterface::class, $comment);
     }
 
-    public function testParentChildren()
+    public function testAddChild()
     {
         $comment = new Comment();
         $child = new Comment();
@@ -31,6 +31,16 @@ class CommentTest extends TestCase
         $this->assertNotEmpty($comment->getChildren());
         $this->assertTrue($comment->getChildren()->contains($child));
         $this->assertCount(1, $comment->getChildren());
+
+        return $comment;
+    }
+
+    /**
+     * @depends testAddChild
+     */
+    public function testRemoveChild(Comment $comment)
+    {
+        $child = $comment->getChildren()->first();
 
         $this->assertSame($comment, $comment->removeChild($child));
         $this->assertEmpty($comment->getChildren());

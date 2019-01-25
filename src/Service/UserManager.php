@@ -6,10 +6,11 @@ use App\Entity\Article;
 use App\Entity\User;
 use App\Exception\Mail\MailException;
 use App\Exception\User\RegistrationException;
+use App\Exception\User\UnknownUserException;
 use App\Lib\Helper;
 use App\Lib\Traits\ManagerTrait;
 use App\Repository\ArticleRepository;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class UserManager
 {
@@ -31,6 +32,10 @@ class UserManager
     {
         $em = $this->getEntityManager();
         $userRepository = $em->getRepository(User::class);
+
+        if (empty($user->getEmail())) {
+            throw new UnknownUserException();
+        }
 
         if ($userRepository->findOneBy(['email' => $user->getEmail()])) {
             throw new RegistrationException();
@@ -74,10 +79,14 @@ class UserManager
      */
     public function resetUserPassword(User $user)
     {
-        $em = $this->getEntityManager();
+        if (empty($user->getId())) {
+            throw new UnknownUserException();
+        }
 
-        $user->setPlainPassword(substr(md5(random_bytes(32)), 0, 10));
+        $user->setPlainPassword(Helper::generateNewPassword());
         $user->setPassword($this->getEncodedPassword($user));
+
+        $em = $this->getEntityManager();
         $em->persist($user);
         $em->flush();
 
