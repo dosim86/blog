@@ -34,6 +34,18 @@ class MailerService
             ->setTo($to)
             ->setBody($text, 'text/html')
         ;
-        return $this->mailer->send($message);
+        $transport = $this->mailer->getTransport();
+
+        if (!$transport->isStarted()) {
+            $transport->start();
+        }
+
+        $isSuccess = $transport->send($message);
+
+        if ($transport->isStarted()) {
+            $transport->stop();
+        }
+
+        return $isSuccess;
     }
 }

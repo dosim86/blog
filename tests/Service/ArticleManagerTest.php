@@ -72,9 +72,9 @@ class ArticleManagerTest extends AppWebTestCase
      */
     public function testGettingPaginationInSearch(Form $filter)
     {
-        $pagination = $this->manager->search($filter, 1);
+        $pagination = $this->manager->search($filter, 1, 10);
 
-        $this->assertCount(0, $pagination);
+        $this->assertCount(10, $pagination);
         $this->assertContainsOnlyInstancesOf(Article::class, $pagination);
     }
 }

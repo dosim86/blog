@@ -19,44 +19,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ArticleController extends AbstractController
 {
     /**
-     * @Route("/", name="homepage")
-     * @Route("/article", name="article_list")
-     */
-    public function search(Request $request, ArticleManager $articleManager)
-    {
-        $page = $request->get('page', 1);
-        $filter = $articleManager->getHandledFilter($request);
-
-        return $this->render('article/search.html.twig', [
-            'filter' => $filter->createView(),
-            'pagination' => $articleManager->search($filter, $page),
-            'collapse' => $collapse ?? ''
-        ]);
-    }
-
-    /**
-     * @Route("/article/tag/{name<[a-zA-Z0-9- ]+>}", name="article_by_tag")
-     */
-    public function articleByTag(
-        $name,
-        Request $request,
-        TagRepository $tagRepository,
-        ArticleManager $articleManager
-    ) {
-        $page = $request->get('page', 1);
-        $filter = $articleManager->getHandledFilter($request);
-
-        $filter->get('tags')->setData(
-            new ArrayCollection($tagRepository->findBy(['name' => $name]))
-        );
-
-        return $this->render('article/search.html.twig', [
-            'filter' => $filter->createView(),
-            'pagination' => $articleManager->search($filter, $page),
-        ]);
-    }
-
-    /**
      * @IsGranted("ROLE_USER")
      * @Route("/article/add", name="article_add")
      */
@@ -138,6 +100,43 @@ class ArticleController extends AbstractController
         return $this->render('article/show.html.twig', [
             'article' => $article,
             'htmlAddComment' => $response->getContent()
+        ]);
+    }
+
+    /**
+     * @Route("/", name="homepage")
+     * @Route("/article", name="article_list")
+     */
+    public function search(Request $request, ArticleManager $articleManager)
+    {
+        $page = $request->get('page', 1);
+        $filter = $articleManager->getHandledFilter($request);
+
+        return $this->render('article/search.html.twig', [
+            'filter' => $filter->createView(),
+            'pagination' => $articleManager->search($filter, $page),
+        ]);
+    }
+
+    /**
+     * @Route("/article/tag/{name<[a-zA-Z0-9- ]+>}", name="article_by_tag")
+     */
+    public function articleByTag(
+        $name,
+        Request $request,
+        TagRepository $tagRepository,
+        ArticleManager $articleManager
+    ) {
+        $page = $request->get('page', 1);
+        $filter = $articleManager->getHandledFilter($request);
+
+        $filter->get('tags')->setData(
+            new ArrayCollection($tagRepository->findBy(['name' => $name]))
+        );
+
+        return $this->render('article/search.html.twig', [
+            'filter' => $filter->createView(),
+            'pagination' => $articleManager->search($filter, $page),
         ]);
     }
 }

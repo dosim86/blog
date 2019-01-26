@@ -64,4 +64,16 @@ class UserRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function isUniqueUser(User $user)
+    {
+        $results = $this->createQueryBuilder('u')
+            ->andWhere('u.email = :u_email or u.username = :u_username')
+            ->setParameter('u_email', $user->getEmail())
+            ->setParameter('u_username', $user->getUsername())
+            ->getQuery()
+            ->getResult()
+        ;
+        return empty($results);
+    }
 }

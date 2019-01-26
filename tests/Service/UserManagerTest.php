@@ -52,12 +52,16 @@ class UserManagerTest extends AppWebTestCase
      */
     public function testUserRegister()
     {
-        self::$purger->purge();
         $faker = Factory::create();
-        $email = $faker->email;
+        $userRepository = self::$em->getRepository(User::class);
+
+        $email = 'test@test.com';
+        $username = 'test';
+
+        $this->clearUser($email, $username);
 
         $user = new User();
-        $user->setUsername($faker->unique()->firstName);
+        $user->setUsername($username);
         $user->setEmail($email);
         $user->setFirstname($faker->firstName);
         $user->setPlainPassword('123');
@@ -65,11 +69,9 @@ class UserManagerTest extends AppWebTestCase
         $user->setApiKey(Helper::generateToken());
 
         $this->manager->registerUser($user);
-        $sameUser = self::$em->getRepository(User::class)
-            ->findOneBy(['email' => $user->getEmail()]);
+        $sameUser = $userRepository->findOneBy(['email' => $user->getEmail()]);
 
-        $this->assertTrue($user === $sameUser);
-        $this->assertSame($sameUser, $user);
+        $this->assertTrue($user->getId() === $sameUser->getId());
         $this->assertEquals($email, $user->getEmail());
         $this->assertFalse($user->isActivated());
         $this->assertFalse($user->isDisabled());
@@ -102,10 +104,10 @@ class UserManagerTest extends AppWebTestCase
      */
     public function testUserResetPassword(User $user)
     {
-        $user = self::$em->getRepository(User::class)->find($user->getId());
-
         $oldPassword = $user->getPassword();
         $this->manager->resetUserPassword($user);
+
+        $this->clearUser($user->getEmail(), $user->getUsername());
 
         $this->assertNotEquals($oldPassword, $user->getPassword());
     }

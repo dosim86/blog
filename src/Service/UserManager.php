@@ -30,14 +30,13 @@ class UserManager
      */
     public function registerUser(User $user)
     {
-        $em = $this->getEntityManager();
-        $userRepository = $em->getRepository(User::class);
-
-        if (empty($user->getEmail())) {
+        if (!$user->getEmail() || !$user->getUsername() || !$user->getPlainPassword()) {
             throw new UnknownUserException();
         }
+        $em = $this->getEntityManager();
 
-        if ($userRepository->findOneBy(['email' => $user->getEmail()])) {
+        $userRepository = $em->getRepository(User::class);
+        if (!$userRepository->isUniqueUser($user)) {
             throw new RegistrationException();
         }
 
@@ -87,6 +86,7 @@ class UserManager
         $user->setPassword($this->getEncodedPassword($user));
 
         $em = $this->getEntityManager();
+        $user = $em->merge($user);
         $em->persist($user);
         $em->flush();
 
@@ -95,7 +95,7 @@ class UserManager
 
     /**
      * @param User $user
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Exception
      */
     public function rankUser(User $user)
     {
@@ -112,6 +112,7 @@ class UserManager
 
     /**
      * @param User $user
+     * @throws \Exception
      */
     public function refreshUserLastActivity(User $user)
     {

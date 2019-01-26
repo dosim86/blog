@@ -2,21 +2,10 @@
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\AppWebTestCase;
 
-class ArticleControllerTest extends WebTestCase
+class ArticleControllerTest extends AppWebTestCase
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
-    protected function setUp()
-    {
-        $this->client = self::createClient();
-    }
-
     /**
      * @dataProvider provideUrls
      */
@@ -24,8 +13,8 @@ class ArticleControllerTest extends WebTestCase
     {
         $this->markTestIncomplete('This test is not implemented yet.');
 
-        $this->client->request('GET', $url);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::$client->request('GET', $url);
+        $this->assertEquals(200, self::$client->getResponse()->getStatusCode());
     }
 
     public function provideUrls()
