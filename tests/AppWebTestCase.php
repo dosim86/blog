@@ -7,6 +7,8 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 
 class AppWebTestCase extends WebTestCase
 {
@@ -67,5 +69,18 @@ class AppWebTestCase extends WebTestCase
     {
         return self::$em->getRepository(User::class)
             ->findOneBy(['email' => $email]);
+    }
+
+    protected function logIn($username, $password, $role = 'ROLE_USER')
+    {
+        $firewallContext = 'secured_area';
+        $token = new PostAuthenticationGuardToken($username, $password, [$role]);
+
+        $session = self::$container->get('session');
+        $session->set('_security_'.$firewallContext, serialize($token));
+        $session->save();
+
+        $cookie = new Cookie($session->getName(), $session->getId());
+        self::$client->getCookieJar()->set($cookie);
     }
 }
